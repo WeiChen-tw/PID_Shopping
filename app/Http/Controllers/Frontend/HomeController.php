@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Frontend;
 
 use Illuminate\Http\Request;
 
@@ -13,7 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('frontend.auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -23,6 +23,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('frontend.home');
+        return view('home');
     }
 }

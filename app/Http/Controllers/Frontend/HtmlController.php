@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Frontend;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -9,7 +9,7 @@ class HtmlController extends Controller
 {
     public function loadProduct()
     {
-        //$products = DB::select('select * from product');
+        $products = DB::select('select * from product');
         
         if (!$products) {
             return response()->json(array('success' => false, 'html' => 'No Product'));
@@ -17,6 +17,7 @@ class HtmlController extends Controller
             $returnHtml = view('frontend.showbox')->with('products',$products)->render();
             return response()->json(array('success' => true, 'html' => $returnHtml));
         }
+        
     }
         
         

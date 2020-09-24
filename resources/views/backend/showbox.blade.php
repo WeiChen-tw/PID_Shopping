@@ -1,7 +1,7 @@
 
 
 @foreach ($products as $product)
-<div class="col-md-4">
+<div class="product col-md-4 " style="padding-bottom: 1.25rem;">
     <div class="card bg-default">
         <h5 class="card-header">
             {{$product->name}}
@@ -12,7 +12,7 @@
                 
             </p>
         </div>
-        <div class="card-footer">
+        <div class="card-footer ">
             Card footer
         </div>
     </div>

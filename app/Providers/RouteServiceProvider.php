@@ -35,12 +35,52 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapApiRoutes();
+        //$currentDomain = 'www.admin.net';
+        $currentDomain = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : "";
+        switch ($currentDomain) {
+            case 'www.shopping.net':
+                $this->mapWebFrontendRoutes();
+                break;
+            case 'www.admin.net':
+                $this->mapWebBackendRoutes();
+                break;          
+            default:
+                $this->mapApiRoutes();
+                $this->mapWebRoutes();
+                break;
+        }
+        //$this->mapApiRoutes();
 
-        $this->mapWebRoutes();
+        //$this->mapWebRoutes();
 
-        //
+        
     }
+
+/**
+     * 前台
+     *
+     * @return void
+     */
+    protected function mapWebFrontendRoutes()
+    {
+        Route::middleware( 'web' )
+             ->namespace( 'App\Http\Controllers\Frontend' )
+             ->group(base_path('routes/webRoutesFrontend.php'));
+    }
+
+    /**
+     * 後台
+     *
+     * @return void
+     */
+    protected function mapWebBackendRoutes()
+    {
+        Route::middleware( 'web' )
+             ->namespace( 'App\Http\Controllers\Backend' )
+             ->group(base_path('routes/webRoutesBackend.php'));
+    }
+
+
 
     /**
      * Define the "web" routes for the application.

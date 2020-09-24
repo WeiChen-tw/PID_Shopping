@@ -73,23 +73,23 @@
 <body>
 
     <div class=" container-fluid position-ref full-height">
-       
-        
+
+
             <div class="row header" >
-              
+
                     @if (Route::has('login'))
                         <div class="col-md-12 top-right links">
                             @auth
-                                <a href="{{ url('/home') }}">Home</a>
+                                <a href="{{ url('/home') }}">後台管理</a>
                                 @else
                                     <a href="{{ route('login') }}">Login</a>
                                     <a href="{{ route('register') }}">Register</a>
                                     @endauth
                         </div>
                     @endif
-                    
-                
-                
+
+
+
             </div>
             <div class="row">
                     <div class="col-md-12">
@@ -121,12 +121,12 @@
                                         Search
                                     </button>
                                 </form>
-                                
+
                             </div>
                         </nav>
                         <div class="jumbotron">
                             <h2>
-                                Hello, world!
+                                Hello, admin!
                             </h2>
                             <p>
                                 This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.
@@ -141,15 +141,15 @@
                     @section('showBox')
                     @show
             </div>
-        
+
     </div>
-        <div class="">
-            
+        <div class="row">
+            123
         </div>
-   
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script>
             console.log("1")
             $.ajax({
@@ -168,7 +168,9 @@
                 }
             })
             $(document).ready(function(){
-
+                $("#showBox").on('click','.product',function () {
+                    alert('test')
+                })
             })
     </script>
 </body>
