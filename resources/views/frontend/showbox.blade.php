@@ -7,7 +7,7 @@
             {{$product->name}}
         </h5>
         <div class="card-body">
-            <img class="img-responsive" src="data:image/jpeg;base64,{{base64_encode($product->img)}}" >
+            <img class="img-fluid" src="data:image/jpeg;base64,{{base64_encode($product->img)}}" >
             <p class="card-text">
                 
             </p>

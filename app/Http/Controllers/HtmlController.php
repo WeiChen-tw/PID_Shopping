@@ -9,7 +9,7 @@ class HtmlController extends Controller
 {
     public function loadProduct()
     {
-        //$products = DB::select('select * from product');
+        $products = DB::select('select * from product');
         
         if (!$products) {
             return response()->json(array('success' => false, 'html' => 'No Product'));

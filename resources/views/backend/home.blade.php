@@ -34,6 +34,7 @@
                     <div class="nav flex-column nav-pills " id="v-pills-tab" role="tablist" aria-orientation="vertical">
                         <a class="nav-link active" id="v-pills-management-tab" data-toggle="pill" href="#v-pills-management" role="tab" aria-controls="v-pills-management" aria-selected="true">會員管理</a>
                         <a class="nav-link" id="v-pills-commodity-tab" data-toggle="pill" href="#v-pills-commodity" role="tab" aria-controls="v-pills-commodity" aria-selected="false">我的商品</a>
+                        <a class="nav-link" id="v-pills-product-tab" data-toggle="pill" href="#v-pills-product" role="tab" aria-controls="v-pills-product" aria-selected="false">商品管理</a>
                         <a class="nav-link" id="v-pills-myData-tab" data-toggle="pill" href="#v-pills-myData" role="tab" aria-controls="v-pills-myData" aria-selected="false">銷售數據</a>
                     </div>
                 </div>
@@ -115,6 +116,99 @@
                                 </form>
                                 <button id="showButton" type="button" class="btn btn-success" value="">已上架商品</button>
 
+                            </div>
+                            <div class="tab-pane fade" id ="v-pills-product" role="tabpanel" aria-labelledby="v-pills-product-tab">
+                                <div class="container">
+                                    <h1>Laravel 5.8 Ajax CRUD tutorial using Datatable - ItSolutionStuff.com</h1>
+                                    <a class="btn btn-success" href="javascript:void(0)" id="createNewProduct"> Create New Product</a>
+
+                                    <table class="table table-bordered data-table">
+
+                                        <thead>
+
+                                            <tr>
+
+                                                <th>No</th>
+
+                                                <th>Name</th>
+
+                                                <th>Details</th>
+
+                                                <th width="280px">Action</th>
+
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                                <div class="modal fade" id="ajaxModel" aria-hidden="true">
+
+                                    <div class="modal-dialog">
+
+                                        <div class="modal-content">
+
+                                            <div class="modal-header">
+
+                                                <h4 class="modal-title" id="modelHeading"></h4>
+
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <form id="productForm" name="productForm" class="form-horizontal">
+
+                                                <input type="hidden" name="product_id" id="product_id">
+
+                                                    <div class="form-group">
+
+                                                        <label for="name" class="col-sm-2 control-label">Name</label>
+
+                                                        <div class="col-sm-12">
+
+                                                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
+
+                                                        </div>
+
+                                                    </div>
+
+
+
+                                                    <div class="form-group">
+
+                                                        <label class="col-sm-2 control-label">Details</label>
+
+                                                        <div class="col-sm-12">
+
+                                                            <textarea id="detail" name="detail" required="" placeholder="Enter Details" class="form-control"></textarea>
+
+                                                        </div>
+
+                                                    </div>
+
+
+
+                                                    <div class="col-sm-offset-2 col-sm-10">
+
+                                                    <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
+
+                                                    </button>
+
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
                             </div>
                             <div class="tab-pane fade" id="v-pills-myData" role="tabpanel" aria-labelledby="v-pills-myData-tab">
                                 <div class="row">
