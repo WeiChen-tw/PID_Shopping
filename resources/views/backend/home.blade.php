@@ -118,97 +118,145 @@
 
                             </div>
                             <div class="tab-pane fade" id ="v-pills-product" role="tabpanel" aria-labelledby="v-pills-product-tab">
-                                <div class="container">
-                                    <h1>Laravel 5.8 Ajax CRUD tutorial using Datatable - ItSolutionStuff.com</h1>
-                                    <a class="btn btn-success" href="javascript:void(0)" id="createNewProduct"> Create New Product</a>
+                            <div class="container">
 
-                                    <table class="table table-bordered data-table">
+<h1>Product CRUD</h1>
 
-                                        <thead>
+<a class="btn btn-success" href="javascript:void(0)" id="createNewProduct"> Create New Product</a>
+<a class="btn btn-primary" href="javascript:void(0)" id="onMarket">上架</a>
+<a class="btn btn-danger" href="javascript:void(0)" id="takeOff">下架</a>
+<select id="sel">
+    <option value="">查詢分類</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+</select>
+<table id="myProducts" class="table table-bordered data-table">
 
-                                            <tr>
+    <thead>
 
-                                                <th>No</th>
+        <tr>
+            <th><input type="checkbox" name="chkAll" /> </th>
+            <th>No</th>
+            <th>Name</th>
+            <th>Img</th>
+            <th>onMarket</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>QuantitySold</th>
+            <th>Descriptions</th>
+            <th width="280px">Action</th>
+        </tr>
 
-                                                <th>Name</th>
+    </thead>
 
-                                                <th>Details</th>
+    <tbody>
 
-                                                <th width="280px">Action</th>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th><input type="checkbox" name="chkAll" /> </th>
+            <th>No</th>
+            <th>Name</th>
+            <th>Img</th>
+            <th>onMarket</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>QuantitySold</th>
+            <th>Descriptions</th>
+            <th width="280px">Action</th>
+        </tr>
 
-                                            </tr>
+    </tfoot>
+</table>
 
-                                        </thead>
-
-                                        <tbody>
-
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                                <div class="modal fade" id="ajaxModel" aria-hidden="true">
-
-                                    <div class="modal-dialog">
-
-                                        <div class="modal-content">
-
-                                            <div class="modal-header">
-
-                                                <h4 class="modal-title" id="modelHeading"></h4>
-
-                                            </div>
-
-                                            <div class="modal-body">
-
-                                                <form id="productForm" name="productForm" class="form-horizontal">
-
-                                                <input type="hidden" name="product_id" id="product_id">
-
-                                                    <div class="form-group">
-
-                                                        <label for="name" class="col-sm-2 control-label">Name</label>
-
-                                                        <div class="col-sm-12">
-
-                                                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
-
-                                                        </div>
-
-                                                    </div>
+</div>
 
 
 
-                                                    <div class="form-group">
+<div class="modal fade" id="ajaxModel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modelHeading"></h4>
+            </div>
+            <div class="modal-body">
+                <form id="productForm" name="productForm" class="form-horizontal">
+                <input type="hidden" name="product_id" id="product_id">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-2 control-label">Name</label>
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
+                        </div>
+                    </div>
 
-                                                        <label class="col-sm-2 control-label">Details</label>
+                    <!-- <div class="form-group">
+                        <label for="img" class="col-sm-2 control-label">Img</label>
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="img" name="img" placeholder="Enter Img" value="" maxlength="50" required="">
+                        </div>
+                    </div> -->
 
-                                                        <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="category" class="col-sm-2 control-label">Category</label>
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="category" name="category" placeholder="Enter Category" value="" maxlength="50" required="">
+                        </div>
+                    </div>
 
-                                                            <textarea id="detail" name="detail" required="" placeholder="Enter Details" class="form-control"></textarea>
+                    <div class="form-group">
+                        <label for="price" class="col-sm-2 control-label">Price</label>
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="price" name="price" placeholder="Enter Price" value="" maxlength="50" required="">
+                        </div>
+                    </div>
 
-                                                        </div>
+                    <div class="form-group">
+                        <label for="quantity" class="col-sm-2 control-label">Quantity</label>
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="quantity" name="quantity" placeholder="Enter Quantity" value="" maxlength="50" required="">
+                        </div>
+                    </div>
 
-                                                    </div>
+                    <div class="form-group">
+                        <label for="quantitySold" class="col-sm-2 control-label">QuantitySold</label>
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="quantitySold" name="quantitySold" placeholder="Enter QuantitySold" value="" maxlength="50" required="">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label">Descriptions</label>
+
+                        <div class="col-sm-12">
+
+                            <textarea id="description" name="description" required="" placeholder="Enter Descriptions" class="form-control"></textarea>
+
+                        </div>
+
+                    </div>
 
 
 
-                                                    <div class="col-sm-offset-2 col-sm-10">
+                    <div class="col-sm-offset-2 col-sm-10">
 
-                                                    <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
+                    <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
 
-                                                    </button>
+                    </button>
 
-                                                    </div>
+                    </div>
 
-                                                </form>
+                </form>
 
-                                            </div>
+            </div>
 
-                                        </div>
+        </div>
 
-                                    </div>
+    </div>
+</div>
 
-                                </div>
                             </div>
                             <div class="tab-pane fade" id="v-pills-myData" role="tabpanel" aria-labelledby="v-pills-myData-tab">
                                 <div class="row">
@@ -236,5 +284,15 @@
             </div>
         </div>
     </div>
-   
+    @push('scripts')
+    <script src="{{ asset('js/product.js') }}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />
+    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+@endpush
 @endsection

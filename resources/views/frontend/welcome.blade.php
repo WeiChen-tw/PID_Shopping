@@ -80,7 +80,7 @@
                     @if (Route::has('login'))
                         <div class="col-md-12 top-right links">
                             @auth
-                                <a href="{{ url('/home') }}">後台管理</a>
+                                <a href="{{ url('/home') }}">購物車</a>
                                 @else
                                     <a href="{{ route('login') }}">Login</a>
                                     <a href="{{ route('register') }}">Register</a>
@@ -126,7 +126,7 @@
                         </nav>
                         <div class="jumbotron">
                             <h2>
-                                Hello, admin!
+                                Hello,User!
                             </h2>
                             <p>
                                 This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.

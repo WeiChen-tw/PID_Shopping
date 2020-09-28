@@ -23,10 +23,15 @@ class ProductAjaxController extends Controller
     {
 
         if ($request->ajax()) {
-        //if(true){
             $data = Product::latest()->get();
 
             return Datatables::of($data)
+                ->addIndexColumn()
+
+                ->addColumn('check', function ($row) {
+                    $check = '<input type="checkbox" data-id="' . $row->productID . '">';
+                    return $check;
+                })
 
                 ->addIndexColumn()
 
@@ -39,14 +44,22 @@ class ProductAjaxController extends Controller
                     return $btn;
 
                 })
-
-                ->rawColumns(['action'])
-
+                ->editColumn('img', function ($row) {
+                    if ($img = $row->img) {
+                        //return  '<img class="img-fluid" src="data:image/jpeg;base64,'. base64_encode($img). '">';
+                        return sprintf(
+                            '<img class="img-fluid" src="data:image/jpeg;base64,%s">',
+                            base64_encode($img)
+                        );
+                    }
+                    return ' ';
+                })
+                ->rawColumns(['img', 'action', 'check'])
                 ->make(true);
 
         }
-        
-        return view('backend.productAjax',compact('products'));
+
+        return view('backend.productAjax', compact('products'));
 
     }
 
@@ -65,12 +78,19 @@ class ProductAjaxController extends Controller
     public function store(Request $request)
     {
 
-        Product::updateOrCreate(['id' => $request->product_id],
-
-            ['name' => $request->name, 'description' => $request->description]);
-
+        Product::updateOrCreate(['productID' => $request->product_id],
+            ['id' => 1,
+                'name' => $request->name,
+                'img' => "123",
+                'category' => $request->category,
+                'price' => $request->price,
+                'quantity' => $request->quantity,
+                'quantitySold' => $request->quantitySold,
+                'description' => $request->description]);
+        // $product = Product::where('productID',3)->first();
+        // $product->name = 'p33';
+        // $product->save();
         return response()->json(['success' => 'Product saved successfully.']);
-
     }
 
     /**
@@ -87,11 +107,29 @@ class ProductAjaxController extends Controller
 
     public function edit($id)
     {
-
-        $product = Product::find($id);
-
+        //$product = Product::find($id);
+        $product = Product::where('productID', $id)->first();
+        $product->img = 'tt';
+        //$product->save();
         return response()->json($product);
+    }
 
+    
+    /**
+     * on the market or take off
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function onOrOff(Request $request)
+    {
+        foreach ($request->id as $key => $id) {
+            $product = Product::where('productID', $id)->first();
+            $product->onMarket = $request->action;
+            $product->save();
+        }
+
+        return response()->json(['success' => 'Product  successfully.']);
     }
 
     /**

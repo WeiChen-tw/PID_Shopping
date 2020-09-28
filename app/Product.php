@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    //白名單
     protected $fillable = [
 
-        'name', 'description'
+        'id','name', 'category', 'price', 'quantity', 'quantitySold', 'description',
 
     ];
+    //public $timestamps = false;
+    public $primaryKey = 'productID';
 }
