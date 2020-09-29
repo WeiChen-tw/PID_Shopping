@@ -301,6 +301,35 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="modal fade" id="ajaxProductCategoryModel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="categoryModelHeading"></h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div id ="showBox" class="row pre-scrollable ">
+                                                        <div class="product col-md-4 " style="padding-bottom: 1.25rem;">
+                                                            <div class="card bg-default">
+                                                                <h5 class="card-header">
+                                                                    HHH
+                                                                </h5>
+                                                                <div class="card-body">
+                                                                    <img class="img-fluid" src="data:image/jpeg;base64," >
+                                                                    <p class="card-text">
+                                                                        ppp
+                                                                    </p>
+                                                                </div>
+                                                                <div class="card-footer ">
+                                                                    Card footer
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="v-pills-myData" role="tabpanel" aria-labelledby="v-pills-myData-tab">

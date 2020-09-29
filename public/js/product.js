@@ -68,12 +68,14 @@ $(document).ready(function(){
         
     })
     
+    //get select option data
     $.get("./home/ajaxcategory", function (data) {
         $.each(data.data,function (index,arr){
             $("#sel").append( '<option value="'+arr.name+'">'+arr.name+'</option>' )
         })
        console.log(data.data[0].name);
     })
+    //select category change product list
     $('#sel').on('change', function(){
         console.log($(this).data('table'));
         let table_name = $(this).data('table');
@@ -86,6 +88,7 @@ $(document).ready(function(){
         }
         table.columns(5).search(this.value).draw();
     })
+    //select all
     $('input[name=chkAll').change(function () {
         let isChecked = $(this).prop('checked');
             $('#myProducts > tbody input:checkbox').prop('checked', isChecked);
@@ -243,6 +246,30 @@ $(document).ready(function(){
                 console.log('Error:', data);
             }
         });
+    });
+//set
+    $('body').on('click', '.setCategory', function () {
+        let table;
+        //let table_name = $(this).data("table");
+        let modal_name = ajaxProductCategoryModel;
+        // let id = $(this).data("id");
+        // confirm("Are You sure want to delete !");
+        // if(table_name == 'products')
+        //     table = productTable;
+        // else if(table_name=='category')
+        //     table = categoryTable;
+        $(modal_name).modal('show');
+        // $.ajax({
+        //     type: "DELETE",
+        //     //url: "{{ route('ajaxproducts.store') }}"+'/'+product_id,
+        //     url: "./home/ajax"+table_name+'/'+id,
+        //     success: function (data) {
+        //         table.draw();
+        //     },
+        //     error: function (data) {
+        //         console.log('Error:', data);
+        //     }
+        // });
     });
 
     //---------------------- Category.js -------------------//
