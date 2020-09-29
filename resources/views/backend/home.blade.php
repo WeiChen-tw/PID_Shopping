@@ -34,12 +34,16 @@
                     <div class="nav flex-column nav-pills " id="v-pills-tab" role="tablist" aria-orientation="vertical">
                         <a class="nav-link active" id="v-pills-management-tab" data-toggle="pill" href="#v-pills-management" role="tab" aria-controls="v-pills-management" aria-selected="true">會員管理</a>
                         <a class="nav-link" id="v-pills-commodity-tab" data-toggle="pill" href="#v-pills-commodity" role="tab" aria-controls="v-pills-commodity" aria-selected="false">我的商品</a>
-                        <a class="nav-link" id="v-pills-product-tab" data-toggle="pill" href="#v-pills-product" role="tab" aria-controls="v-pills-product" aria-selected="false">商品管理</a>
+                        <a class="nav-link" id="v-pills-product-tab" data-toggle="pill" href="#v-pills-product" role="tab" aria-controls="v-pills-product" aria-selected="false">庫存管理</a>
+                        <a class="nav-link" id="v-pills-category-tab" data-toggle="pill" href="#v-pills-category" role="tab" aria-controls="v-pills-category" aria-selected="false">商品分類管理</a>
+                        <a class="nav-link" id="v-pills-product-tab" data-toggle="pill" href="#v-pills-" role="tab" aria-controls="v-pills-" aria-selected="false">退貨管理</a>
+                        <a class="nav-link" id="v-pills-product-tab" data-toggle="pill" href="#v-pills-" role="tab" aria-controls="v-pills-" aria-selected="false">設定優惠活動</a>
+                        <a class="nav-link" id="v-pills-product-tab" data-toggle="pill" href="#v-pills-" role="tab" aria-controls="v-pills-" aria-selected="false">等級機制</a>
                         <a class="nav-link" id="v-pills-myData-tab" data-toggle="pill" href="#v-pills-myData" role="tab" aria-controls="v-pills-myData" aria-selected="false">銷售數據</a>
                     </div>
                 </div>
             </div>
-            <div id="div-middle" class="col-md-6">
+            <div id="div-middle" class="col-md-9">
                 <div class="row">
                     <div class="col">
                         <div class="tab-content" id="v-pills-tabContent">
@@ -118,145 +122,186 @@
 
                             </div>
                             <div class="tab-pane fade" id ="v-pills-product" role="tabpanel" aria-labelledby="v-pills-product-tab">
-                            <div class="container">
+                            
+                                <div class="container">
+                                    <h1>Product CRUD</h1>
+                                    <a class="btn btn-success" href="javascript:void(0)" id="createNewProduct"> Create New Product</a>
+                                    <a class="btn btn-primary" href="javascript:void(0)" id="onMarket" data-table="products">上架</a>
+                                    <a class="btn btn-danger" href="javascript:void(0)" id="takeOff" data-table="products">下架</a>
+                                    <select id="sel" data-table="products">
+                                        <option value="">查詢分類</option>
+                                        
+                                    </select>
+                                    <table id="myProducts" class="table table-bordered data-table">
 
-<h1>Product CRUD</h1>
+                                        <thead>
 
-<a class="btn btn-success" href="javascript:void(0)" id="createNewProduct"> Create New Product</a>
-<a class="btn btn-primary" href="javascript:void(0)" id="onMarket">上架</a>
-<a class="btn btn-danger" href="javascript:void(0)" id="takeOff">下架</a>
-<select id="sel">
-    <option value="">查詢分類</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-</select>
-<table id="myProducts" class="table table-bordered data-table">
+                                            <tr>
+                                                <th><input type="checkbox" name="chkAll" /> </th>
+                                                <th>No</th>
+                                                <th>Name</th>
+                                                <th>Img</th>
+                                                <th>onMarket</th>
+                                                <th>Category</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>QuantitySold</th>
+                                                <th>Descriptions</th>
+                                                <th width="100px">Action</th>
+                                            </tr>
 
-    <thead>
+                                        </thead>
 
-        <tr>
-            <th><input type="checkbox" name="chkAll" /> </th>
-            <th>No</th>
-            <th>Name</th>
-            <th>Img</th>
-            <th>onMarket</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>QuantitySold</th>
-            <th>Descriptions</th>
-            <th width="280px">Action</th>
-        </tr>
+                                        <tbody>
 
-    </thead>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th><input type="checkbox" name="chkAll" /> </th>
+                                                <th>No</th>
+                                                <th>Name</th>
+                                                <th>Img</th>
+                                                <th>onMarket</th>
+                                                <th>Category</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>QuantitySold</th>
+                                                <th>Descriptions</th>
+                                                <th width="280px">Action</th>
+                                            </tr>
 
-    <tbody>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                    <div class="modal fade" id="ajaxProductModel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="productModelHeading"></h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="productForm" name="productForm" class="form-horizontal">
+                                                        <input type="hidden" name="product_id" id="product_id">
+                                                        <div class="form-group">
+                                                            <label for="name" class="col-sm-2 control-label">Name</label>
+                                                            <div class="col-sm-12">
+                                                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
+                                                            </div>
+                                                        </div>
 
-    </tbody>
-    <tfoot>
-        <tr>
-            <th><input type="checkbox" name="chkAll" /> </th>
-            <th>No</th>
-            <th>Name</th>
-            <th>Img</th>
-            <th>onMarket</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>QuantitySold</th>
-            <th>Descriptions</th>
-            <th width="280px">Action</th>
-        </tr>
+                                                        <!-- <div class="form-group">
+                                                            <label for="img" class="col-sm-2 control-label">Img</label>
+                                                            <div class="col-sm-12">
+                                                                <input type="text" class="form-control" id="img" name="img" placeholder="Enter Img" value="" maxlength="50" required="">
+                                                            </div>
+                                                        </div> -->
 
-    </tfoot>
-</table>
+                                                        <div class="form-group">
+                                                            <label for="category" class="col-sm-2 control-label">Category</label>
+                                                            <div class="col-sm-12">
+                                                                <input type="text" class="form-control" id="category" name="category" placeholder="Enter Category" value="" maxlength="50" required="">
+                                                            </div>
+                                                        </div>
 
-</div>
+                                                        <div class="form-group">
+                                                            <label for="price" class="col-sm-2 control-label">Price</label>
+                                                            <div class="col-sm-12">
+                                                                <input type="text" class="form-control" id="price" name="price" placeholder="Enter Price" value="" maxlength="50" required="">
+                                                            </div>
+                                                        </div>
 
+                                                        <div class="form-group">
+                                                            <label for="quantity" class="col-sm-2 control-label">Quantity</label>
+                                                            <div class="col-sm-12">
+                                                                <input type="text" class="form-control" id="quantity" name="quantity" placeholder="Enter Quantity" value="" maxlength="50" required="">
+                                                            </div>
+                                                        </div>
 
+                                                        <div class="form-group">
+                                                            <label for="quantitySold" class="col-sm-2 control-label">QuantitySold</label>
+                                                            <div class="col-sm-12">
+                                                                <input type="text" class="form-control" id="quantitySold" name="quantitySold" placeholder="Enter QuantitySold" value="" maxlength="50" required="">
+                                                            </div>
+                                                        </div>
 
-<div class="modal fade" id="ajaxModel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modelHeading"></h4>
-            </div>
-            <div class="modal-body">
-                <form id="productForm" name="productForm" class="form-horizontal">
-                <input type="hidden" name="product_id" id="product_id">
-                    <div class="form-group">
-                        <label for="name" class="col-sm-2 control-label">Name</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
-                        </div>
-                    </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">Descriptions</label>
+                                                            <div class="col-sm-12">
+                                                                <textarea id="description" name="description" required="" placeholder="Enter Descriptions" class="form-control"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-offset-2 col-sm-10">
+                                                            <a class="btn btn-primary mb-2 saveBtn" data-table="products" href="javascript:void(0)" > Save Changes</a>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                               
+                            </div>
+                            <div class="tab-pane fade" id ="v-pills-category" role="tabpanel" aria-labelledby="v-pills-category-tab">
+                            
+                                <div class="container">
+                                    <h1>Categories CRUD</h1>
+                                    <form class="form-inline" id = "categoryForm">
+                                        <div class="form-group mb-2">
+                                            <label for="staticCaretoryText" class="sr-only">新增類別</label>
+                                            <input type="text"  readonly class="form-control-plaintext" id="staticCaretoryText" value="新增類別">
+                                        </div>
+                                        <div class="form-group mx-sm-3 mb-2">
+                                            <label for="inputCaretory" class="sr-only"></label>
+                                            <input type="text" name="name" class="form-control" id="inputCaretory" placeholder="名稱">
+                                        </div>
+                                        <a class="btn btn-primary mb-2" href="javascript:void(0)" id="createNewCategory"> 送出</a>
+                                        
+                                    </form>
+                                    <!-- <select id="sel">
+                                        <option value="">查詢分類</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                    </select> -->
+                                    <table id="myCategory" class="table table-bordered ">
+                                        <thead>
+                                            <tr>
+                                                <th><input type="checkbox" name="chkAll" /> </th>
+                                                <th>No</th>
+                                                <th>Name</th>
+                                                <th width="280px">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                    <!-- <div class="form-group">
-                        <label for="img" class="col-sm-2 control-label">Img</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="img" name="img" placeholder="Enter Img" value="" maxlength="50" required="">
-                        </div>
-                    </div> -->
-
-                    <div class="form-group">
-                        <label for="category" class="col-sm-2 control-label">Category</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="category" name="category" placeholder="Enter Category" value="" maxlength="50" required="">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="price" class="col-sm-2 control-label">Price</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="price" name="price" placeholder="Enter Price" value="" maxlength="50" required="">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="quantity" class="col-sm-2 control-label">Quantity</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="quantity" name="quantity" placeholder="Enter Quantity" value="" maxlength="50" required="">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="quantitySold" class="col-sm-2 control-label">QuantitySold</label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="quantitySold" name="quantitySold" placeholder="Enter QuantitySold" value="" maxlength="50" required="">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-
-                        <label class="col-sm-2 control-label">Descriptions</label>
-
-                        <div class="col-sm-12">
-
-                            <textarea id="description" name="description" required="" placeholder="Enter Descriptions" class="form-control"></textarea>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <div class="col-sm-offset-2 col-sm-10">
-
-                    <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
-
-                    </button>
-
-                    </div>
-
-                </form>
-
-            </div>
-
-        </div>
-
-    </div>
-</div>
-
+                                        </tbody>
+                                        <tfoot>
+                                        
+                                        </tfoot>
+                                    </table>
+                                    </div>
+                                    <div class="modal fade" id="ajaxCategoryModel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="categoryModelHeading"></h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="categoryForm2" name="categoryForm" class="form-horizontal">
+                                                        <input type="hidden" name="id" id="id">
+                                                        <div class="form-group">
+                                                            <label for="name" class="col-sm-2 control-label">Name</label>
+                                                            <div class="col-sm-12">
+                                                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-offset-2 col-sm-10">
+                                                            <a class="btn btn-primary mb-2 saveBtn" data-table="category" href="javascript:void(0)" > Save Changes</a>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="tab-pane fade" id="v-pills-myData" role="tabpanel" aria-labelledby="v-pills-myData-tab">
                                 <div class="row">
@@ -277,7 +322,7 @@
                 </div>
 
             </div>
-            <div id="div-right" class="col-md-4">
+            <div id="div-right" class="col-md-1">
                 <div id="listDiv">
 
                 </div>
@@ -286,13 +331,13 @@
     </div>
     @push('scripts')
     <script src="{{ asset('js/product.js') }}"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />
-    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+ 
 @endpush
 @endsection

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Product;
 use DataTables;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 class ProductAjaxController extends Controller
 {
 
@@ -24,22 +24,21 @@ class ProductAjaxController extends Controller
 
         if ($request->ajax()) {
             $data = Product::latest()->get();
-
-            return Datatables::of($data)
-                ->addIndexColumn()
-
+            $data2 = DB::select('SELECT p.productID,p.name,GROUP_CONCAT(c.name) as category,p.quantity,p.quantitySold ,p.price,p.description,p.img,p.onMarket FROM `products` as p INNER JOIN products_categories as pc INNER JOIN categories as c on p.productID = pc.product_id and pc.category_id = c.id GROUP BY p.productID');
+            return Datatables::of($data2)
+                //->addIndexColumn()
+                
                 ->addColumn('check', function ($row) {
                     $check = '<input type="checkbox" data-id="' . $row->productID . '">';
                     return $check;
                 })
-
                 ->addIndexColumn()
 
                 ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->productID . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Edit</a>';
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-table="products" data-id="' . $row->productID . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Edit</a>';
 
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->productID . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteProduct">Delete</a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="products" data-id="' . $row->productID . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteProduct">Delete</a>';
 
                     return $btn;
 
@@ -59,7 +58,7 @@ class ProductAjaxController extends Controller
 
         }
 
-        return view('backend.productAjax', compact('products'));
+        return view('backend.home', compact('products'));
 
     }
 
