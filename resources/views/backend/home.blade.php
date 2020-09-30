@@ -199,7 +199,11 @@
                                                         <div class="form-group">
                                                             <label for="category" class="col-sm-2 control-label">Category</label>
                                                             <div class="col-sm-12">
-                                                                <input type="text" class="form-control" id="category" name="category" placeholder="Enter Category" value="" maxlength="50" required="">
+                                                            <select class ="selectpicker" multiple   id="form-sel" data-table="products" >
+                                                                
+                                                            </select>
+                                                            <!-- <input type="hidden" name="category" id="category"> -->
+                                                                <!-- <input type="text" class="form-control" id="category" name="category" placeholder="Enter Category" value="" maxlength="50" required=""> -->
                                                             </div>
                                                         </div>
 
@@ -267,7 +271,7 @@
                                                 <th><input type="checkbox" name="chkAll" /> </th>
                                                 <th>No</th>
                                                 <th>Name</th>
-                                                <th width="280px">Action</th>
+                                                <th width="320px">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -306,26 +310,16 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h4 class="modal-title" id="categoryModelHeading"></h4>
+                                                    
+                                                    <input type="hidden" name="id" >
                                                 </div>
                                                 <div class="modal-body">
                                                     <div id ="showBox" class="row pre-scrollable ">
-                                                        <div class="product col-md-4 " style="padding-bottom: 1.25rem;">
-                                                            <div class="card bg-default">
-                                                                <h5 class="card-header">
-                                                                    HHH
-                                                                </h5>
-                                                                <div class="card-body">
-                                                                    <img class="img-fluid" src="data:image/jpeg;base64," >
-                                                                    <p class="card-text">
-                                                                        ppp
-                                                                    </p>
-                                                                </div>
-                                                                <div class="card-footer ">
-                                                                    Card footer
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                       
                                                     </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a class="btn btn-primary mb-2" href="javascript:void(0)" id="setProductCategory"> 送出</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -367,6 +361,8 @@
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
- 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="{{ asset('css/my.css') }}">
 @endpush
 @endsection

@@ -7,10 +7,14 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('home', 'HomeController@index')->name('home');
-Route::get('/load_product', 'HtmlController@loadProduct');
-Route::post('/onOrOff', 'ProductAjaxController@onOrOff');
+Route::get('load_product', 'HtmlController@loadProduct');
+//--
 Route::resource('home/ajaxproducts', 'ProductAjaxController');
 Route::resource('home/ajaxcategory', 'CategoryAjaxController');
-Route::get('/getCategoryData', 'CategoryAjaxController@getCategoryData');
-//Route::resource('ajaxproducts', 'ProductAjaxController');
-//Route::resource('home/ajaxproducts', 'ProductAjaxController');
+//--
+Route::get('getCategoryData', 'CategoryAjaxController@getCategoryData');
+Route::post('setProductCategory', 'CategoryAjaxController@setProductCategory');
+
+//--
+Route::post('getProductData', 'ProductAjaxController@getProductData');
+Route::post('onOrOff', 'ProductAjaxController@onOrOff');

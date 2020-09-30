@@ -6,6 +6,7 @@ use App\Product;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 class ProductAjaxController extends Controller
 {
 
@@ -26,8 +27,8 @@ class ProductAjaxController extends Controller
             $data = Product::latest()->get();
             $data2 = DB::select('SELECT p.productID,p.name,GROUP_CONCAT(c.name) as category,p.quantity,p.quantitySold ,p.price,p.description,p.img,p.onMarket FROM `products` as p INNER JOIN products_categories as pc INNER JOIN categories as c on p.productID = pc.product_id and pc.category_id = c.id GROUP BY p.productID');
             return Datatables::of($data2)
-                //->addIndexColumn()
-                
+            //->addIndexColumn()
+
                 ->addColumn('check', function ($row) {
                     $check = '<input type="checkbox" data-id="' . $row->productID . '">';
                     return $check;
@@ -62,6 +63,21 @@ class ProductAjaxController extends Controller
 
     }
 
+    public function getProductData(Request $request)
+    {
+
+        if (isset($request->id)) {
+            $data = Product::where('id', '=', $request->id)->firstOrFail();
+        } else {
+            $data = Product::all();
+        }
+
+        foreach ($data as $key => $value) {
+            //echo $value->name;
+            $value->img = base64_encode($value->img);
+        }
+        return response()->json($data);
+    }
     /**
 
      * Store a newly created resource in storage.
@@ -113,7 +129,6 @@ class ProductAjaxController extends Controller
         return response()->json($product);
     }
 
-    
     /**
      * on the market or take off
      *
