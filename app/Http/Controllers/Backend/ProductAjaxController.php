@@ -67,11 +67,14 @@ class ProductAjaxController extends Controller
     {
 
         if (isset($request->id)) {
-            $data = Product::where('id', '=', $request->id)->firstOrFail();
+            $data = DB::table('products')
+                ->join('products_categories', 'products.productID', '=', 'products_categories.product_id')
+                ->where('products_categories.category_id', '=',$request->id)
+                ->get();
         } else {
             $data = Product::all();
         }
-
+        
         foreach ($data as $key => $value) {
             //echo $value->name;
             $value->img = base64_encode($value->img);

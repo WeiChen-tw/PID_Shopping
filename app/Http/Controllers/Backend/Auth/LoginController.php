@@ -1,39 +1,29 @@
 <?php
-
 namespace App\Http\Controllers\Backend\Auth;
 
-use App\Http\Controllers\Backend\Controller;
+use App\Http\Controllers\Frontend\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
     protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware('guest:admin')->except('logout');
+    }
+    public function showLoginForm()
+    {
+        return view('backend.auth.login');
+    }
+    // public function username()
+    // {
+    //     return 'name';
+    // }
+    //指定guard admin -> 對應 config/auth.php 設定的'admin'參數（含資料表）
+    protected function guard()
+    {
+        return Auth::guard('admin');
     }
 }

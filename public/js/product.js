@@ -68,15 +68,7 @@ $(document).ready(function () {
 
     })
 
-    //get select option data
-    $.get("./home/ajaxcategory", function (data) {
-        $.each(data.data, function (index, arr) {
-            $("#sel").append('<option value="' + arr.name + '">' + arr.name + '</option>')
-            $("#form-sel").append('<option value="' + arr.name + '">' + arr.name + '</option>')
-        })
-        $("#form-sel").selectpicker('refresh');
-    })
-
+   
     //select category change product list
     $('#sel').on('change', function () {
         console.log($(this).data('table'));
@@ -102,6 +94,17 @@ $(document).ready(function () {
         $('#productForm').trigger("reset");
         $('#modelProductHeading').html("Create New Product");
         $('#ajaxProductModel').modal('show');
+         //get select option data
+        $.get("./home/ajaxcategory", function (data) {
+            $("#sel").empty();
+            $("#form-sel").empty();
+            $.each(data.data, function (index, arr) {
+                $("#sel").append('<option value="' + arr.name + '">' + arr.name + '</option>')
+                $("#form-sel").append('<option value="' + arr.name + '">' + arr.name + '</option>')
+            })
+            $("#form-sel").selectpicker('refresh');
+        })
+
     });
 
     function checkboxAction(table_name, action) {
@@ -243,6 +246,7 @@ $(document).ready(function () {
             //url: "{{ route('ajaxproducts.store') }}"+'/'+product_id,
             url: "./home/ajax" + table_name + '/' + id,
             success: function (data) {
+                alert(data.success);
                 table.draw();
             },
             error: function (data) {
@@ -252,31 +256,30 @@ $(document).ready(function () {
     });
     //set
     $('body').on('click', '.setProduct', function () {
-        $("#showBox").empty();
         
-        let table;
-        //let table_name = $(this).data("table");
         let modal_name = ajaxProductCategoryModel;
         let id = $(this).data("id");
-        $("#setProductCategory").attr('data-category_id',id);
-
+        $("#showBox").empty();
+        $("#setProductCategory").attr('data-category_id', id);
+        $("#ProductCategoryModelHeading").html('新增分類商品');
         $(modal_name).modal('show');
+
         $.post("./getProductData", function (data) {
             $.each(data, function (index, arr) {
                 let cardBody;
-                if(arr.img!=''){
-                    cardBody=`<img class="img-fluid" src="data:image/jpeg;base64,`+ arr.img + `" ></img>`;
-                }else{
+                if (arr.img != '') {
+                    cardBody = `<img class="img-fluid" src="data:image/jpeg;base64,` + arr.img + `" ></img>`;
+                } else {
                     cardBody = `<h3>No Image</h3>`
                 }
                 $("#showBox").append(` <div class="product col-md-4 " style="padding-bottom: 1.25rem;">
-                        <div class="card bg-default" data-product_id="`+ arr.productID+`">
+                        <div class="card bg-default" data-product_id="`+ arr.productID + `">
                             <h5 class="card-header">`
                     + arr.name +
                     `</h5>
                             <div class="card-body">`
-                                +cardBody+
-                                `<p class="card-text">`
+                    + cardBody +
+                    `<p class="card-text">`
                     + arr.description +
                     `</p>
                             </div>
@@ -288,35 +291,38 @@ $(document).ready(function () {
                 );
             })
         })
-        
+
     });
-    
+
     $('body').on('click', '.removeProduct', function () {
-        $("#showBox").empty();
-        
-        let table;
-        //let table_name = $(this).data("table");
+
         let modal_name = ajaxProductCategoryModel;
         let id = $(this).data("id");
-        $("#setProductCategory").attr('data-category_id',id);
-
+        $("#showBox").empty();
+        $("#setProductCategory").attr('data-category_id', id);
         $(modal_name).modal('show');
-        $.post("./getProductData",{'id':id}, function (data) {
+        $("#ProductCategoryModelHeading").html('移除分類商品');
+
+        $.post("./getProductData", { 'id': id }, function (data) {
+            if (data.length == 0) {
+                $("#showBox").append(`<h3>該分類查無商品</h3`);
+            }
+            
             $.each(data, function (index, arr) {
                 let cardBody;
-                if(arr.img!=''){
-                    cardBody=`<img class="img-fluid" src="data:image/jpeg;base64,`+ arr.img + `" ></img>`;
-                }else{
+                if (arr.img != '') {
+                    cardBody = `<img class="img-fluid" src="data:image/jpeg;base64,` + arr.img + `" ></img>`;
+                } else {
                     cardBody = `<h3>No Image</h3>`
                 }
                 $("#showBox").append(` <div class="product col-md-4 " style="padding-bottom: 1.25rem;">
-                        <div class="card bg-default" data-product_id="`+ arr.productID+`">
+                        <div class="card bg-default" data-product_id="`+ arr.productID + `">
                             <h5 class="card-header">`
                     + arr.name +
                     `</h5>
                             <div class="card-body">`
-                                +cardBody+
-                                `<p class="card-text">`
+                    + cardBody +
+                    `<p class="card-text">`
                     + arr.description +
                     `</p>
                             </div>
@@ -328,65 +334,72 @@ $(document).ready(function () {
                 );
             })
         })
-        
     });
-    
-    let selectCardArr=[];
-    $('body').off('click','.card').on('click','.card',function(){
-       
+
+    let selectCardArr = [];
+    $('body').off('click', '.card').on('click', '.card', function () {
+
         $(this).toggleClass('border-danger');
         selectCardArr.push($(this).data('product_id'));
-        console.log($(this),selectCardArr);
+        console.log($(this), selectCardArr);
     })
 
-    $("#setProductCategory").click( function () {
-        let result =new Set(selectCardArr);
+    $("#setProductCategory").click(function () {
+        let result = new Set(selectCardArr);
         result = [...result];
         let category_id = $(this).data('category_id');
-        selectCardArr=[];
+        selectCardArr = [];
         $('.card').removeClass('border-danger');
-        console.log(1,result,selectCardArr);
         $.ajax({
             data: {
-                category_id:category_id,
-                product_id_arr:result
+                category_id: category_id,
+                product_id_arr: result
             },
             url: "./setProductCategory",
             type: "POST",
             dataType: 'json',
             success: function (data) {
-               
-                console.log('succ',data);
+                alert(data.success);
+                console.log('succ', data);
             },
             error: function (data) {
                 console.log('Error:', data);
             }
         });
     });
-   
-    
+
+    $(".closeModal").on('click', function () {
+        $("#ajaxProductCategoryModel").modal('hide')
+        console.log($(this))
+    })
     //---------------------- Category.js -------------------//
     $('#createNewCategory').click(function (e) {
         e.preventDefault();
         $(this).html('Sending..');
         console.log($('#categoryForm').serialize());
-        $.ajax({
-            data: $('#categoryForm').serialize(),
-            url: "./home/ajaxcategory",
-            type: "POST",
-            dataType: 'json',
-            success: function (data) {
-                $('#createNewCategory').html('送出');
-                $('#categoryForm').trigger("reset");
-                categoryTable.draw();
-
-                console.log('succ');
-            },
-            error: function (data) {
-                console.log('Error:', data);
-
-            }
-        });
+        if($("#inputCaretory").val().length!=0){
+            $.ajax({
+                data: $('#categoryForm').serialize(),
+                url: "./home/ajaxcategory",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    $('#createNewCategory').html('送出');
+                    $('#categoryForm').trigger("reset");
+                    categoryTable.draw();
+                    alert(data.success);
+                },
+                error: function (data) {
+                    $('#createNewCategory').html('送出');
+                    console.log('Error:', data);
+    
+                }
+            });
+        }else{
+            $('#createNewCategory').html('送出');
+            alert('輸入錯誤');
+        }
+        
     });
 
 })
