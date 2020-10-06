@@ -37,9 +37,9 @@ class ProductAjaxController extends Controller
 
                 ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-table="products" data-id="' . $row->productID . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Edit</a>';
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-table="products" data-id="' . $row->productID . '" data-original-title="Edit" class="edit btn btn-primary btn-sm edit">Edit</a>';
 
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="products" data-id="' . $row->productID . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteProduct">Delete</a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="products" data-id="' . $row->productID . '" data-original-title="Delete" class="btn btn-danger btn-sm delete">Delete</a>';
 
                     return $btn;
 

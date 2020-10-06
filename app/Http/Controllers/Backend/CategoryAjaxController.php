@@ -39,8 +39,8 @@ class CategoryAjaxController extends Controller
 
                 ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-table="category" data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Edit</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="category" data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm deleteProduct">Delete</a>';
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-table="category" data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm edit">Edit</a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="category" data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm delete">Delete</a>';
                     $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="category" data-id="' . $row->id . '" data-original-title="Set" class="btn btn-success btn-sm setProduct">Set Product</a>';
                     $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="category" data-id="' . $row->id . '" data-original-title="Set" class="btn btn-success btn-sm removeProduct">Remove Product</a>';
 

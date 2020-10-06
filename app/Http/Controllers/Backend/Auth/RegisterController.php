@@ -6,7 +6,7 @@ use App\Admin;
 use App\Http\Controllers\Backend\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-
+use Illuminate\Http\Request;
 class RegisterController extends Controller
 {
     /*
@@ -39,7 +39,9 @@ class RegisterController extends Controller
        //$this->middleware('guest');
         $this->middleware('guest:admin');
     }
-
+    public function showRegistrationForm(Request $request) {
+        return view('backend.auth.register');
+    }
     /**
      * Get a validator for an incoming registration request.
      *

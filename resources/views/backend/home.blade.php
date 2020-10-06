@@ -48,15 +48,97 @@
                     <div class="col">
                         <div class="tab-content" id="v-pills-tabContent">
                             <div class="tab-pane fade show active" id="v-pills-management" role="tabpanel" aria-labelledby="v-pills-management-tab">
-                                <form>
-                                    <div id="usersManagement" class="row">
-
-
+                                <div class="container">
+                                        <h1>會員管理</h1>
+                                    <a class="btn btn-danger" href="javascript:void(0)" id="isBan" data-table="user">停權</a>
+                                    <a class="btn btn-primary" href="javascript:void(0)" id="unBan" data-table="user">解除停權</a>
+                                        
+                                    <table id="usersTable" class="display" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th><input type="checkbox" name="chkAll" data-table='#usersTable' /> </th>
+                                                <th>No</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Addr</th>
+                                                <th>Phone</th>
+                                                <th>Coin</th>
+                                                <th>Banned</th>
+                                                <th width="100px">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <!-- User Modal -->
+                                <div class="modal fade" id="ajaxUserModel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="userModelHeading"></h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="userForm" name="userForm" class="form-horizontal">
+                                                    <input type="hidden" name="id" id="id">
+                                                    <div class="form-group">
+                                                        <label for="name" class="col-sm-2 control-label">Name</label>
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="name" class="col-sm-2 control-label">Banned</label>
+                                                        <div class="col-sm-12">
+                                                            <select id="" name='banned' data-table="user">
+                                                                <option value="N">N</option>
+                                                                <option value="Y">Y</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="name" class="col-sm-2 control-label">Password</label>
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control" id="password" name="password" placeholder="Enter Password" value="" maxlength="50" required="">
+                                                        </div>
+                                                    </div><div class="form-group">
+                                                        <label for="name" class="col-sm-2 control-label">Email</label>
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email" value="" maxlength="50" required="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="name" class="col-sm-2 control-label">Addr</label>
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control" id="addr" name="addr" placeholder="Enter Addr" value="" maxlength="50" required="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="name" class="col-sm-2 control-label">Phone</label>
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Phone" value="" maxlength="50" required="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="name" class="col-sm-2 control-label">Coin</label>
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control" id="coin" name="coin" placeholder="Enter Coin" value="" maxlength="50" required="">
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a class="btn btn-primary mb-2 saveBtn" href="javascript:void(0)" data-table="user" id=""> 儲存</a>
+                                                <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" id=""> 關閉</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div id="formFooter">
-                                        <button id="managementButton" class="btn btn-success" type="button" onclick="management()">確認操作</button>
-                                    </div>
-                                </form>
+                                </div>
+                                <!-- END -->
+                            
+                            
+                            
                             </div>
                             <div class="tab-pane fade" id="v-pills-commodity" role="tabpanel" aria-labelledby="v-pills-commodity-tab">
 
@@ -137,7 +219,7 @@
                                         <thead>
 
                                             <tr>
-                                                <th><input type="checkbox" name="chkAll" /> </th>
+                                                <th><input type="checkbox" name="chkAll" data-table='#myProducts'/> </th>
                                                 <th>No</th>
                                                 <th>Name</th>
                                                 <th>Img</th>
@@ -156,20 +238,7 @@
 
                                         </tbody>
                                         <tfoot>
-                                            <tr>
-                                                <th><input type="checkbox" name="chkAll" /> </th>
-                                                <th>No</th>
-                                                <th>Name</th>
-                                                <th>Img</th>
-                                                <th>onMarket</th>
-                                                <th>Category</th>
-                                                <th>Price</th>
-                                                <th>Quantity</th>
-                                                <th>QuantitySold</th>
-                                                <th>Descriptions</th>
-                                                <th width="280px">Action</th>
-                                            </tr>
-
+                                            
                                         </tfoot>
                                     </table>
                                 </div>
@@ -282,6 +351,8 @@
                                         </tfoot>
                                     </table>
                                     </div>
+
+                                    <!-- Category Modal -->
                                     <div class="modal fade" id="ajaxCategoryModel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -305,6 +376,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- END -->
+
+                                    <!-- Product Modal -->
                                     <div class="modal fade" id="ajaxProductCategoryModel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -325,6 +399,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- END -->
+
+                                   
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="v-pills-myData" role="tabpanel" aria-labelledby="v-pills-myData-tab">
@@ -355,14 +432,18 @@
     </div>
     @push('scripts')
     <script src="{{ asset('js/product.js') }}"></script>
-     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="{{ asset('js/table.js') }}"></script>
+    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script> -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"> -->
+    
     <link rel="stylesheet" href="{{ asset('css/my.css') }}">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <!-- <script>$.fn.selectpicker.Constructor.BootstrapVersion = '4';</script> -->
 @endpush
 @endsection
