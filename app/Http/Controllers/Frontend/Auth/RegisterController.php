@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Frontend\Auth;
 
-use App\User;
 use App\Http\Controllers\Frontend\Controller;
-use Illuminate\Support\Facades\Validator;
+use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 class RegisterController extends Controller
 {
     /*
@@ -18,7 +19,7 @@ class RegisterController extends Controller
     | validation and creation. By default this controller uses a trait to
     | provide this functionality without requiring any additional code.
     |
-    */
+     */
 
     use RegistersUsers;
 
@@ -39,7 +40,8 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    public function showRegistrationForm(Request $request) {
+    public function showRegistrationForm(Request $request)
+    {
         return view('frontend.auth.register');
     }
     /**
@@ -56,7 +58,11 @@ class RegisterController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'addr' => 'required|string|max:255',
             'phone' => 'required|string|min:6',
-            
+            'captcha' => 'required|captcha',
+
+        ], [
+            'captcha.required' => '驗證碼不能為空',
+            'captcha.captcha' => '請輸入正確的驗證碼',
         ]);
     }
 

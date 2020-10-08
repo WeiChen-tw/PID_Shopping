@@ -57,20 +57,26 @@ class CategoryAjaxController extends Controller
 
     }
 
-    public function getCategoryData(Request $request)
-    {
-        $selectData = DB::select('SELECT * FROM categories');
-        return response()->json($selectData);
-    }
+    
     public function setProductCategory(Request $request)
     {
-        foreach ($request->product_id_arr as $key => $product_id) {
-            Products_Categories::updateOrCreate(
-                ['product_id' => $product_id, 'category_id' => $request->category_id]
-            );
+        if($request->action=='add'){
+            foreach ($request->product_id_arr as $key => $product_id) {
+                Products_Categories::updateOrCreate(
+                    ['product_id' => $product_id, 'category_id' => $request->id]
+                );
+            }
+            return response()->json(['success' => 'Product Category Add Successfully.']);
+        }else if($request->action=='remove'){
+            foreach ($request->product_id_arr as $key => $product_id) {
+                Products_Categories::where('product_id',$product_id)
+                    ->where('category_id',$request->id)
+                    ->delete();
+            }
+            return response()->json(['success' => 'Product Category Remove Successfully.']);
         }
         
-        return response()->json(['success' => 'Product Category Set successfully.']);
+        
     }
     /**
      * Store a newly created resource in storage.

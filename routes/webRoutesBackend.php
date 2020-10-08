@@ -12,9 +12,12 @@ Route::get('load_product', 'HtmlController@loadProduct');
 Route::resource('home/ajaxproducts', 'ProductAjaxController');
 Route::resource('home/ajaxcategory', 'CategoryAjaxController');
 Route::resource('home/ajaxuser', 'UserAjaxController');
+Route::resource('home/ajaxdiscount', 'DiscountAjaxController');
 //--
-Route::get('getCategoryData', 'CategoryAjaxController@getCategoryData');
 Route::post('setProductCategory', 'CategoryAjaxController@setProductCategory');
+
+//--
+Route::post('setProductDiscount', 'DiscountAjaxController@setProductDiscount');
 
 //--
 Route::post('getProductData', 'ProductAjaxController@getProductData');

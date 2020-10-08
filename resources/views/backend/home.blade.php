@@ -24,21 +24,20 @@
 <div class="container-fluid">
         <div class="row">
             <div class="otherHeader col-md-12">
-                
+
             </div>
-            
+
         </div>
         <div class="body row">
             <div class="col-md-2">
                 <div class="col">
                     <div class="nav flex-column nav-pills " id="v-pills-tab" role="tablist" aria-orientation="vertical">
                         <a class="nav-link active" id="v-pills-management-tab" data-toggle="pill" href="#v-pills-management" role="tab" aria-controls="v-pills-management" aria-selected="true">會員管理</a>
-                        <a class="nav-link" id="v-pills-commodity-tab" data-toggle="pill" href="#v-pills-commodity" role="tab" aria-controls="v-pills-commodity" aria-selected="false">我的商品</a>
                         <a class="nav-link" id="v-pills-product-tab" data-toggle="pill" href="#v-pills-product" role="tab" aria-controls="v-pills-product" aria-selected="false">庫存管理</a>
                         <a class="nav-link" id="v-pills-category-tab" data-toggle="pill" href="#v-pills-category" role="tab" aria-controls="v-pills-category" aria-selected="false">商品分類管理</a>
-                        <a class="nav-link" id="v-pills-product-tab" data-toggle="pill" href="#v-pills-" role="tab" aria-controls="v-pills-" aria-selected="false">退貨管理</a>
-                        <a class="nav-link" id="v-pills-product-tab" data-toggle="pill" href="#v-pills-" role="tab" aria-controls="v-pills-" aria-selected="false">設定優惠活動</a>
-                        <a class="nav-link" id="v-pills-product-tab" data-toggle="pill" href="#v-pills-" role="tab" aria-controls="v-pills-" aria-selected="false">等級機制</a>
+                        <a class="nav-link" id="v-pills-return-tab" data-toggle="pill" href="#v-pills-return" role="tab" aria-controls="v-pills-return" aria-selected="false">退貨管理</a>
+                        <a class="nav-link" id="v-pills-discount-tab" data-toggle="pill" href="#v-pills-discount" role="tab" aria-controls="v-pills-discount" aria-selected="false">設定優惠活動</a>
+                        <a class="nav-link" id="v-pills-experience-tab" data-toggle="pill" href="#v-pills-experience" role="tab" aria-controls="v-pills-experience" aria-selected="false">等級機制</a>
                         <a class="nav-link" id="v-pills-myData-tab" data-toggle="pill" href="#v-pills-myData" role="tab" aria-controls="v-pills-myData" aria-selected="false">銷售數據</a>
                     </div>
                 </div>
@@ -52,7 +51,7 @@
                                         <h1>會員管理</h1>
                                     <a class="btn btn-danger" href="javascript:void(0)" id="isBan" data-table="user">停權</a>
                                     <a class="btn btn-primary" href="javascript:void(0)" id="unBan" data-table="user">解除停權</a>
-                                        
+
                                     <table id="usersTable" class="display" style="width:100%">
                                         <thead>
                                             <tr>
@@ -68,7 +67,7 @@
                                             </tr>
                                         </thead>
                                         <tfoot>
-                                            
+
                                         </tfoot>
                                     </table>
                                 </div>
@@ -136,75 +135,13 @@
                                     </div>
                                 </div>
                                 <!-- END -->
-                            
-                            
-                            
-                            </div>
-                            <div class="tab-pane fade" id="v-pills-commodity" role="tabpanel" aria-labelledby="v-pills-commodity-tab">
 
-                                <!-- autocomplete='off' -->
-                                <form id="putForm" enctype="multipart/form-data" method="post" action="/PID_Assignment/core/Upload.php" onsubmit="return false">
-                                    <div class="form-group row">
-                                        <label for="name" class="col-2 col-form-label">商品名稱</label>
-                                        <div class="col-10">
-                                            <input id="name" name="name" type="text" class="form-control" required="required">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="category" class="col-2 col-form-label">類別</label>
-                                        <div class="col-10">
-                                            <select id="category" name="category" class="custom-select" aria-describedby="categoryHelpBlock" required="required">
-                                                <option value="1">本季主打</option>
-                                                <option value="2">經典火車</option>
-                                            </select>
-                                            <span id="categoryHelpBlock" class="form-text text-muted">請選擇分類</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="quantity" class="col-2 col-form-label">數量</label>
-                                        <div class="col-10">
-                                            <input id="quantity" name="quantity" placeholder="1" type="text" required="required" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="price" class="col-2 col-form-label">價格</label>
-                                        <div class="col-10">
-                                            <input id="price" name="price" placeholder="$" type="text" class="form-control" required="required">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="description" class="col-2 col-form-label">商品描述</label>
-                                        <div class="col-10">
-                                            <textarea id="description" name="description" cols="40" rows="5" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-2 col-form-label" for="Shipping">運費</label>
-                                        <div class="col-10">
-                                            <input id="Shipping" name="Shipping" type="text" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleFormControlFile1">預覽商品圖片</label>
-                                        <div id="previewDiv"></div>
-                                        <div class="offset-4 col-10">
-                                            <input id="uploadImage" type="file" name="image" class="custom-file-input">
-                                            <label class="custom-file-label" for="image" style="width:200px">Choose file...</label>
-                                        </div>
 
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="offset-4 col-10">
-                                            <button id="uploadButton" type="button" class="btn btn-primary" onclick="upload()">確定上架</button>
-                                            <button id="cancelButton" type="button" class="btn btn-primary" onclick="cancel()">取消</button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <button id="showButton" type="button" class="btn btn-success" value="">已上架商品</button>
 
                             </div>
+                            
                             <div class="tab-pane fade" id ="v-pills-product" role="tabpanel" aria-labelledby="v-pills-product-tab">
-                            
+
                                 <div class="container">
                                     <h1>Product CRUD</h1>
                                     <a class="btn btn-success" href="javascript:void(0)" id="createNewProduct"> Create New Product</a>
@@ -212,7 +149,7 @@
                                     <a class="btn btn-danger" href="javascript:void(0)" id="takeOff" data-table="products">下架</a>
                                     <select id="sel" data-table="products">
                                         <option value="">查詢分類</option>
-                                        
+
                                     </select>
                                     <table id="myProducts" class="table table-bordered data-table">
 
@@ -238,7 +175,7 @@
 
                                         </tbody>
                                         <tfoot>
-                                            
+
                                         </tfoot>
                                     </table>
                                 </div>
@@ -269,7 +206,7 @@
                                                             <label for="category" class="col-sm-2 control-label">Category</label>
                                                             <div class="col-sm-12">
                                                             <select class ="selectpicker" multiple   id="form-sel" data-table="products" >
-                                                                
+
                                                             </select>
                                                             <!-- <input type="hidden" name="category" id="category"> -->
                                                                 <!-- <input type="text" class="form-control" id="category" name="category" placeholder="Enter Category" value="" maxlength="50" required=""> -->
@@ -311,10 +248,10 @@
                                             </div>
                                         </div>
                                     </div>
-                               
+
                             </div>
                             <div class="tab-pane fade" id ="v-pills-category" role="tabpanel" aria-labelledby="v-pills-category-tab">
-                            
+
                                 <div class="container">
                                     <h1>Categories CRUD</h1>
                                     <form class="form-inline" id = "categoryForm">
@@ -327,7 +264,7 @@
                                             <input type="text" name="name" class="form-control" id="inputCaretory" placeholder="名稱">
                                         </div>
                                         <a class="btn btn-primary mb-2" href="javascript:void(0)" id="createNewCategory"> 送出</a>
-                                        
+
                                     </form>
                                     <!-- <select id="sel">
                                         <option value="">查詢分類</option>
@@ -347,10 +284,10 @@
 
                                         </tbody>
                                         <tfoot>
-                                        
+
                                         </tfoot>
                                     </table>
-                                    </div>
+                                </div>
 
                                     <!-- Category Modal -->
                                     <div class="modal fade" id="ajaxCategoryModel" aria-hidden="true">
@@ -377,45 +314,113 @@
                                         </div>
                                     </div>
                                     <!-- END -->
+                                   
+                                
+                            </div>
+                            <div class="tab-pane fade" id ="v-pills-return" role="tabpanel" aria-labelledby="v-pills-return-tab">
+                                <div class="container">
+                                    <h1>1</h1>
+                                   
+                                   
+                                    
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id ="v-pills-discount" role="tabpanel" aria-labelledby="v-pills-discount-tab">
+                                <div class="container">
+                                    <h2>設定優惠活動</h2>
+                                    <form class="form-inline" id = "discountForm">
+                                        <div class="form-group mx-sm-3 mb-2">
+                                            <label for="method" class="">Method</label>
+                                            <div class="">
+                                                <select id="" name='method' class="form-control" data-table="discount">
+                                                    <option value="1">滿額贈購物金</option>
+                                                    <option value="2">滿額額折扣%</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mx-sm-3 mb-2">
+                                            <label for="inputTotal" class="">滿額</label>
+                                            <input type="text" name="total" class="form-control" id="inputTotal" placeholder="$">
+                                        </div>
+                                        
+                                        <div class="form-group mx-sm-3 mb-2">
+                                            <label for="inputTotal" class="">優惠</label>
+                                            <input type="text" name="discount" class="form-control" id="inputDiscount" placeholder="">
+                                        </div>
+                                        <a class="form-control btn btn-primary mb-2" href="javascript:void(0)" id="createNewDiscount"> 送出</a>
 
-                                    <!-- Product Modal -->
-                                    <div class="modal fade" id="ajaxProductCategoryModel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title" id="ProductCategoryModelHeading"></h4>
-                                                    
-                                                    <input type="hidden" name="id" >
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div id ="showBox" class="row pre-scrollable ">
-                                                       
+                                    </form>
+                                    <table id="discountTable" class="table table-bordered " style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Method</th>
+                                                <th>Total</th>
+                                                <th>Discount</th>
+                                                <th width="320px">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                        <tfoot>
+
+                                        </tfoot>
+                                    </table>
+                                <!-- Discount Modal -->
+                                <div class="modal fade" id="ajaxDiscountModel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="discountModelHeading"></h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="discountForm2" name="discountForm2" class="form-horizontal">
+                                                    <input type="hidden" name="id" id="id">
+                
+                                                    <div class="form-group">
+                                                        <label for="method" class="col-sm-2 control-label">Method</label>
+                                                        <div class="col-sm-12">
+                                                            <select id="" name='method' data-table="discount">
+                                                                <option value="1">滿額贈購物金</option>
+                                                                <option value="2">滿額額折扣%</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <a class="btn btn-primary mb-2" href="javascript:void(0)" id="setProductCategory"> 送出</a>
-                                                    <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" id=""> 關閉</a>
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label for="total" class="col-sm-2 control-label">金額</label>
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control" id="" name="total" placeholder="Enter $" value="" maxlength="50" required="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="discount" class="col-sm-2 control-label">優惠</label>
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control" id="" name="discount" placeholder="" value="" maxlength="50" required="">
+                                                        </div>
+                                                    </div>
+                                                
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a class="btn btn-primary mb-2 saveBtn" href="javascript:void(0)" data-table="discount" id=""> 儲存</a>
+                                                <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" id=""> 關閉</a>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- END -->
-
+                                </div>
+                                <!-- END -->
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id ="v-pills-experience" role="tabpanel" aria-labelledby="v-pills-experience-tab">
+                                <div class="container">
+                                    <h1>3</h1>
                                    
+                                   
+                                    
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="v-pills-myData" role="tabpanel" aria-labelledby="v-pills-myData-tab">
-                                <div class="row">
-                                    <h2><label id="label-lineChart">報表類別：最近7天銷售額</label></h2>
-                                </div>
-                                <div class="row">&nbsp;</div>
-                                <div class="row">
-                                    <button id="btn-last7days" class="btn btn-primary">最近7天銷售額</button> &nbsp;
-                                    <button id="btn-last30days" class="btn btn-success">最近30天銷售額</button>
-                                </div>
 
-                                <div id="my_dataviz"></div>
-                            </div>
                         </div>
 
                     </div>
@@ -423,11 +428,33 @@
                 </div>
 
             </div>
-            <div id="div-right" class="col-md-1">
+            <!-- <div id="div-right" class="col-md-1">
                 <div id="listDiv">
 
                 </div>
+            </div> -->
+             <!-- ProductCategory Modal -->
+             <div class="modal fade" id="ajaxProductListModel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="productListModelHeading"></h4>
+
+                            <input type="hidden" name="id" >
+                        </div>
+                        <div class="modal-body">
+                            <div id ="showBox" class="row pre-scrollable ">
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn btn-primary mb-2" href="javascript:void(0)" id="saveProductBtn"> 送出</a>
+                            <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" id=""> 關閉</a>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <!-- END -->
         </div>
     </div>
     @push('scripts')
@@ -441,9 +468,9 @@
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script> -->
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"> -->
-    
+
     <link rel="stylesheet" href="{{ asset('css/my.css') }}">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <!-- <script>$.fn.selectpicker.Constructor.BootstrapVersion = '4';</script> -->
-@endpush
+    @endpush
 @endsection

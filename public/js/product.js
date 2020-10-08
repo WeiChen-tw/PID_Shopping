@@ -10,6 +10,39 @@ $(document).ready(function () {
     let productTable;
     let categoryTable;
     let userTable;
+    let discountTable;
+
+    //會員管理分頁
+   $('#v-pills-management-tab').on('click', function (e) {
+    e.preventDefault()
+    if (userTable) {
+        userTable.destroy();
+    }
+    userTable = $('#usersTable').DataTable( {
+        dom: "Bfrtip",
+        "scrollY": "400px",
+        "scrollX": true,
+        "scrollCollapse": true,
+        processing: true,
+        serverSide: true,
+        ajax: "./home/ajaxuser",
+        columns: [
+            { data: 'check', name: 'check', orderable: false, searchable: false },
+            { data: "id" },
+            { data: 'name', name: 'name' },
+            { data: "email" },
+            { data: "addr" },
+            { data: "phone"}, 
+            { data: "coin"}, 
+            { data: "banned"}, 
+            { data: 'action', name: 'action', orderable: false, searchable: false },
+        ],
+        select: true,
+    } );
+    
+})
+    //初始觸發會員管理分頁
+    $('#v-pills-management-tab').trigger('click');
     //庫存管理分頁
     $('#v-pills-product-tab').on('click', function (e) {
         $.get("./home/ajaxcategory", function (data) {
@@ -60,10 +93,10 @@ $(document).ready(function () {
             categoryTable.destroy();
         }
         categoryTable = $('#myCategory').DataTable({
-            //"scrollY": "400px",
+            "scrollY": "400px",
             //"scrollX": true,
             "scrollCollapse": true,
-            "paging": false,
+            //"paging": false,
             processing: true,
             serverSide: true,
             ajax: "./home/ajaxcategory",
@@ -79,34 +112,40 @@ $(document).ready(function () {
 
     })
 
-    //會員管理分頁
-   $('#v-pills-management-tab').on('click', function (e) {
+    //優惠活動分頁
+    $('#v-pills-discount-tab').on('click', function (e) {
         e.preventDefault()
-        if (userTable) {
-            userTable.destroy();
+        if (discountTable) {
+            discountTable.destroy();
         }
-        userTable = $('#usersTable').DataTable( {
-            dom: "Bfrtip",
+        discountTable = $('#discountTable').DataTable({
+            // "scrollY": "400px",
+            // "scrollX": true,
+            // "scrollCollapse": true,
+            //"paging": false,
             processing: true,
             serverSide: true,
-            ajax: "./home/ajaxuser",
+            ajax: "./home/ajaxdiscount",
             columns: [
-                { data: 'check', name: 'check', orderable: false, searchable: false },
-                { data: "id" },
-                { data: 'name', name: 'name' },
-                { data: "email" },
-                { data: "addr" },
-                { data: "phone"}, 
-                { data: "coin"}, 
-                { data: "banned"}, 
-                { data: 'action', name: 'action', orderable: false, searchable: false },
+                { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                { data: 'null', render: function(data,type,row){
+                    if(row.method=='1'){
+                        return '滿額贈購物金';
+                    }else if(row.method=='2'){
+                        return '滿額額折扣%';
+                    }
+                } },
+                { data: 'total', name: 'total' },
+                { data: 'discount', name: 'discount' },
+                { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             select: true,
-        } );
-        
-    })
-    //初始觸發會員管理分頁
-    $('#v-pills-management-tab').trigger('click');
+
+        });
+
+    });
+
+    
     //select category change product list
     $('#sel').on('change', function () {
         console.log($(this).data('table'));
@@ -207,6 +246,11 @@ $(document).ready(function () {
                 obj.form_name = '#userForm';
                 obj.model_name = '#ajaxUserModel';
                 break;
+            case 'discount':
+                obj.table = discountTable;
+                obj.form_name = '#discountForm2';
+                obj.model_name = '#ajaxDiscountModel';
+                break;
             default:
                 break;
         }
@@ -263,7 +307,18 @@ $(document).ready(function () {
                 console.log(data);
             })
         }
+        else if(obj.table_name == 'discount'){
+            $.get("./home/ajax" + obj.table_name + '/' + id + '/edit', function (data) {
+                $('#discountModelHeading').html("編輯優惠活動內容");
+                $(obj.model_name).modal('show');
+                $(obj.form_name+' input[name=id]').val(data.id);
+                $(obj.form_name+' input[name=total]').val(data.total);
+                $(obj.form_name+' input[name=discount]').val(data.discount);
+                $(obj.form_name+' select[name=method]').val(data.method);
 
+                console.log(data);
+            })
+        }
     });
     //save changes
     $('body').on('click', '.saveBtn', function (e) {
@@ -317,6 +372,8 @@ $(document).ready(function () {
             table = productTable;
         else if (table_name == 'category')
             table = categoryTable;
+        else if (table_name == 'discount')
+            table = discountTable;
 
         $.ajax({
             type: "DELETE",
@@ -335,11 +392,24 @@ $(document).ready(function () {
     //set
     $('body').on('click', '.setProduct', function () {
         
-        let model_name = ajaxProductCategoryModel;
+        let model_name = ajaxProductListModel;
         let id = $(this).data("id");
+        
+        let dataTable = $(this).data("table");
         $("#showBox").empty();
-        $("#setProductCategory").attr('data-category_id', id);
-        $("#ProductCategoryModelHeading").html('新增分類商品');
+        
+       if(dataTable == 'category'){
+            $("#productListModelHeading").html('新增分類商品');
+            $("#saveProductBtn").attr('data-table', 'category');
+       }else if(dataTable == 'discount'){
+            $("#productListModelHeading").html('商品套用優惠活動');
+            $("#saveProductBtn").attr('data-table', 'discount');
+       }else{
+           alert("Error");
+           return;
+       }
+       $("#saveProductBtn").attr('data-id', id);
+       $("#saveProductBtn").attr('data-action', 'add');
         $(model_name).modal('show');
 
         $.post("./getProductData", function (data) {
@@ -351,7 +421,7 @@ $(document).ready(function () {
                     cardBody = `<h3>No Image</h3>`
                 }
                 $("#showBox").append(` <div class="product col-md-4 " style="padding-bottom: 1.25rem;">
-                        <div class="card bg-default" data-product_id="`+ arr.productID + `">
+                        <div class="product-list card bg-default" data-product_id="`+ arr.productID + `">
                             <h5 class="card-header">`
                     + arr.name +
                     `</h5>
@@ -374,16 +444,26 @@ $(document).ready(function () {
 
     $('body').on('click', '.removeProduct', function () {
 
-        let model_name = ajaxProductCategoryModel;
+        let model_name = ajaxProductListModel;
         let id = $(this).data("id");
         $("#showBox").empty();
-        $("#setProductCategory").attr('data-category_id', id);
+        $("#saveProductBtn").attr('data-id', id);
+        $("#saveProductBtn").attr('data-action', 'remove');
         $(model_name).modal('show');
-        $("#ProductCategoryModelHeading").html('移除分類商品');
-
-        $.post("./getProductData", { 'id': id }, function (data) {
+        let dataTable = $(this).data("table");
+        if(dataTable == 'category'){
+            $("#productListModelHeading").html('移除分類商品');
+            $("#saveProductBtn").attr('data-table', 'category');
+       }else if(dataTable == 'discount'){
+            $("#productListModelHeading").html('移除商品套用優惠活動');
+            $("#saveProductBtn").attr('data-table', 'discount');
+       }else{
+           alert("Error");
+           return;
+       }
+        $.post("./getProductData", { 'table':dataTable,'id': id }, function (data) {
             if (data.length == 0) {
-                $("#showBox").append(`<h3>該分類查無商品</h3`);
+                $("#showBox").append(`<h3>查無商品</h3`);
             }
             
             $.each(data, function (index, arr) {
@@ -394,7 +474,7 @@ $(document).ready(function () {
                     cardBody = `<h3>No Image</h3>`
                 }
                 $("#showBox").append(` <div class="product col-md-4 " style="padding-bottom: 1.25rem;">
-                        <div class="card bg-default" data-product_id="`+ arr.productID + `">
+                        <div class="product-list card bg-default" data-product_id="`+ arr.productID + `">
                             <h5 class="card-header">`
                     + arr.name +
                     `</h5>
@@ -415,42 +495,92 @@ $(document).ready(function () {
     });
 
     let selectCardArr = [];
-    $('body').off('click', '.card').on('click', '.card', function () {
+    $('body').off('click', '.product-list').on('click', '.product-list', function () {
 
         $(this).toggleClass('border-danger');
         selectCardArr.push($(this).data('product_id'));
         console.log($(this), selectCardArr);
     })
 
-    $("#setProductCategory").click(function () {
+    $("#saveProductBtn").click(function () {
         let result = new Set(selectCardArr);
         result = [...result];
-        let category_id = $(this).data('category_id');
+        let id = document.querySelector("#saveProductBtn").getAttribute('data-id')
+        let table = document.querySelector("#saveProductBtn").getAttribute('data-table')
+        let action = document.querySelector("#saveProductBtn").getAttribute('data-action')
+
+        let url ;
+        if(table =='category'){
+            url = './setProductCategory'
+        }else if(table=='discount'){
+            url = './setProductDiscount'
+        }else{
+            alert("Error");
+            return;
+        }
         selectCardArr = [];
-        $('.card').removeClass('border-danger');
+        $('.product-list').removeClass('border-danger');
         $.ajax({
             data: {
-                category_id: category_id,
+                id: id,
+                action:action,
                 product_id_arr: result
             },
-            url: "./setProductCategory",
+            url: url,
             type: "POST",
             dataType: 'json',
             success: function (data) {
+                if(action =='remove'){
+                    $("#showBox").empty();
+                    $.post("./getProductData", { 'table':table,'id': id }, function (data) {
+                        if (data.length == 0) {
+                            $("#showBox").append(`<h3>查無商品</h3`);
+                        }
+                        
+                        $.each(data, function (index, arr) {
+                            let cardBody;
+                            if (arr.img != '') {
+                                cardBody = `<img class="img-fluid" src="data:image/jpeg;base64,` + arr.img + `" ></img>`;
+                            } else {
+                                cardBody = `<h3>No Image</h3>`
+                            }
+                            $("#showBox").append(` <div class="product col-md-4 " style="padding-bottom: 1.25rem;">
+                                    <div class="product-list card bg-default" data-product_id="`+ arr.productID + `">
+                                        <h5 class="card-header">`
+                                + arr.name +
+                                `</h5>
+                                        <div class="card-body">`
+                                + cardBody +
+                                `<p class="card-text">`
+                                + arr.description +
+                                `</p>
+                                        </div>
+                                        <div class="card-footer ">
+                                            Card footer
+                                        </div>
+                                    </div>
+                                </div>`
+                            );
+                        })
+                    })
+                    
+                }
                 alert(data.success);
-                console.log('succ', data);
             },
             error: function (data) {
                 console.log('Error:', data);
             }
         });
+
+        
     });
 
+    
     $(".closeModal").on('click', function () {
-        $("#ajaxProductCategoryModel").modal('hide')
+        $("#ajaxProductListModel").modal('hide')
         console.log($(this))
     })
-    //---------------------- Category.js -------------------//
+    //---------------------- Create -------------------//
     $('#createNewCategory').click(function (e) {
         e.preventDefault();
         $(this).html('Sending..');
@@ -476,6 +606,39 @@ $(document).ready(function () {
             });
         }else{
             $('#createNewCategory').html('送出');
+            alert('輸入錯誤');
+        }
+        
+    });
+
+    $('#createNewDiscount').click(function (e) {
+        let formName = '#discountForm';
+        e.preventDefault();
+        $(this).html('Sending..');
+        console.log($(formName).serialize());
+        let isTotal = $("#inputTotal").val().length!=0;
+        let isDiscount = $("#inputDiscount").val().length!=0;
+        if(isTotal && isDiscount){
+            $.ajax({
+                data: $(formName).serialize(),
+                url: "./home/ajaxdiscount",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    $('#createNewDiscount').html('送出');
+                    $(formName).trigger("reset");
+                    discountTable.draw();
+                    $('input[name=chkAll').prop('checked',false);
+                    alert(data.success);
+                },
+                error: function (data) {
+                    $('#createNewDiscount').html('送出');
+                    console.log('Error:', data);
+    
+                }
+            });
+        }else{
+            $('#createNewDiscount').html('送出');
             alert('輸入錯誤');
         }
         

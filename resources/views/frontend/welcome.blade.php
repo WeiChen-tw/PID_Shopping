@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -143,35 +144,59 @@
             </div>
 
     </div>
-        <div class="row">
-            123
+    <!-- Discount Modal -->
+    <div class="modal fade" id="shoppingCartModel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="shoppingCartModelHeading">放入購物車</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="shopCartForm" name="shopCartForm" class="form-horizontal">
+                        <input type="hidden" name="id" id="id">
+
+                        <div class="form-group">
+                            <label for="method" class="col-sm-2 control-label">品名</label>
+                            <div class="col-sm-12">
+                                <select id="" name='method' data-table="discount">
+                                    <option value="1">滿額贈購物金</option>
+                                    <option value="2">滿額額折扣%</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="total" class="col-sm-2 control-label">品名</label>
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control" id="" name="total" placeholder="Enter $" value="" maxlength="50" required="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="price" class="col-sm-2 control-label">價格</label>
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control" id="" name="price" placeholder="" value="" maxlength="50" required="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity" class="col-sm-2 control-label">數量</label>
+                            <div class="col-sm-12">
+                                <input type="number" oninput = "value=value.replace(/[^\d]/g,'')" class="form-control" id="" name="quantity" placeholder="" value="1" maxlength="50" required="">
+                            </div>
+                        </div>
+                    
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary mb-2 saveBtn" href="javascript:void(0)" data-table="discount" id=""> 儲存</a>
+                    <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" id=""> 關閉</a>
+                </div>
+            </div>
         </div>
+    </div>
+    <!-- END -->
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script>
-            console.log("1")
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type:"GET",
-                url:"./load_product",
-                dataType:"json",
-                success:function(data){
-                    $("#showBox").html(data.html)
-                    console.log(data.success)
-                },
-                error:function(xhr){
-                    alert(xhr.status)
-                }
-            })
-            $(document).ready(function(){
-                $("#showBox").on('click','.product',function () {
-                    alert('test')
-                })
-            })
-    </script>
+    <script src="{{ asset('js/frontend.js') }}"></script>
 </body>
 </html>

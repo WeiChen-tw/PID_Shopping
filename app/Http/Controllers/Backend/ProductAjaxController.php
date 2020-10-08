@@ -66,12 +66,17 @@ class ProductAjaxController extends Controller
     public function getProductData(Request $request)
     {
 
-        if (isset($request->id)) {
+        if ($request->table=='category'&&isset($request->id)) {
             $data = DB::table('products')
                 ->join('products_categories', 'products.productID', '=', 'products_categories.product_id')
                 ->where('products_categories.category_id', '=',$request->id)
                 ->get();
-        } else {
+        } else if($request->table=='discount'&&isset($request->id)){
+            $data = DB::table('products')
+                ->join('products_discounts', 'products.productID', '=', 'products_discounts.product_id')
+                ->where('products_discounts.discount_id', '=',$request->id)
+                ->get();
+        }else {
             $data = Product::all();
         }
         
