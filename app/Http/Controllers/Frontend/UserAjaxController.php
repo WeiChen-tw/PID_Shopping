@@ -47,15 +47,47 @@ class UserAjaxController extends Controller
      */
     public function editProfile(Request $request)
     {
-        $request->password = Hash::make('secret');
-        if(Hash::check('secret', $request->password)){
-            return;
+        $id = $request->user()->id;
+        //$request->oldPassword = Hash::make('secret');
+        //使用者沒有輸入原密碼,所以不對密碼欄位進行驗證
+        if($request->oldPassword === null){
+            $validataedData= $request->validate([
+                'name' => 'required|string|max:255',
+            ]);
+    
+            Profile::updateOrCreate(['id' => $id],
+                [  'name' => $request->name,
+                    'addr' => $request->addr,
+                    'phone' => $request->phone,
+                ]
+            );
+            return redirect('home')->withSuccess('Profile saved successfully.');
+             
+        }else{
+            $res = DB::table('users')->where('id',$id)->select('password')->first();
+            if(!Hash::check($request->oldPassword,$res->password)){
+                return redirect('home')->withErrors(['oldPassword'=>'The original passowrd is wrong.']);
+             }
+            $validataedData= $request->validate([
+                'name' => 'required|string|max:255',
+                'oldPassword' => 'required|string|min:6|',
+                'newPassword' => 'required|string|min:6|confirmed',
+            ]);
+    
+            Profile::updateOrCreate(['id' => $id],
+                [  'name' => $request->name,
+                    'addr' => $request->addr,
+                    'phone' => $request->phone,
+                    'password' => bcrypt($request->newPassword),
+                ]
+            );
+            return redirect('home')->withSuccess('Profile && New Password saved successfully.');
+             
+            //return response()->json(['success' => 'Profile && New Password saved successfully.']);
         }
-        $validataedData= $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'newPassword' => 'required|string|min:6|confirmed',
-        ]);
+  
+
+        
     }
     public function store(Request $request)
     {

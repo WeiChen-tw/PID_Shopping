@@ -14,4 +14,6 @@ class Product extends Model
     ];
     //public $timestamps = false;
     public $primaryKey = 'productID';
+
+    
 }

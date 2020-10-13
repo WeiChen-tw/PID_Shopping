@@ -51,8 +51,11 @@ $(document).ready(function () {
             $("#sel").append('<option value="">查詢分類</option>')
             $.each(data.data, function (index, arr) {
                 $("#sel").append('<option value="' + arr.name + '">' + arr.name + '</option>')
-                $("#form-sel").append('<option value="' + arr.name + '">' + arr.name + '</option>')
-            })
+                $("#form-sel").append('<option value="' + arr.id + '">' + arr.name + '</option>')
+                $("#form-sel").selectpicker('refresh');
+            });
+            
+            
         })
 
         e.preventDefault()
@@ -272,12 +275,14 @@ $(document).ready(function () {
                 //$('#saveBtn').val("edit-user");
                 $(obj.form_name + ' input[name=product_id]').val(data.productID);
                 $(obj.form_name + ' input[name=name]').val(data.name);
-                $(obj.form_name + ' input[name=category]').val(data.category);
+                //$(obj.form_name + ' input[name=category]').val(data.category);
                 $(obj.form_name + ' input[name=price]').val(data.price);
                 $(obj.form_name + ' input[name=quantity]').val(data.quantity);
                 $(obj.form_name + ' input[name=quantitySold]').val(data.quantitySold);
                 $(obj.form_name + ' textarea[name=description]').val(data.description);
                 $(obj.model_name).modal('show');
+                $('#form-sel').selectpicker('val',['noneSelectedText'])
+                $("#form-sel").selectpicker('refresh');
             })
         }
         else if (obj.table_name == 'category') {
@@ -644,6 +649,10 @@ $(document).ready(function () {
         
     });
 
+    $('.selectpicker').change(function () {
+        $('#category').val( $('.selectpicker').val());
+        //alert(selectedItem);
+    });
 })
 
 

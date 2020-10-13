@@ -52,7 +52,7 @@
                                     <a class="btn btn-danger" href="javascript:void(0)" id="isBan" data-table="user">停權</a>
                                     <a class="btn btn-primary" href="javascript:void(0)" id="unBan" data-table="user">解除停權</a>
 
-                                    <table id="usersTable" class="display" style="width:100%">
+                                    <table id="usersTable" class="display" >
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" name="chkAll" data-table='#usersTable' /> </th>
@@ -147,8 +147,9 @@
                                     <a class="btn btn-success" href="javascript:void(0)" id="createNewProduct"> Create New Product</a>
                                     <a class="btn btn-primary" href="javascript:void(0)" id="onMarket" data-table="products">上架</a>
                                     <a class="btn btn-danger" href="javascript:void(0)" id="takeOff" data-table="products">下架</a>
-                                    <select id="sel" data-table="products">
+                                    <select id="sel"  data-table="products">
                                         <option value="">查詢分類</option>
+                                        
 
                                     </select>
                                     <table id="myProducts" class="table table-bordered data-table">
@@ -205,11 +206,11 @@
                                                         <div class="form-group">
                                                             <label for="category" class="col-sm-2 control-label">Category</label>
                                                             <div class="col-sm-12">
-                                                            <select class ="selectpicker" multiple   id="form-sel" data-table="products" >
-
-                                                            </select>
-                                                            <!-- <input type="hidden" name="category" id="category"> -->
-                                                                <!-- <input type="text" class="form-control" id="category" name="category" placeholder="Enter Category" value="" maxlength="50" required=""> -->
+                                                                <input  name="category" id="category">
+                                                                <select class ="selectpicker"    id="form-sel" data-table="products" multiple>
+                                                                        
+                                                                        
+                                                                </select>
                                                             </div>
                                                         </div>
 
@@ -462,15 +463,17 @@
     <script src="{{ asset('js/table.js') }}"></script>
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script> -->
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script> -->
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"> -->
-
+    
     <link rel="stylesheet" href="{{ asset('css/my.css') }}">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <!-- <script>$.fn.selectpicker.Constructor.BootstrapVersion = '4';</script> -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"> 
+
+    <script>$.fn.selectpicker.Constructor.BootstrapVersion = '4';</script>
     @endpush
 @endsection

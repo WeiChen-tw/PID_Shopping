@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Product;
+use App\Products_Categories;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +26,21 @@ class ProductAjaxController extends Controller
 
         if ($request->ajax()) {
             $data = Product::latest()->get();
-            $data2 = DB::select('SELECT p.productID,p.name,GROUP_CONCAT(c.name) as category,p.quantity,p.quantitySold ,p.price,p.description,p.img,p.onMarket FROM `products` as p INNER JOIN products_categories as pc INNER JOIN categories as c on p.productID = pc.product_id and pc.category_id = c.id GROUP BY p.productID');
+
+            // $sql = <<<'STR'
+            // SELECT p.productID,p.name,GROUP_CONCAT(DISTINCT c.name) as category,GROUP_CONCAT(DISTINCT d.method)as discount,p.quantity,p.quantitySold ,p.price,p.description,p.img,p.onMarket
+            // FROM products as p
+            // INNER JOIN products_categories as pc
+            // LEFT JOIN categories as c
+            // on p.productID = pc.product_id
+            // and pc.category_id = c.id
+            // INNER JOIN products_discounts as pd
+            // LEFT JOIN discounts as d
+            // on p.productID = pd.product_id
+            // and pd.discount_id = d.id
+            // GROUP BY p.productID
+            // STR;
+            $data2 = DB::select('SELECT p.productID,p.name,GROUP_CONCAT(DISTINCT c.name) as category,GROUP_CONCAT(DISTINCT d.method)as discount,p.quantity,p.quantitySold ,p.price,p.description,p.img,p.onMarket FROM `products` as p INNER JOIN products_categories as pc LEFT JOIN categories as c on p.productID = pc.product_id and pc.category_id = c.id INNER JOIN products_discounts as pd LEFT JOIN discounts as d on p.productID = pd.product_id and pd.discount_id = d.id GROUP BY p.productID');
             return Datatables::of($data2)
             //->addIndexColumn()
 
@@ -66,20 +81,20 @@ class ProductAjaxController extends Controller
     public function getProductData(Request $request)
     {
 
-        if ($request->table=='category'&&isset($request->id)) {
+        if ($request->table == 'category' && isset($request->id)) {
             $data = DB::table('products')
                 ->join('products_categories', 'products.productID', '=', 'products_categories.product_id')
-                ->where('products_categories.category_id', '=',$request->id)
+                ->where('products_categories.category_id', '=', $request->id)
                 ->get();
-        } else if($request->table=='discount'&&isset($request->id)){
+        } else if ($request->table == 'discount' && isset($request->id)) {
             $data = DB::table('products')
                 ->join('products_discounts', 'products.productID', '=', 'products_discounts.product_id')
-                ->where('products_discounts.discount_id', '=',$request->id)
+                ->where('products_discounts.discount_id', '=', $request->id)
                 ->get();
-        }else {
+        } else {
             $data = Product::all();
         }
-        
+
         foreach ($data as $key => $value) {
             //echo $value->name;
             $value->img = base64_encode($value->img);
@@ -100,19 +115,46 @@ class ProductAjaxController extends Controller
 
     public function store(Request $request)
     {
-
+        $new_category = explode(",", $request->category);
         Product::updateOrCreate(['productID' => $request->product_id],
             ['id' => 1,
                 'name' => $request->name,
                 'img' => "123",
-                'category' => $request->category,
                 'price' => $request->price,
                 'quantity' => $request->quantity,
                 'quantitySold' => $request->quantitySold,
                 'description' => $request->description]);
-        // $product = Product::where('productID',3)->first();
-        // $product->name = 'p33';
-        // $product->save();
+        $arr = Products_Categories::where('product_id', $request->product_id)->get();
+        $old_category = [];
+        $add_arr = [];
+        $remove_arr = [];
+        if (isset($arr)) {
+
+            foreach ($arr as $key => $row) {
+                array_push($old_category, $row->category_id);
+            }
+
+            $add_arr = array_diff_assoc($new_category, $old_category);
+            $remove_arr = array_diff_assoc($old_category, $new_category);
+        } else {
+            $add_arr = $new_category;
+        }
+
+        if (count($add_arr)) {
+            foreach ($add_arr as $key => $category_id) {
+                Products_Categories::updateOrCreate(
+                    ['product_id' => $request->product_id, 'category_id' => $category_id]
+                );
+            }
+        }
+        if (count($remove_arr)) {
+            foreach ($remove_arr as $key => $category_id) {
+                Products_Categories::where('product_id', $request->product_id)
+                    ->where('category_id', $category_id)
+                    ->delete();
+            }
+        }
+
         return response()->json(['success' => 'Product saved successfully.']);
     }
 

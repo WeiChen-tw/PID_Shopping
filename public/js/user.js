@@ -6,6 +6,8 @@ $(document).ready(function(){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+    let orderTable;
+    let orderDetailTable;
     function initShopCart(){
         $.ajax({
             url: "./home/ajaxshopcart",
@@ -22,10 +24,7 @@ $(document).ready(function(){
         });
     
     }
-    $('#v-pills-myShopCart-tab').on('click', function (e) {
-        initShopCart();
-    });
-    $('#v-pills-profile-tab').on('click', function (e) {
+    function initProfile(){
         $.get("./home/ajaxuser", function (data) {
             let form_name = "#profileForm"
             $(form_name+' input[name=id]').val(data.id);
@@ -36,9 +35,65 @@ $(document).ready(function(){
             $(form_name+' input[name=phone]').val(data.phone);
             $(form_name+' input[name=coin]').val(data.coin);
             $(form_name+' select[name=banned]').val(data.banned);
-
+         });
+    }
+    $('#v-pills-myShopCart-tab').on('click', function (e) {
+        initShopCart();
     });
-})
+    $('#v-pills-profile-tab').on('click', function (e) {
+        initProfile();
+    })
+    $('#v-pills-checkOrder-tab').on('click', function (e) {
+        
+        e.preventDefault()
+        if (orderTable) {
+            orderTable.destroy();
+        }
+        orderTable = $('#orderTable').DataTable( {
+            // dom: "Bfrtip",
+            // "scrollY": "400px",
+            // "scrollX": true,
+            // "scrollCollapse": true,
+            language:{
+                decimal:',',
+                thousands:'.'
+            },
+            processing: true,
+            serverSide: true,
+            ajax: "./getOrder",
+            columns: [
+                { data: "id" },
+                { data: 'created_at' },
+                { data: 'status' },
+                { data: 'total' ,
+                    name:'total',
+                    render: function(data,type,full,meta){
+                        return '$'+data;
+                    }},
+                { data: 'details', name: 'details', orderable: false, searchable: false },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+            ],
+            select: true,
+        } );
+        
+    })
+    $('#orderTable > tbody').on('click','.details-control',function(){
+        let tr = $(this).closest('tr');
+        let id = $(this).data('id');
+        let row = orderTable.row(tr);
+        if(row.child.isShown()){
+            row.child.hide();
+            tr.removeClass('shown');
+        }else{
+            row.child( format(row.data(),id) ).show();
+            tr.addClass('shown');
+            console.log(id)
+        }
+    })
+    $('#v-pills-profile-tab').trigger('click');
+    $('#profileResetBtn').on('click',function(){
+        initProfile();
+    })
     //initShopCart();
     function showList(list) {
         console.log(list);
@@ -179,15 +234,22 @@ $(document).ready(function(){
         if (chk_id.length > 0) {
             $.ajax({
                 type: "POST",
-                url: "./home/ajaxorder",
+                url: "./home/ajaxorderdetail",
                 data:{
                     quantity: chk_quantity,
                     productID: chk_id,
                 },
                 success: function(data) {
-                    alert(data.success);
-                    delShopCartAll();
-                    console.log('success');
+                    
+                    if(data.success){
+                        alert(data.success);
+                        delShopCartAll();
+                        console.log('success');
+                    }else{
+                        alert(data.wrong);
+                        console.log('wrong');
+                    }
+                    
                 },
                 error: function(data){
                     console.log('Error:',data);
@@ -195,5 +257,63 @@ $(document).ready(function(){
             })
         }
     }
-    
+    $('body').on('click','.cancelOrder',function(){
+        let id = $(this).data('id');
+        yes = confirm("Are you sure want to cancel order !");
+        if(!yes){
+            alert('You canceled the action. ');
+            return;
+        }
+        $.ajax({
+            data:{
+                id:id
+            },
+            type: "DELETE",
+            url: "./cancelOrder" ,
+            success: function (data) {
+                alert(data.success);
+                orderTable.draw();
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+        console.log(id);
+    })
 })
+
+function format ( d ,id) {
+    // `d` is the original data object for the row
+    let orderDetail;
+    let htmlText ='<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+    $.ajax({
+        async:false,
+        data: {
+            id: id,
+        },
+        url: './getOrderDetail',
+        type: "POST",
+        dataType: 'json',
+        success: function (data) {
+           
+            orderDetail = data;
+            console.log(data,orderDetail);
+        },
+        error:function (data){
+
+        }
+    });
+    console.log(orderDetail)
+    for (let index = 0; index < orderDetail.length; index++) {
+        let name = 'drink';
+        htmlText += `
+        <tr>
+            <td>name : ${orderDetail[index].name}</td>
+            <td>${orderDetail[index].quantity} 件</td>
+            <td>$${orderDetail[index].total}</td>
+            
+        </tr>`
+    }
+    htmlText+= '</table>';
+    return htmlText;
+}
