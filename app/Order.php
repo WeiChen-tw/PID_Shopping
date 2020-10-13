@@ -13,7 +13,7 @@ class Order extends Model
     //白名單
     protected $fillable = [
 
-        'id','user_id','status','total','created_at'
+        'id','user_id','addr','status','total','created_at'
 
     ];
     public $timestamps = true;

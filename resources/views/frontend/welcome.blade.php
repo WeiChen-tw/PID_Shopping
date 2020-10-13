@@ -160,7 +160,7 @@
                             <div class="col-sm-12">
                                 <select id="" name='method' data-table="discount">
                                     <option value="1">滿額贈購物金</option>
-                                    <option value="2">滿額額折扣%</option>
+                                    <option value="2">滿額折扣%</option>
                                 </select>
                             </div>
                         </div>

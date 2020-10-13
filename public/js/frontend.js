@@ -42,14 +42,20 @@ $(document).ready(function(){
             type: "POST",
             dataType: 'json',
             success: function (data) {
-                $('#shoppingCartModel').modal('hide');
-                $(obj).html('送出');
-                $(form_name).trigger("reset");
-                alert(data.success);
+                if(data.success){
+                    $('#shoppingCartModel').modal('hide');
+                    $(obj).html('送出');
+                    $(form_name).trigger("reset");
+                    alert(data.success);
+                }
+                    
+                
             },
             error: function (data) {
                 $('#createNewCategory').html('送出');
                 console.log('Error:', data);
+                document.location.href="http://www.shopping.net/public/login";
+                
             }
         });
 

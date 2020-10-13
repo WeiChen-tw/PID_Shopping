@@ -14,7 +14,6 @@ $(document).ready(function(){
             type: "GET",
             dataType: 'json',
             success: function (data) {
-                console.log(data);
                 showList(data);
                 //alert(data.success);
             },
@@ -96,7 +95,7 @@ $(document).ready(function(){
     })
     //initShopCart();
     function showList(list) {
-        console.log(list);
+        
         $("#listDiv").empty();
         $("#listDiv").append(`                        
             <div id="listDivRow0" class="shadow-sm p-3 mb-5 bg-white rounded row" style="margin:1%">                        
@@ -157,7 +156,7 @@ $(document).ready(function(){
         $("#inputQuantity" + obj.name).val(++value);
         price = $("#price" + obj.name).attr("value");
         $("#price" + obj.name).text(price * value);
-        console.log("plus",value,$(obj.name));
+        //console.log("plus",value,$(obj.name));
         
     }
     minus = function(obj) {
@@ -223,18 +222,18 @@ $(document).ready(function(){
    
      }
      buy = function(obj) {
-        var chk_id = []; //定義一個產品編號陣列
-        var chk_quantity = [];
+        let chk_id = []; //定義一個產品編號陣列
+        let chk_quantity = [];
+        let price = [];
         $('input[name="checkBuy"]:checked').each(function() { //遍歷每一個名字為checkBuy的核取方塊，其中選中的執行函式  
             chk_id.push($(this).val()); //將選中的值新增到陣列chk_value中  
             chk_quantity.push($("#inputQuantity" + chk_id[chk_id.length - 1]).val());
-            console.log(chk_quantity);
+            //console.log(chk_quantity);
         });
-        console.log(chk_id);
         if (chk_id.length > 0) {
             $.ajax({
                 type: "POST",
-                url: "./home/ajaxorderdetail",
+                url: "./getOrderDiscount",
                 data:{
                     quantity: chk_quantity,
                     productID: chk_id,
@@ -242,6 +241,64 @@ $(document).ready(function(){
                 success: function(data) {
                     
                     if(data.success){
+                        //alert(data.success);
+                        //delShopCartAll();
+                        $.each(data.total, function (index, arr) {
+                            $("#form-sel").append('<option value="' + data.id[index] + '">' + arr+data.discount[index] + '</option>')
+                        });
+                        console.log(data);
+                    }else{
+                        alert(data.wrong);
+                        console.log('wrong');
+                    }
+                    
+                },
+                error: function(data){
+                    console.log('Error:',data);
+                }
+            })
+        }
+        $("#ajaxCheckoutModel").modal('show');
+        $('#list-body-info .price').each(function(key) { 
+            price.push($(this).text())
+        });
+        $("#checkDetail").empty();
+        $('#list-body-info .datatime').each(function(key) { 
+            $("#checkDetail").append(`
+                    <p>商品名稱:${$(this).text()} 數量${chk_quantity[key]} 金額:$${price[key]} </p>
+            `)
+        })
+        
+    }
+    $(".buy").on('click',function(){
+        let addr = $("#checkoutForm input[name=addr]").val();
+        let chk_id = []; //定義一個產品編號陣列
+        let chk_quantity = [];
+        if(addr.length<=0){
+            alert('請輸入地址');
+            return;
+        }
+        
+        $('input[name="checkBuy"]:checked').each(function() { //遍歷每一個名字為checkBuy的核取方塊，其中選中的執行函式  
+            chk_id.push($(this).val()); //將選中的值新增到陣列chk_value中  
+            chk_quantity.push($("#inputQuantity" + chk_id[chk_id.length - 1]).val());
+            //console.log(chk_quantity);
+        });
+        console.log(chk_id);
+        if (chk_id.length > 0) {
+            $.ajax({
+                type: "POST",
+                url: "./home/ajaxorderdetail",
+                data:{
+                    addr: addr,
+                    quantity: chk_quantity,
+                    productID: chk_id,
+                },
+                success: function(data) {
+                    
+                    if(data.success){
+                        $("#ajaxCheckoutModel").modal('hide');
+                        $("#checkDetail").empty();
                         alert(data.success);
                         delShopCartAll();
                         console.log('success');
@@ -256,7 +313,7 @@ $(document).ready(function(){
                 }
             })
         }
-    }
+    })
     $('body').on('click','.cancelOrder',function(){
         let id = $(this).data('id');
         yes = confirm("Are you sure want to cancel order !");

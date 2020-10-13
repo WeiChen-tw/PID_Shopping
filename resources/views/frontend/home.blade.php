@@ -144,6 +144,45 @@
                             <div id="listDiv">
 
                             </div>
+                            <!-- Checkout Modal -->
+                            <div class="modal fade" id="ajaxCheckoutModel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="checkoutyModelHeading"></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="checkoutForm" name="checkoutForm" class="form-horizontal">
+                                                <input type="hidden" name="id" id="id">
+                                                <div class="form-group">
+                                                    <label for="" class="col-sm-6 control-label">確認訂單明細</label>
+                                                    <div id = "checkDetail"class="col-sm-12 ">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="" class="col-sm-2 control-label">優惠活動</label>
+                                                    <div class="col-sm-12">
+                                                        <input type="text" class="form-control" id="" name="discount" placeholder="輸入地址" value="" maxlength="50" required="">
+                                                    </div>
+                                                    <select id="form-sel" name='discount' class="form-control" data-table="">
+                                                        
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="addr" class="col-sm-2 control-label">地址</label>
+                                                    <div class="col-sm-12">
+                                                        <input type="text" class="form-control" id="" name="addr" placeholder="輸入地址" value="" maxlength="50" required="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-offset-2 col-sm-10">
+                                                    <a class="btn btn-primary mb-2 buy" data-table="" href="javascript:void(0)" > 購買</a>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END -->
                         </div>
                         <div class="tab-pane fade" id="v-pills-checkOrder" role="tabpanel" aria-labelledby="v-pills-checkOrder-tab">
                             <div id="userOrder" class="row">
@@ -151,12 +190,12 @@
                                 <table id="orderTable" class="table table-bordered " style="width:100%"> 
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Date</th>
-                                            <th>Staut</th>
-                                            <th>Total</th>
-                                            <th width="120px">Details</th>
-                                            <th width="320px">Action</th>
+                                            <th>訂單編號</th>
+                                            <th>時間</th>
+                                            <th>狀態</th>
+                                            <th>總金額</th>
+                                            <th width="80px">明細</th>
+                                            <th width="120px">操作</th>
                                         </tr>
                                     </thead>
                                     <tbody>

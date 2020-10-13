@@ -79,7 +79,9 @@ class ShoppingCartAjaxController extends Controller
 
     public function store(Request $request)
     {
-        
+        if(!Auth::check()){
+            return ;
+        }
         $user_id = $request->user()->id;
         $product_id = $request->id;
         $product = Product::find($product_id);

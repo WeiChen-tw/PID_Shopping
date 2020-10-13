@@ -135,7 +135,7 @@ $(document).ready(function () {
                     if(row.method=='1'){
                         return '滿額贈購物金';
                     }else if(row.method=='2'){
-                        return '滿額額折扣%';
+                        return '滿額折扣%';
                     }
                 } },
                 { data: 'total', name: 'total' },
