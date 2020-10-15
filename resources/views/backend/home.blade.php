@@ -33,9 +33,9 @@
                 <div class="col">
                     <div class="nav flex-column nav-pills " id="v-pills-tab" role="tablist" aria-orientation="vertical">
                         <a class="nav-link active" id="v-pills-management-tab" data-toggle="pill" href="#v-pills-management" role="tab" aria-controls="v-pills-management" aria-selected="true">會員管理</a>
+                        <a class="nav-link" id="v-pills-checkOrder-tab" data-toggle="pill" href="#v-pills-checkOrder" role="tab" aria-controls="v-pills-checkOrder" aria-selected="false">訂單管理</a>
                         <a class="nav-link" id="v-pills-product-tab" data-toggle="pill" href="#v-pills-product" role="tab" aria-controls="v-pills-product" aria-selected="false">庫存管理</a>
                         <a class="nav-link" id="v-pills-category-tab" data-toggle="pill" href="#v-pills-category" role="tab" aria-controls="v-pills-category" aria-selected="false">商品分類管理</a>
-                        <a class="nav-link" id="v-pills-return-tab" data-toggle="pill" href="#v-pills-return" role="tab" aria-controls="v-pills-return" aria-selected="false">退貨管理</a>
                         <a class="nav-link" id="v-pills-discount-tab" data-toggle="pill" href="#v-pills-discount" role="tab" aria-controls="v-pills-discount" aria-selected="false">設定優惠活動</a>
                         <a class="nav-link" id="v-pills-experience-tab" data-toggle="pill" href="#v-pills-experience" role="tab" aria-controls="v-pills-experience" aria-selected="false">等級機制</a>
                         <a class="nav-link" id="v-pills-myData-tab" data-toggle="pill" href="#v-pills-myData" role="tab" aria-controls="v-pills-myData" aria-selected="false">銷售數據</a>
@@ -56,14 +56,14 @@
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" name="chkAll" data-table='#usersTable' /> </th>
-                                                <th>No</th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Addr</th>
-                                                <th>Phone</th>
-                                                <th>Coin</th>
-                                                <th>Banned</th>
-                                                <th width="100px">Action</th>
+                                                <th>編號</th>
+                                                <th>名稱</th>
+                                                <th>信箱</th>
+                                                <th>地址</th>
+                                                <th>手機</th>
+                                                <th>購物金</th>
+                                                <th>停權</th>
+                                                <th width="100px">操作</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
@@ -82,13 +82,13 @@
                                                 <form id="userForm" name="userForm" class="form-horizontal">
                                                     <input type="hidden" name="id" id="id">
                                                     <div class="form-group">
-                                                        <label for="name" class="col-sm-2 control-label">Name</label>
+                                                        <label for="name" class="col-sm-2 control-label">名稱</label>
                                                         <div class="col-sm-12">
                                                             <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="name" class="col-sm-2 control-label">Banned</label>
+                                                        <label for="name" class="col-sm-2 control-label">停權</label>
                                                         <div class="col-sm-12">
                                                             <select id="" name='banned' data-table="user">
                                                                 <option value="N">N</option>
@@ -97,30 +97,30 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="name" class="col-sm-2 control-label">Password</label>
+                                                        <label for="name" class="col-sm-2 control-label">密碼</label>
                                                         <div class="col-sm-12">
                                                             <input type="text" class="form-control" id="password" name="password" placeholder="Enter Password" value="" maxlength="50" required="">
                                                         </div>
                                                     </div><div class="form-group">
-                                                        <label for="name" class="col-sm-2 control-label">Email</label>
+                                                        <label for="name" class="col-sm-2 control-label">信箱</label>
                                                         <div class="col-sm-12">
                                                             <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email" value="" maxlength="50" required="">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="name" class="col-sm-2 control-label">Addr</label>
+                                                        <label for="name" class="col-sm-2 control-label">地址</label>
                                                         <div class="col-sm-12">
                                                             <input type="text" class="form-control" id="addr" name="addr" placeholder="Enter Addr" value="" maxlength="50" required="">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="name" class="col-sm-2 control-label">Phone</label>
+                                                        <label for="name" class="col-sm-2 control-label">手機</label>
                                                         <div class="col-sm-12">
                                                             <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Phone" value="" maxlength="50" required="">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="name" class="col-sm-2 control-label">Coin</label>
+                                                        <label for="name" class="col-sm-2 control-label">購物金</label>
                                                         <div class="col-sm-12">
                                                             <input type="text" class="form-control" id="coin" name="coin" placeholder="Enter Coin" value="" maxlength="50" required="">
                                                         </div>
@@ -139,12 +139,69 @@
 
 
                             </div>
-                            
+                            <div class="tab-pane fade" id="v-pills-checkOrder" role="tabpanel" aria-labelledby="v-pills-checkOrder-tab">
+                            <div class="container">
+                                <h1>訂單查詢</h1>
+                                
+                                <div class="col-md-5 pull-right">
+                                   <div>
+                                        <label>查詢時間區間<label>
+                                    </div>
+                                    <div class="input-group input-daterange">
+                                    <input type="text" id="min-date" class="form-control date-range-filter" data-date-format="yyyy-mm-dd" placeholder="From:">
+                                    <div class="input-group-addon">to</div>
+                                    <input type="text" id="max-date" class="form-control date-range-filter" data-date-format="yyyy-mm-dd" placeholder="To:">
+                                    </div>
+                                </div>
+                                <div class="col-md-5 pull-right">
+                                    <select id="sel-user"  data-table="orderTable">
+                                            
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="userOrder" class="row">
+                                <table id="orderTable" class="table table-bordered " style="width:100%"> 
+                                    <thead>
+                                        <tr>
+                                            <th>訂單編號</th>
+                                            <th>客戶編號</th>
+                                            <th>客戶名稱</th>
+                                            <th>時間</th>
+                                            <th>狀態</th>
+                                            <th>總金額</th>
+                                            <th width="80px">明細</th>
+                                            <th width="120px">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                    <tfoot>
+
+                                    </tfoot>
+                                </table>
+                                <table id="orderDetailTable" class="table table-bordered " style="width:100%"> 
+                                    <thead>
+                                        <tr>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                    <tfoot>
+
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                        </div>
                             <div class="tab-pane fade" id ="v-pills-product" role="tabpanel" aria-labelledby="v-pills-product-tab">
 
                                 <div class="container">
-                                    <h1>Product CRUD</h1>
-                                    <a class="btn btn-success" href="javascript:void(0)" id="createNewProduct"> Create New Product</a>
+                                    <h1>商品管理</h1>
+                                    <a class="btn btn-success" href="javascript:void(0)" id="createNewProduct">新增商品</a>
                                     <a class="btn btn-primary" href="javascript:void(0)" id="onMarket" data-table="products">上架</a>
                                     <a class="btn btn-danger" href="javascript:void(0)" id="takeOff" data-table="products">下架</a>
                                     <select id="sel"  data-table="products">
@@ -158,16 +215,16 @@
 
                                             <tr>
                                                 <th><input type="checkbox" name="chkAll" data-table='#myProducts'/> </th>
-                                                <th>No</th>
-                                                <th>Name</th>
-                                                <th>Img</th>
-                                                <th>onMarket</th>
-                                                <th>Category</th>
-                                                <th>Price</th>
-                                                <th>Quantity</th>
-                                                <th>QuantitySold</th>
-                                                <th>Descriptions</th>
-                                                <th width="100px">Action</th>
+                                                <th>流水號</th>
+                                                <th>名稱</th>
+                                                <th>圖片</th>
+                                                <th>上架</th>
+                                                <th>類別</th>
+                                                <th>價格</th>
+                                                <th>庫存量</th>
+                                                <th>售出量</th>
+                                                <th>商品描述</th>
+                                                <th width="100px">操作</th>
                                             </tr>
 
                                         </thead>
@@ -188,23 +245,17 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <form id="productForm" name="productForm" class="form-horizontal">
+                                                        {{ csrf_field() }}
                                                         <input type="hidden" name="product_id" id="product_id">
                                                         <div class="form-group">
-                                                            <label for="name" class="col-sm-2 control-label">Name</label>
+                                                            <label for="name" class="col-sm-2 control-label">名稱</label>
                                                             <div class="col-sm-12">
                                                                 <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
                                                             </div>
                                                         </div>
 
-                                                        <!-- <div class="form-group">
-                                                            <label for="img" class="col-sm-2 control-label">Img</label>
-                                                            <div class="col-sm-12">
-                                                                <input type="text" class="form-control" id="img" name="img" placeholder="Enter Img" value="" maxlength="50" required="">
-                                                            </div>
-                                                        </div> -->
-
                                                         <div class="form-group">
-                                                            <label for="category" class="col-sm-2 control-label">Category</label>
+                                                            <label for="category" class="col-sm-2 control-label">類別</label>
                                                             <div class="col-sm-12">
                                                                 <input  name="category" id="category">
                                                                 <select class ="selectpicker"    id="form-sel" data-table="products" multiple>
@@ -215,32 +266,42 @@
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <label for="price" class="col-sm-2 control-label">Price</label>
+                                                            <label for="price" class="col-sm-2 control-label">價格</label>
                                                             <div class="col-sm-12">
                                                                 <input type="text" class="form-control" id="price" name="price" placeholder="Enter Price" value="" maxlength="50" required="">
                                                             </div>
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <label for="quantity" class="col-sm-2 control-label">Quantity</label>
+                                                            <label for="quantity" class="col-sm-2 control-label">庫存量</label>
                                                             <div class="col-sm-12">
                                                                 <input type="text" class="form-control" id="quantity" name="quantity" placeholder="Enter Quantity" value="" maxlength="50" required="">
                                                             </div>
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <label for="quantitySold" class="col-sm-2 control-label">QuantitySold</label>
+                                                            <label for="quantitySold" class="col-sm-2 control-label">售出量</label>
                                                             <div class="col-sm-12">
                                                                 <input type="text" class="form-control" id="quantitySold" name="quantitySold" placeholder="Enter QuantitySold" value="" maxlength="50" required="">
                                                             </div>
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <label class="col-sm-2 control-label">Descriptions</label>
+                                                            <label class="col-sm-2 control-label">商品介紹</label>
                                                             <div class="col-sm-12">
                                                                 <textarea id="description" name="description" required="" placeholder="Enter Descriptions" class="form-control"></textarea>
                                                             </div>
                                                         </div>
+                                                        <div class="form-group"> 
+                                                            <label for="banner_path" class="col-sm-4 control-label">商品圖片</label> 
+                                                            <input name="file"class="form-conrol col-sm-6 uploadImg" type="file" id="banner_path"> 
+                                                            <div class="col-sm-6" style="margin-top: 10px;"> 
+                                                                <img id="showPreviewImage"src="./images/default.jpg" title="縮略圖" width="200" class="img-rounded img-responsive banner_path"/>
+                                                                <input type="hidden" name="banner_path" accept="image/png, image/jpeg" id="banner_img" value="" required/> 
+                                                            </div> 
+                                                        </div>
+
+
                                                         <div class="col-sm-offset-2 col-sm-10">
                                                             <a class="btn btn-primary mb-2 saveBtn" data-table="products" href="javascript:void(0)" > Save Changes</a>
                                                         </div>
@@ -254,7 +315,7 @@
                             <div class="tab-pane fade" id ="v-pills-category" role="tabpanel" aria-labelledby="v-pills-category-tab">
 
                                 <div class="container">
-                                    <h1>Categories CRUD</h1>
+                                    <h1>商品分類管理</h1>
                                     <form class="form-inline" id = "categoryForm">
                                         <div class="form-group mb-2">
                                             <label for="staticCaretoryText" class="sr-only">新增類別</label>
@@ -276,9 +337,9 @@
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" name="chkAll" /> </th>
-                                                <th>No</th>
-                                                <th>Name</th>
-                                                <th width="320px">Action</th>
+                                                <th>流水號</th>
+                                                <th>名稱</th>
+                                                <th width="320px">操作</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -301,7 +362,7 @@
                                                     <form id="categoryForm2" name="categoryForm" class="form-horizontal">
                                                         <input type="hidden" name="id" id="id">
                                                         <div class="form-group">
-                                                            <label for="name" class="col-sm-2 control-label">Name</label>
+                                                            <label for="name" class="col-sm-4 control-label">類別名稱</label>
                                                             <div class="col-sm-12">
                                                                 <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
                                                             </div>
@@ -318,20 +379,14 @@
                                    
                                 
                             </div>
-                            <div class="tab-pane fade" id ="v-pills-return" role="tabpanel" aria-labelledby="v-pills-return-tab">
-                                <div class="container">
-                                    <h1>1</h1>
-                                   
-                                   
-                                    
-                                </div>
-                            </div>
+                            
                             <div class="tab-pane fade" id ="v-pills-discount" role="tabpanel" aria-labelledby="v-pills-discount-tab">
                                 <div class="container">
-                                    <h2>設定優惠活動</h2>
+                                    <h2>優惠活動管理</h2>
                                     <form class="form-inline" id = "discountForm">
                                         <div class="form-group mx-sm-3 mb-2">
-                                            <label for="method" class="">Method</label>
+                                        <label  class="">設定優惠活動</label>
+                                            <label for="method" class="">優惠模式</label>
                                             <div class="">
                                                 <select id="" name='method' class="form-control" data-table="discount">
                                                     <option value="1">滿額贈購物金</option>
@@ -354,11 +409,11 @@
                                     <table id="discountTable" class="table table-bordered " style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th>No</th>
-                                                <th>Method</th>
-                                                <th>Total</th>
-                                                <th>Discount</th>
-                                                <th width="320px">Action</th>
+                                                <th>流水號</th>
+                                                <th>優惠模式</th>
+                                                <th>滿額</th>
+                                                <th>優惠</th>
+                                                <th width="320px">操作</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -414,9 +469,28 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id ="v-pills-experience" role="tabpanel" aria-labelledby="v-pills-experience-tab">
-                                <div class="container">
-                                    <h1>3</h1>
-                                   
+                                <div class="col-md-6">
+                                    <h1>等級機制</h1>
+                                    <h5>經驗計算</h5>
+                                    <form id="levelForm" name="categoryForm" class="form-horizontal">
+                                        <input type="hidden" name="id" id="id">
+                                        <div class="form-group">
+                                            <label for="name" class="col-sm-6 control-label">提升一等所需的消費金額</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="moneyToLevel" name="moneyToLevel" placeholder="$" value="" maxlength="50" required="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="name" class="col-sm-6 control-label">設定單筆訂單的升級限制</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="upgrade_limit" name="upgrade_limit" placeholder="level" value="" maxlength="50" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <a class="btn btn-primary mb-2 set-config" data-form="levelForm" href="javascript:void(0)" > 儲存設定</a>
+                                        </div>
+                                    </form>
+                                    
                                    
                                     
                                 </div>
@@ -473,7 +547,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script> 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"> 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script>$.fn.selectpicker.Constructor.BootstrapVersion = '4';</script>
     @endpush
 @endsection

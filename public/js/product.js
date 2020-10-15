@@ -11,7 +11,7 @@ $(document).ready(function () {
     let categoryTable;
     let userTable;
     let discountTable;
-
+    let orderTable;
     //會員管理分頁
    $('#v-pills-management-tab').on('click', function (e) {
     e.preventDefault()
@@ -43,6 +43,70 @@ $(document).ready(function () {
 })
     //初始觸發會員管理分頁
     $('#v-pills-management-tab').trigger('click');
+    
+    $('#v-pills-checkOrder-tab').on('click', function (e) {
+        
+        e.preventDefault()
+        if (orderTable) {
+            orderTable.destroy();
+        }
+        $.get("./home/ajaxuser", function (data) {
+            $("#sel-user").empty();
+            $("#sel-user").append('<option value="">查詢會員</option>')
+            console.log(data);
+            $.each(data.data, function (index, arr) {
+                $("#sel-user").append('<option value="' + arr.name + '">' + arr.name + '</option>')
+                
+            });
+        });
+        $('.input-daterange input').each(function() {
+            $(this).datepicker();
+            $(this).datepicker("option", "dateFormat","yy-mm-dd");
+          });
+        orderTable = $('#orderTable').DataTable( {
+            // dom: "Bfrtip",
+            // "scrollY": "400px",
+            // "scrollX": true,
+            // "scrollCollapse": true,
+            language:{
+                decimal:',',
+                thousands:'.'
+            },
+            processing: true,
+            //serverSide: true,
+            ajax: "./getOrder",
+            columns: [
+                { data: "id" },
+                { data: "user_id" },
+                { data: "name" },
+                { data: 'created_at' },
+                { data: 'status' },
+                { data: 'total' ,
+                    name:'total',
+                    render: function(data,type,full,meta){
+                        return '$'+data;
+                    }},
+                { data: 'details', name: 'details', orderable: false, searchable: false },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+            ],
+            select: true,
+        } );
+        
+    })
+    $('#orderTable > tbody').on('click','.details-control',function(){
+        let tr = $(this).closest('tr');
+        let id = $(this).data('id');
+        let row = orderTable.row(tr);
+        if(row.child.isShown()){
+            row.child.hide();
+            tr.removeClass('shown');
+        }else{
+            row.child( format(row.data(),id) ).show();
+            tr.addClass('shown');
+            console.log(id)
+        }
+    })
+    
     //庫存管理分頁
     $('#v-pills-product-tab').on('click', function (e) {
         $.get("./home/ajaxcategory", function (data) {
@@ -148,6 +212,18 @@ $(document).ready(function () {
 
     });
 
+    $('#v-pills-experience-tab').on('click', function (e) {
+        e.preventDefault()
+        $.get("./getConfig", function (data) {
+            if(data.success){
+                $("#levelForm input[name=moneyToLevel]").val(data.moneyToLevel);
+                $("#levelForm input[name=upgrade_limit]").val(data.upgrade_limit);
+                alert(data.success);
+            }else if(data.error){
+                alert(data.error);
+            }
+        })
+    })
     
     //select category change product list
     $('#sel').on('change', function () {
@@ -162,6 +238,9 @@ $(document).ready(function () {
         }
         table.columns(5).search(this.value).draw();
         $('input[name=chkAll').prop('checked',false);
+    })
+    $('#sel-user').on('change', function () {
+        orderTable.columns(2).search(this.value).draw();
     })
     //select all
     $('input[name=chkAll').change(function () {
@@ -280,6 +359,10 @@ $(document).ready(function () {
                 $(obj.form_name + ' input[name=quantity]').val(data.quantity);
                 $(obj.form_name + ' input[name=quantitySold]').val(data.quantitySold);
                 $(obj.form_name + ' textarea[name=description]').val(data.description);
+                if(data.img.length>0){
+                    $("#showPreviewImage").attr('src',data.img);
+                }
+                
                 $(obj.model_name).modal('show');
                 $('#form-sel').selectpicker('val',['noneSelectedText'])
                 $("#form-sel").selectpicker('refresh');
@@ -328,6 +411,7 @@ $(document).ready(function () {
     //save changes
     $('body').on('click', '.saveBtn', function (e) {
         e.preventDefault();
+        var formData = new FormData(); 
         let button = $(this);
         let obj = {
             table:null,
@@ -340,11 +424,34 @@ $(document).ready(function () {
         setObjName(obj);
         console.log($(this).data("table"), $(this).data("id"))
         console.log($(obj.form_name).serialize());
-        $.ajax({
-            data: $(obj.form_name).serialize(),
+        if(obj.table_name=="products"){
+            var that = $("#banner_path"); 
+            var imgpex = /.(jpg|png|jpeg|gif)$/i; 
+            if (!imgpex.test(that.val())) {
+                  alert("如無法上傳。請上傳JPG、PNG、JPEG格式的文件"); 
+                  $(button).html('Save Changes');
+                  return;
+            } else if (that[0].files[0].size > 2000000) {
+                  alert("上傳的圖片大於2M"); 
+                  $(button).html('Save Changes');
+                  return;
+            } else {
+                formData.append("file", $('#banner_path')[0].files[0]); 
+            } 
+        }
+       
+
+        $.each($(obj.form_name).serializeArray(),function (i,field) {
+            formData.append(field.name,field.value);
+        }) 
+         $.ajax({
+            data: formData, 
             url: "./home/ajax" + obj.table_name,
             type: "POST",
             dataType: 'json',
+            processData: false, 
+            contentType: false, 
+            cache: false, 
             success: function (data) {
                 $(obj.form_name).trigger("reset");
                 $(button).html('Save Changes');
@@ -358,6 +465,7 @@ $(document).ready(function () {
                 $(button).html('Save Changes');
             }
         });
+    
     });
 
 
@@ -634,7 +742,12 @@ $(document).ready(function () {
                     $(formName).trigger("reset");
                     discountTable.draw();
                     $('input[name=chkAll').prop('checked',false);
-                    alert(data.success);
+                    if(data.success){
+                        alert(data.success);
+                    }else if(data.error){
+                        alert(data.error);
+                    }
+                     
                 },
                 error: function (data) {
                     $('#createNewDiscount').html('送出');
@@ -653,19 +766,183 @@ $(document).ready(function () {
         $('#category').val( $('.selectpicker').val());
         //alert(selectedItem);
     });
+    $('body').on('click','.出貨',function(){
+        let id = $(this).data('id');
+        yes = confirm("確定要出貨 ？");
+        if(!yes){
+            alert('你不出貨');
+            return;
+        }
+        $.ajax({
+            data:{
+                id:id
+            },
+            type: "POST",
+            url: "./ship" ,
+            success: function (data) {
+                alert(data.success);
+                orderTable.draw();
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+        console.log(id);
+    })
+    $('body').on('click','.同意退貨',function(){
+        let id = $(this).data('id');
+        yes = confirm("同意退貨 ？");
+        if(!yes){
+            alert('你取消了操作');
+            return;
+        }
+        $.ajax({
+            data:{
+                id:id,
+                action:'yes'
+            },
+            type: "POST",
+            url: "./returnOrder" ,
+            success: function (data) {
+                alert(data.success);
+                orderTable.draw();
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+        console.log(id);
+    })
+    $('body').on('click','.拒絕退貨',function(){
+        let id = $(this).data('id');
+        yes = confirm("拒絕退貨 ？");
+        if(!yes){
+            alert('你取消了操作');
+            return;
+        }
+        $.ajax({
+            data:{
+                id:id,
+                action:'no'
+            },
+            type: "POST",
+            url: "./returnOrder" ,
+            success: function (data) {
+                alert(data.success);
+                orderTable.draw();
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+        console.log(id);
+    })
+    //訂單管理-查詢時間區間 START
+ 
+      $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+          var min = $('#min-date').val();
+          var max = $('#max-date').val();
+          var created_at = data[3] || 0; // Our date column in the table
+           console.log(max)
+          if ((min == "" || max == "") ||
+            (moment(created_at).isSameOrAfter(min) && moment(created_at).isSameOrBefore(max))
+          ) {
+            return true;
+          }
+          return false;
+        }
+      );
+      $('.date-range-filter').change(function() {
+        //orderTable.columns(3).search($('#min-date').val()).draw();
+        orderTable.draw();
+      });
+      
+
+      //訂單管理-查詢時間區間 END
+    $("#banner_path").change(function () {
+        var that = this; 
+        var imgpex = /.(jpg|png|jpeg|gif)$/i; 
+        if (!imgpex.test(that.value)) {
+              alert("如無法上傳。請上傳JPG、PNG、JPEG、GIF格式的文件"); 
+        } else if (that.files[0].size > 2000000) {
+              alert("上傳的圖片大於2M"); 
+        } else {
+            //let img = convertFile($('#banner_path')[0].files[0]);
+            convertFile($('#banner_path')[0].files[0]).then(data=>{
+                console.log(data);
+                $("#showPreviewImage").attr('src',data);
+            });
+             
+             
+        } 
+    })
+    $(".set-config").on('click',function(){
+        let form_name = '#'+$(this).data('form');
+        let moneyToLevel = $(form_name+" input[name=moneyToLevel]").val();
+        let upgrade_limit = $(form_name+" input[name=upgrade_limit]").val();
+        console.log('money',moneyToLevel,'limit',upgrade_limit)
+        $.post("./setConfig", { 'moneyToLevel':moneyToLevel,'upgrade_limit': upgrade_limit }, function (data) {
+            if(data.success){
+                alert(data.success);
+            }else if(data.error){
+                alert(data.error);
+            }
+        })
+    })
+    
 })
 
+function format ( d ,id) {
+    // `d` is the original data object for the row
+    let orderDetail;
+    let htmlText ='<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+    $.ajax({
+        async:false,
+        data: {
+            id: id,
+        },
+        url: './getOrderDetail',
+        type: "POST",
+        dataType: 'json',
+        success: function (data) {
+           
+            orderDetail = data;
+            console.log(data,orderDetail);
+        },
+        error:function (data){
 
+        }
+    });
+    console.log(orderDetail)
+    for (let index = 0; index < orderDetail.length; index++) {
+        let name = 'drink';
+        htmlText += `
+        <tr>
+            <td>name : ${orderDetail[index].name}</td>
+            <td>${orderDetail[index].quantity} 件</td>
+            <td>$${orderDetail[index].total}</td>
+            
+        </tr>`
+    }
+    htmlText+= '</table>';
+    return htmlText;
+}
+// 使用FileReader讀取檔案，並且回傳Base64編碼後的source
+function convertFile(file) {
+    return new Promise((resolve,reject)=>{
+        // 建立FileReader物件
+        let reader = new FileReader()
+        // 註冊onload事件，取得result則resolve (會是一個Base64字串)
+        reader.onload = () => { resolve(reader.result) }
+        // 註冊onerror事件，若發生error則reject
+        reader.onerror = () => { reject(reader.error) }
+        // 讀取檔案
+        reader.readAsDataURL(file)
+    })
+}
 
-    //   $.ajaxSetup({
-
-    //       headers: {
-
-    //           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-
-    //       }
-
-    // });
+   
 
 
 

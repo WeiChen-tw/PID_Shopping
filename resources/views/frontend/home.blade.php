@@ -160,13 +160,19 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="" class="col-sm-2 control-label">優惠活動</label>
+                                                    <label for="" class="col-sm-4 control-label">優惠活動</label>
+                                                    
+                                                    <input type="hidden" class="form-control" id="" name="discount"  value="" maxlength="50" required="">
+                                                    <input type="hidden" class="form-control" id="" name="otherSum"  value="" maxlength="50" required="">
+                                                    <input type="hidden" class="form-control" id="" name="amount"  value="" maxlength="50" required="">
+                                                    
                                                     <div class="col-sm-12">
-                                                        <input type="text" class="form-control" id="" name="discount" placeholder="輸入地址" value="" maxlength="50" required="">
-                                                    </div>
-                                                    <select id="form-sel" name='discount' class="form-control" data-table="">
+                                                        <select id="form-sel" name='discount' class="form-control" data-table="">
                                                         
-                                                    </select>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-12"name="result">
+                                                    </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="addr" class="col-sm-2 control-label">地址</label>

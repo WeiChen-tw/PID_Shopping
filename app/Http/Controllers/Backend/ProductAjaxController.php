@@ -7,7 +7,7 @@ use App\Products_Categories;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Image;
 class ProductAjaxController extends Controller
 {
 
@@ -101,6 +101,8 @@ class ProductAjaxController extends Controller
         }
         return response()->json($data);
     }
+    
+
     /**
 
      * Store a newly created resource in storage.
@@ -115,20 +117,40 @@ class ProductAjaxController extends Controller
 
     public function store(Request $request)
     {
-        $new_category = explode(",", $request->category);
-        Product::updateOrCreate(['productID' => $request->product_id],
+        //$targetDir = config('blog._picture_upload_path') . date('Y-m-d');
+        $image=null;
+        if($request->hasFile('file')){
+            $file = $request->file('file');
+        
+            // if (!is_dir($targetDir)) {
+            //     @mkdir($targetDir, 0777, true);
+            // }
+            $originFilename = $file->getClientOriginalName();
+            $fileSize = $file->getSize();
+            $file_mime = $file->getClientOriginalExtension();
+            $fileName = uniqid() . '.' .
+            $file->getClientOriginalExtension();
+            $path = $file->getRealPath();
+            $image = file_get_contents($path);
+        }
+        
+        $new_category=[];
+        if($request->category){
+            $new_category = explode(",", $request->category);
+        }
+        $product = Product::updateOrCreate(['productID' => $request->product_id],
             ['id' => 1,
                 'name' => $request->name,
-                'img' => "123",
+                'img' => $image,
                 'price' => $request->price,
                 'quantity' => $request->quantity,
                 'quantitySold' => $request->quantitySold,
                 'description' => $request->description]);
-        $arr = Products_Categories::where('product_id', $request->product_id)->get();
+        $arr = Products_Categories::where('product_id', $product->productID)->get();
         $old_category = [];
         $add_arr = [];
         $remove_arr = [];
-        if (isset($arr)) {
+        if (empty($arr)) {
 
             foreach ($arr as $key => $row) {
                 array_push($old_category, $row->category_id);
@@ -143,7 +165,7 @@ class ProductAjaxController extends Controller
         if (count($add_arr)) {
             foreach ($add_arr as $key => $category_id) {
                 Products_Categories::updateOrCreate(
-                    ['product_id' => $request->product_id, 'category_id' => $category_id]
+                    ['product_id' => $product->productID, 'category_id' => $category_id]
                 );
             }
         }
@@ -174,7 +196,7 @@ class ProductAjaxController extends Controller
     {
         //$product = Product::find($id);
         $product = Product::where('productID', $id)->first();
-        $product->img = 'tt';
+        $product->img = 'data:image/jpeg;base64,'.base64_encode($product->img);
         //$product->save();
         return response()->json($product);
     }

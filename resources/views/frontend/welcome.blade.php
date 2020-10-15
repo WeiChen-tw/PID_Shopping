@@ -104,17 +104,15 @@
                                     <li class="nav-item active">
                                         <a class="nav-link" href="#">Link <span class="sr-only">(current)</span></a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">Link</a>
-                                    </li>
-                                    <li class="nav-item dropdown">
+
+                                    <!-- <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown">Dropdown link</a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                             <a class="dropdown-item" href="#">Action</a> <a class="dropdown-item" href="#">Another action</a> <a class="dropdown-item" href="#">Something else here</a>
                                             <div class="dropdown-divider">
                                             </div> <a class="dropdown-item" href="#">Separated link</a>
                                         </div>
-                                    </li>
+                                    </li> -->
                                 </ul>
                                 <form class="form-inline">
                                     <input class="form-control mr-sm-2" type="text" />
@@ -127,14 +125,9 @@
                         </nav>
                         <div class="jumbotron">
                             <h2>
-                                Hello,User!
+                                線上商城
                             </h2>
-                            <p>
-                                This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.
-                            </p>
-                            <p>
-                                <a class="btn btn-primary btn-large" href="#">Learn more</a>
-                            </p>
+
                         </div>
                     </div>
             </div>
@@ -155,38 +148,38 @@
                     <form id="shopCartForm" name="shopCartForm" class="form-horizontal">
                         <input type="hidden" name="id" id="id">
 
+
                         <div class="form-group">
-                            <label for="method" class="col-sm-2 control-label">品名</label>
+                            <label name="name" class="col-sm-6 control-label">品名</label>
+                           
+                        </div>
+                        <div class="form-group">
+                            <label name="price" class="col-sm-6 control-label">價格</label>
+                        </div>
+                        <div class="form-group">
+                            <label name="sys_quantity" class="col-sm-6 control-label">庫存量</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label name="quantitySold" class="col-sm-6 control-label">售出量</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">商品介紹</label>
                             <div class="col-sm-12">
-                                <select id="" name='method' data-table="discount">
-                                    <option value="1">滿額贈購物金</option>
-                                    <option value="2">滿額折扣%</option>
-                                </select>
+                                <textarea id="description" name="description" required="" placeholder="Enter Descriptions" class="form-control" readonly></textarea>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="total" class="col-sm-2 control-label">品名</label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" id="" name="total" placeholder="Enter $" value="" maxlength="50" required="">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="price" class="col-sm-2 control-label">價格</label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" id="" name="price" placeholder="" value="" maxlength="50" required="">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="quantity" class="col-sm-2 control-label">數量</label>
+                            <label for="quantity" class="col-sm-4 control-label">購買數量</label>
                             <div class="col-sm-12">
                                 <input type="number" oninput = "value=value.replace(/[^\d]/g,'')" class="form-control" id="" name="quantity" placeholder="" value="1" maxlength="50" required="">
                             </div>
                         </div>
-                    
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <a class="btn btn-primary mb-2 saveBtn" href="javascript:void(0)" data-table="discount" id=""> 儲存</a>
+                    <a class="btn btn-primary mb-2 saveBtn" href="javascript:void(0)" data-table="" id=""> 儲存</a>
                     <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" id=""> 關閉</a>
                 </div>
             </div>

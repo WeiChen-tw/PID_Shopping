@@ -26,13 +26,19 @@ class DiscountAjaxController extends Controller
 
         if ($request->ajax()) {
             $data = Discount::get();
-
+            foreach ($data as $key => $row) {
+                if($row->method==2){
+                    $row->discount = $row->discount.'%';
+                }else{
+                    $row->discount = '$'.$row->discount;
+                }
+            }
              return Datatables::of($data)
                 ->addIndexColumn()
 
                
                 ->addColumn('action', function ($row) {
-
+                   
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-table="discount" data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm edit">Edit</a>';
                     $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="discount" data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm delete">Delete</a>';
                     $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="discount" data-id="' . $row->id . '" data-original-title="Set" class="btn btn-success btn-sm setProduct">Set Product</a>';
@@ -99,7 +105,11 @@ class DiscountAjaxController extends Controller
 
     public function store(Request $request)
     {
-
+        if($request->method ==2){
+            if($request->discount>=100){
+                return response()->json(['error' => '確認優惠內容,請小於100%']);
+            }
+        }
         Discount::updateOrCreate(['id' => $request->id],
             [
                 'method' => $request->method,

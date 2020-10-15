@@ -23,8 +23,17 @@ $(document).ready(function(){
         }
     });
     $("#showBox").on('click','.this-product',function () {
+        let product_id = $(this).data('id');
         $('#shoppingCartModel').modal();
-        $('#shopCartForm input[name=id]').val($(this).data('id'));
+        $('#shopCartForm input[name=id]').val(product_id);
+        $.get("./getProduct"+'/' + product_id , function (data) {
+            //$('#shopCartForm label[name=product_id]').val(data.productID);
+            $('#shopCartForm label[name=name]').text('品名:'+data.name);
+            $('#shopCartForm label[name=price]').text('價格:'+data.price);
+            $('#shopCartForm label[name=sys_quantity]').text('庫存量:'+data.quantity);
+            $('#shopCartForm label[name=quantitySold]').text('售出量:'+data.quantitySold);
+            $('#shopCartForm textarea[name=description]').val(data.description);
+        });
     })
     $('body').on('click','.saveBtn',function(){
         clickCard($(this))

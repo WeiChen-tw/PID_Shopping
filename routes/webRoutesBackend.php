@@ -23,3 +23,12 @@ Route::post('setProductDiscount', 'DiscountAjaxController@setProductDiscount');
 Route::post('getProductData', 'ProductAjaxController@getProductData');
 Route::post('onOrOff', 'ProductAjaxController@onOrOff');
 Route::post('banOrUnban', 'UserAjaxController@banOrUnban');
+//--
+Route::get('/getOrder', 'OrderDetailAjaxController@getOrder');
+Route::post('/getOrderDetail', 'OrderDetailAjaxController@getOrderDetail');
+Route::post('/ship', 'OrderDetailAjaxController@ship');
+Route::post('/returnOrder', 'OrderDetailAjaxController@returnOrder');
+Route::post('/returnOrderDetail', 'OrderDetailAjaxController@receipt');
+Route::post('/upload', 'ProductAjaxController@uploadImg');
+Route::post('/setConfig', 'ConfigController@setConfig');
+Route::get('/getConfig', 'ConfigController@getConfig');

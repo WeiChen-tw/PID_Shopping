@@ -109,11 +109,18 @@ class ShoppingCartAjaxController extends Controller
     public function edit($id)
     {
         //$product = ShopCart::find($id);
-        $product = ShopCart::where('productID', $id)->first();
+        //$product = ShopCart::where('productID', $id)->first();
+        //$product->save();
+        //return response()->json($product);
+    }
+    public function getProduct($id)
+    {
+        //$product = Product::find($id);
+        $product = Product::where('productID', $id)->first();
+        $product->img = 'data:image/jpeg;base64,'.base64_encode($product->img);
         //$product->save();
         return response()->json($product);
     }
-
     /**
 
      * Remove the specified resource from storage.

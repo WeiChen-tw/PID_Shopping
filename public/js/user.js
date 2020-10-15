@@ -221,6 +221,8 @@ $(document).ready(function(){
         });
    
      }
+     let other_sum;
+     let amount;
      buy = function(obj) {
         let chk_id = []; //定義一個產品編號陣列
         let chk_quantity = [];
@@ -230,6 +232,8 @@ $(document).ready(function(){
             chk_quantity.push($("#inputQuantity" + chk_id[chk_id.length - 1]).val());
             //console.log(chk_quantity);
         });
+        $("#form-sel").empty();
+        $("#checkoutForm div[name=result]").empty();
         if (chk_id.length > 0) {
             $.ajax({
                 type: "POST",
@@ -243,13 +247,27 @@ $(document).ready(function(){
                     if(data.success){
                         //alert(data.success);
                         //delShopCartAll();
+                        $("#form-sel").append('<option value="0">不使用優惠活動</option>')
+                        $("#checkoutForm div[name=result]").html('<h3>總結帳金額$:'+data.amount[0]+'</h3>');
                         $.each(data.total, function (index, arr) {
-                            $("#form-sel").append('<option value="' + data.id[index] + '">' + arr+data.discount[index] + '</option>')
+                            if(index==0){
+                                return true;
+                            }
+                            $("#form-sel").append('<option value="' + index + '">' + arr+data.discount[index]  +'</option>')
                         });
+                        // $("#checkoutForm div[name=result]").html('<p>'+data.other[0]+'</p><h3>總結帳金額$:'+data.amount[0]+'</h3>');
+                        $("#checkoutForm input[name=discount]").val(0);
+                        other_sum = data.other;
+                        amount = data.amount;
                         console.log(data);
-                    }else{
+                    }else if(data.wrong){
                         alert(data.wrong);
                         console.log('wrong');
+                    }else if(data.error){
+                        $("#form-sel").append('<option value="0">' + data.error + '</option>')
+                        $("#checkoutForm input[name=discount]").val('0');
+                        $("#checkoutForm div[name=result]").html('<h3>總結帳金額$:'+data.amount+'</h3>');
+                       
                     }
                     
                 },
@@ -270,8 +288,21 @@ $(document).ready(function(){
         })
         
     }
+    $("#form-sel").on('change',function(){
+        $id = $(this).val();
+        console.log('sel',$(this).val(),other_sum);
+        $("#checkoutForm div[name=result]").empty();
+        if($id=='0'){
+            $("#checkoutForm div[name=result]").html('<h3>總結帳金額$:'+amount[$id]+'</h3>');
+        }else{
+            $("#checkoutForm div[name=result]").html('<p>'+other_sum[$id]+'</p><h3>總結帳金額$:'+amount[$id]+'</h3>');
+            $("#checkoutForm input[name=discount]").val($id);
+        }
+    })
     $(".buy").on('click',function(){
         let addr = $("#checkoutForm input[name=addr]").val();
+        let discount_id = $("#checkoutForm input[name=discount]").val();
+        let sel_id = $("#checkoutForm select option:selected").val();
         let chk_id = []; //定義一個產品編號陣列
         let chk_quantity = [];
         if(addr.length<=0){
@@ -290,6 +321,8 @@ $(document).ready(function(){
                 type: "POST",
                 url: "./home/ajaxorderdetail",
                 data:{
+                    sel_id:sel_id,
+                    discount_id:discount_id,
                     addr: addr,
                     quantity: chk_quantity,
                     productID: chk_id,
@@ -314,11 +347,11 @@ $(document).ready(function(){
             })
         }
     })
-    $('body').on('click','.cancelOrder',function(){
+    $('body').on('click','.取消訂單',function(){
         let id = $(this).data('id');
-        yes = confirm("Are you sure want to cancel order !");
+        yes = confirm("確定要取消訂單 ？");
         if(!yes){
-            alert('You canceled the action. ');
+            alert('你取消了操作');
             return;
         }
         $.ajax({
@@ -337,6 +370,53 @@ $(document).ready(function(){
         });
         console.log(id);
     })
+    $('body').on('click','.收貨',function(){
+        let id = $(this).data('id');
+        yes = confirm("確定收貨 ？");
+        if(!yes){
+            alert('你取消了操作');
+            return;
+        }
+        $.ajax({
+            data:{
+                id:id
+            },
+            type: "POST",
+            url: "./receipt" ,
+            success: function (data) {
+                alert(data.success);
+                orderTable.draw();
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+        console.log(id);
+    })
+    $('body').on('click','.退貨',function(){
+        let id = $(this).data('id');
+        yes = confirm("確定退貨 ？");
+        if(!yes){
+            alert('你取消了操作');
+            return;
+        }
+        $.ajax({
+            data:{
+                id:id
+            },
+            type: "POST",
+            url: "./returnOrder" ,
+            success: function (data) {
+                alert(data.success);
+                orderTable.draw();
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+        console.log(id);
+    })
+
 })
 
 function format ( d ,id) {

@@ -18,7 +18,8 @@
             </p>
         </div>
         <div class="card-footer ">
-            Card footer
+            <p>庫存量{{$product->quantity}}</p>
+            <p>售出量{{$product->quantitySold}}</p>
         </div>
     </div>
 </div>

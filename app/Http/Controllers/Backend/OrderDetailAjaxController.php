@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Frontend;
+namespace App\Http\Controllers\Backend;
 
 use App\Discount;
 use App\Order;
@@ -9,18 +9,16 @@ use App\Product;
 use App\Products_Discounts;
 use App\ShopCart;
 use App\User;
-use App\Models\Config;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-class myOrder
+class myDiscount
 {
     public $id;
     public $sysMethod;
     public $sysTotal;
     public $sysDiscount;
     public $orderDiscount;
-    public $amount;
 }
 class OrderDetailAjaxController extends Controller
 {
@@ -60,7 +58,7 @@ class OrderDetailAjaxController extends Controller
         $user_id = $request->user()->id;
         $wrong_id = null;
         $addr = $request->addr;
-        
+
         foreach ($request->quantity as $key => $quantity) {
             if ($quantity <= 0) {
                 $wrong_id .= $request->productID[$key] . ' ';
@@ -68,18 +66,6 @@ class OrderDetailAjaxController extends Controller
         }
         if ($wrong_id !== null) {
             return response()->json(['wrong' => '商品編號:' . $wrong_id . ' 數量錯誤']);
-        }
-        foreach ($request->quantity as $key => $quantity) {
-            $product = Product::find($request->productID[$key]);
-            if ($product->quantity < $quantity) {
-                $wrong_id .= $request->productID[$key] . ' ';
-                $shopcart = ShopCart::where('user_id',$user_id)
-                    ->where('productID', $id)
-                    ->delete();
-            }
-        }
-        if ($wrong_id !== null) {
-            return response()->json(['wrong' => '商品編號:' . $wrong_id . ' 數量不足,自動移出購物車']);
         }
         if (!isset($addr)) {
             return response()->json(['wrong' => '請輸入地址']);
@@ -175,7 +161,7 @@ class OrderDetailAjaxController extends Controller
         array_unshift($other_sum, 0);
         array_unshift($discount_method, 0);
         $use_discount_flag =0;
-        $obj = new myOrder;
+        $obj = new myDiscount;
         //判斷是否有可使用優惠
         if ($discount_flag != '') {
             if($request->sel_id>0){
@@ -191,17 +177,16 @@ class OrderDetailAjaxController extends Controller
                 $obj->sysMethod = null;
                 $obj->sysTotal=null;
                 $obj->sysDiscount=null;
-                $obj->orderDiscount = 0;
+                $obj->orderDiscount = null;
             }
         } else {
             $obj->id = null;
             $obj->sysMethod = null;
             $obj->sysTotal=null;
             $obj->sysDiscount=null;
-            $obj->orderDiscount = 0;
+            $obj->orderDiscount = null;
         }
         //----計算優惠結束----//
-
         Order::updateOrCreate(['id' => $request->id],
             [
                 'user_id' => $user_id,
@@ -213,10 +198,6 @@ class OrderDetailAjaxController extends Controller
             ]);
         foreach ($request->productID as $key => $product_id) {
             $product = Product::find($product_id);
-            $product->quantity -= $request->quantity[$key];
-            $product->quantitySold += $request->quantity[$key];
-            $product->save();
-            
             OrderDetail::updateOrCreate(
                 [
                     'id' => $id,
@@ -229,8 +210,12 @@ class OrderDetailAjaxController extends Controller
                     //'discount' => '',
                 ]);
         }
+        // if($obj->sysMethod==1){
+        //     $user=User::find($user_id);
+        //     $user->coin += $obj->orderDiscount;
+        //     $user->save();
+        // }
         
-       
 
         return response()->json(['success' => '送出訂單']);
     }
@@ -340,15 +325,16 @@ class OrderDetailAjaxController extends Controller
     public function getOrder(Request $request)
     {
         if ($request->ajax()) {
-            $user_id = $request->user()->id;
-            $data = Order::where('user_id',$user_id)->get();
+            //$user_id = $request->user()->id;
+            $data = Order::get();
             //DB::enableQueryLog(); // Enable query log
 
             // Your Eloquent query executed by using get()
 
             $order = DB::table('orders')
                 ->join('orderDetails', 'orders.id', 'orderDetails.id')
-                ->select('orders.id', 'orders.created_at', 'orders.status', DB::raw('SUM(orderDetails.price * orderDetails.quantity - orders.orderDiscount) as total'))
+                ->join('users', 'orders.user_id', 'users.id')
+                ->select('orders.id', 'orders.user_id','users.name','orders.created_at', 'orders.status', DB::raw('SUM(orderDetails.price * orderDetails.quantity - orders.orderDiscount) as total'))
                 ->groupBy('orders.id')
                 ->orderBy('orders.id', 'desc')
                 ->get();
@@ -365,20 +351,21 @@ class OrderDetailAjaxController extends Controller
 
                     switch ($row->status) {
                         case '待出貨':
-                            $actionText = "取消訂單";
+                            $actionText = "出貨";
                             break;
-                        case '已出貨':
-                            $actionText = "收貨";
-                            break;
-                        case '已付款收貨':
-                            $actionText = "退貨";
+                        case '退貨中':
+                            $actionText = "同意退貨";
                             break;
                         default:
                             return;
                             break;
                     }
                     $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="order" data-id="' . $row->id . '" data-original-title="' . $actionText . '" class="btn btn-danger btn-sm ' . $actionText . '">' . $actionText . '</a>';
-
+                    if($actionText === "同意退貨"){
+                        $actionText2 = "拒絕退貨";
+                        $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="order" data-id="' . $row->id . '" data-original-title="' . $actionText2 . '" class="btn btn-success btn-sm ' . $actionText2 . '">' . $actionText2 . '</a>';
+                    
+                    }
                     return $btn;
 
                 })
@@ -395,7 +382,7 @@ class OrderDetailAjaxController extends Controller
     public function getOrderDetail(Request $request)
     {
         if ($request->ajax()) {
-            $user_id = $request->user()->id;
+            //$user_id = $request->user()->id;
             $id = $request->id;
             //DB::enableQueryLog(); // Enable query log
 
@@ -454,100 +441,45 @@ class OrderDetailAjaxController extends Controller
      * @return \Illuminate\Http\Response
 
      */
-    
-    public function cancelOrder(Request $request)
+
+    public function ship(Request $request)
     {
         $order = Order::find($request->id);
-        $order->status = "訂單取消";
+        $order->status = "已出貨";
         $order->save();
-        $order->delete();
-        return response()->json(['success' => '訂單取消成功']);
-    }
-    public function receipt(Request $request)
-    {
-        $user=User::find($request->user()->id);
-        $config = Config::find(1);
-        $order = Order::find($request->id);
-        $orderDetail = OrderDetail::where('id',$request->id)->get();
-        $amount=0;
-        $lv = null;
-        
-        foreach ($orderDetail as $key => $row) {
-           $amount += $row->quantity * $row->price;
-        }
-        if($order->sysMethod==1){
-            $amount -= $order->orderDiscount;
-            $user->exp_bar += $amount;
-            $lv = floor($user->exp_bar/$config->moneyToLevel);
-            if($lv>0 && $user->level < 10){
-                if($lv - $user->level > $config->upgrade_limit){
-                    $user->level += $config->upgrade_limit;
-                }else{
-                    $user->level = $lv;
-                }
-            }
-            $user->coin += $order->orderDiscount;
-            $user->save();
-            $order->status = "已付款收貨";
-            $order->save();
-            return response()->json(['success' => '您已成功付款收貨,本筆訂單獲得$'.$order->orderDiscount.'購物金,本次累積'.$amount.'經驗']);
-        }else if($order->sysMethod==2){
-            $user->exp_bar += $amount;
-            $lv = floor($user->exp_bar/$config->moneyToLevel);
-            if($lv>0 && $user->level < 10){
-                if($lv - $user->level > $config->upgrade_limit){
-                    $user->level += $config->upgrade_limit;
-                }else{
-                    $user->level = $lv;
-                }
-            }
-            $usre->save();
-            $order->status = "已付款收貨";
-            $order->save();
-            return response()->json(['success' => '您已成功付款收貨,本次累積'.$amount.'經驗']);
-        }else {
-            $user->exp_bar += $amount;
-            $lv = floor($user->exp_bar/$config->moneyToLevel);
-            if($lv>0 && $user->level < 10){
-                if($lv - $user->level > $config->upgrade_limit){
-                    $user->level += $config->upgrade_limit;
-                }else{
-                    $user->level = $lv;
-                }
-            }
-            $user->save();
-            $order->status = "已付款收貨";
-            $order->save();
-            return response()->json(['success' => '您已成功付款收貨,本次累積'.$amount.'經驗']);
-        }
-        
-        
-        
-       
+        return response()->json(['success' => '出貨成功']);
     }
     public function returnOrder(Request $request)
     {
-        $order = Order::find($request->id);
-        $order->status = "退貨中";
-        $order->save();
-        //$order->delete();
-        return response()->json(['success' => '等待賣家同意退貨中']);
-    }
-    public function returnOrderDetail(Request $request)
-    {
-        $order = Order::find($request->id);
-        $order->status = "退貨中";
-        $order->save();
-        //$order->delete();
-        return response()->json(['success' => '等待賣家同意退貨中']);
-    }
-    // public function cancelOrderDetail(Request $request)
-    // {
-    //     $orderDetail = Order::find($request->id);
-    //     $orderDetail->status = "訂單取消";
-    //     $orderDetail->save();
-    //     $orderDetail->delete();
-    //     return response()->json(['success' => 'Order cancel successfully.']);
-    // }
+        if($request->action=='yes'){
 
+            $order = Order::find($request->id);
+            
+            if($order->sysMethod==1){
+                $user=User::find($order->user_id);
+                $user->coin -= $order->orderDiscount;
+                $user->save();
+                $order->status = "退貨成功";
+                $order->save();
+                return response()->json(['success' => '退貨成功,回收$'.$order->orderDiscount.'購物金']);
+            }else if($order->sysMethod==2){
+                $order->status = "退貨成功";
+                $order->save();
+                return response()->json(['success' => '退貨成功']);
+            }else{
+                $order->status = "退貨成功";
+                $order->save();
+                return response()->json(['success' => '退貨成功']);
+            }
+            //$order->delete();
+            return response()->json(['success' => '退貨成功']);
+        }else if($request->action=='no'){
+            $order = Order::find($request->id);
+            $order->status = "退貨失敗";
+            $order->save();
+            //$order->delete();
+            return response()->json(['success' => '拒絕退貨成功']);
+        }
+        
+    }
 }

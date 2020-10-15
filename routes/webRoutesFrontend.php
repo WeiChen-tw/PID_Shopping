@@ -17,3 +17,7 @@ Route::post('/getOrderDetail', 'OrderDetailAjaxController@getOrderDetail');
 Route::post('/getOrderDiscount', 'OrderDetailAjaxController@calc');
 Route::delete('/cancelOrder', 'OrderDetailAjaxController@cancelOrder');
 Route::delete('/cancelOrderDetail', 'OrderDetailAjaxController@cancelOrderDetail');
+Route::post('/receipt', 'OrderDetailAjaxController@receipt');
+Route::post('/returnOrder', 'OrderDetailAjaxController@returnOrder');
+Route::post('/returnOrderDetail', 'OrderDetailAjaxController@receipt');
+Route::get('/getProduct/{id}', 'ShoppingCartAjaxController@getProduct');
