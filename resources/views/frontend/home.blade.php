@@ -4,7 +4,7 @@
 <div class="container">
     <div class="body row">
         <div class="col-md-2">
-            <div class="col">
+            <div class="col-sm-12">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                     <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">個人資料</a>
                     <a class="nav-link " id="v-pills-myShopCart-tab" data-toggle="pill" href="#v-pills-myShopCart" role="tab" aria-controls="v-pills-myShopCart" aria-selected="true">我的購物車</a>
@@ -28,14 +28,14 @@
                                             {!! csrf_field() !!}
                                             <input type="hidden" name="id" id="id">
                                             <div class="form-group">
-                                                <label for="name" class="col-sm-2 control-label">Name</label>
+                                                <label for="name" class="col-sm-2 control-label">名稱</label>
                                                 <div class="col-sm-12">
                                                     <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
                                                 </div>
                                             </div>
                                             
                                             <div class="form-group">
-                                                <label for="name" class="col-sm-4 control-label">Old Password </label>
+                                                <label for="name" class="col-sm-4 control-label">原密碼 </label>
                                                 <div class="col-sm-12">
                                                 <input
                                                             type="password"
@@ -52,7 +52,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-sm-4 col-form-label ">New Password</label>
+                                                <label class="col-sm-4 col-form-label ">新密碼</label>
 
                                                 <div class="col-sm-12">
                                                     <input
@@ -70,7 +70,7 @@
                                             </div>
 
                                             <div class="form-group ">
-                                                <label class="col-sm-4 col-form-label">Confirm New Password</label>
+                                                <label class="col-sm-4 col-form-label">確認新密碼</label>
 
                                                 <div class="col-sm-12">
                                                     <input
@@ -88,25 +88,36 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="name" class="col-sm-2 control-label">Email</label>
+                                                <label for="name" class="col-sm-2 control-label">信箱</label>
                                                 <div class="col-sm-12">
                                                     <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email" value="" maxlength="50" disabled>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="name" class="col-sm-2 control-label">Addr</label>
+                                                <label for="name" class="col-sm-2 control-label">地址</label>
                                                 <div class="col-sm-12">
                                                     <input type="text" class="form-control" id="addr" name="addr" placeholder="Enter Addr" value="" maxlength="50" required="">
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="name" class="col-sm-2 control-label">Phone</label>
+                                                <label for="name" class="col-sm-2 control-label">手機</label>
                                                 <div class="col-sm-12">
                                                     <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Phone" value="" maxlength="50" required="">
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="name" class="col-sm-2 control-label">Coin</label>
+                                                <label for="name" class="col-sm-2 control-label">等級</label>
+                                                <div class="col-sm-12">
+                                                    <input type="text" class="form-control" id="level" name="level" placeholder="Enter Coin" value="" maxlength="50" disabled>
+                                                </div>
+                                                <label for="name" class="col-sm-6 control-label">累積經驗值</label>
+                                                <div class="col-sm-12">
+                                                    <input type="text" class="form-control" id="exp_bar" name="exp_bar" placeholder="Enter Coin" value="" maxlength="50" disabled>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="name" class="col-sm-2 control-label">購物金</label>
                                                 <div class="col-sm-12">
                                                     <input type="text" class="form-control" id="coin" name="coin" placeholder="Enter Coin" value="" maxlength="50" disabled>
                                                 </div>
@@ -115,10 +126,10 @@
                                             <div class="form-group row">
                                                 <div class="col-lg-6 offset-lg-4">
                                                     <button id="profileSubmitBtn" type="" class="btn btn-primary">
-                                                        Submit
+                                                        儲存設定
                                                     </button>
                                                     <a id="profileResetBtn"type="button" class="btn btn-primary">
-                                                        Reset
+                                                        恢復設定
                                                     </a>
                                                 </div>
                                             </div>
@@ -149,13 +160,13 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title" id="checkoutyModelHeading"></h4>
+                                            <h4 class="modal-title" id="checkoutyModelHeading">確認訂單明細</h4>
                                         </div>
                                         <div class="modal-body">
                                             <form id="checkoutForm" name="checkoutForm" class="form-horizontal">
                                                 <input type="hidden" name="id" id="id">
                                                 <div class="form-group">
-                                                    <label for="" class="col-sm-6 control-label">確認訂單明細</label>
+                                                    <label for="" class="col-sm-6 control-label"></label>
                                                     <div id = "checkDetail"class="col-sm-12 ">
                                                     </div>
                                                 </div>

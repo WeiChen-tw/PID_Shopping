@@ -10,7 +10,7 @@ class OrderDetail extends Model
     //白名單
     protected $fillable = [
 
-        'id','user_id', 'productID', 'price', 'quantity', 'discount'
+        'id','user_id', 'productID', 'price', 'quantity', 'discount_flag'
 
     ];
     public $timestamps = true;

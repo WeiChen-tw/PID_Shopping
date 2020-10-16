@@ -72,6 +72,7 @@ $(document).ready(function () {
                 decimal:',',
                 thousands:'.'
             },
+            order:[0,"desc"],
             processing: true,
             //serverSide: true,
             ajax: "./getOrder",
@@ -837,6 +838,56 @@ $(document).ready(function () {
         });
         console.log(id);
     })
+    $('body').on('click','.同意商品退貨',function(){
+        let id = $(this).data('id');
+        yes = confirm("同意該商品退貨 ？");
+        if(!yes){
+            alert('你取消了操作');
+            return;
+        }
+        $.ajax({
+            data:{
+                id:id,
+                action:'yes'
+            },
+            type: "POST",
+            url: "./returnOrderDetail" ,
+            success: function (data) {
+                alert(data.success);
+                orderTable.draw();
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+        console.log(id);
+    })
+    $('body').on('click','.拒絕商品退貨',function(){
+        let id = $(this).data('id');
+        yes = confirm("拒絕該商品退貨 ？");
+        if(!yes){
+            alert('你取消了操作');
+            return;
+        }
+        $.ajax({
+            data:{
+                id:id,
+                action:'no'
+            },
+            type: "POST",
+            url: "./returnOrderDetail" ,
+            success: function (data) {
+                alert(data.success);
+                orderTable.draw();
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+        console.log(id);
+    })
+    
+    
     //訂單管理-查詢時間區間 START
  
       $.fn.dataTable.ext.search.push(
@@ -923,7 +974,32 @@ function format ( d ,id) {
             <td>${orderDetail[index].quantity} 件</td>
             <td>$${orderDetail[index].total}</td>
             
-        </tr>`
+        `
+        if (orderDetail[index].status =='待退貨'){
+            htmlText+=`
+                <td> 
+                    <a href="javascript:void(0)" 
+                        data-toggle="tooltip"  
+                        data-table="order" 
+                        data-id="${orderDetail[index].id}" 
+                        data-product_id="${orderDetail[index].productID}"
+                        data-original-title="" 
+                        class="btn btn-danger btn-sm 同意商品退貨">同意
+                    </a>
+                    <a href="javascript:void(0)" 
+                        data-toggle="tooltip"  
+                        data-table="order" 
+                        data-id="${orderDetail[index].id}" 
+                        data-product_id="${orderDetail[index].productID}"
+                        data-original-title="" 
+                        class="btn btn-success btn-sm 拒絕商品退貨">拒絕
+                    </a>
+                </td>
+            </tr>
+            `;
+        }else{
+            htmlText+='</tr>'
+        }
     }
     htmlText+= '</table>';
     return htmlText;

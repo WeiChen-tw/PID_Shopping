@@ -63,6 +63,7 @@ $(document).ready(function(){
             error: function (data) {
                 $('#createNewCategory').html('送出');
                 console.log('Error:', data);
+                //document.location.href="http://www.shopping.net/public";
                 document.location.href="http://www.shopping.net/public/login";
                 
             }

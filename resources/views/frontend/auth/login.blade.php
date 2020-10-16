@@ -61,7 +61,22 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="form-group row {{ $errors->has('captcha') ? 'has-error' : ''}}">
+                            <label class="col-lg-4 col-form-label text-lg-right">驗證碼</label>
+        
+                            <div class="col-md-4">
+                                <input id="captcha" class="" name="captcha" >
+                                <img class="{{$errors->has('captcha')?'parsley-error':''}}" src="{{captcha_src('flat')}}" style="cursor: pointer" onclick="this.src='{{captcha_src('flat')}}'+Math.random()">
+                            
+                            </div>
+                            <div class="col-md-4">
+                                </div>
+                            @if($errors->has('captcha'))
+                                <div class="col-md-12">
+                                    <p class="text-danger text-left"><strong>{{$errors->first('captcha')}}</strong></p>
+                                </div>
+                            @endif
+                        </div>
                         <div class="form-group row">
                             <div class="col-lg-8 offset-lg-4">
                                 <button type="submit" class="btn btn-primary">

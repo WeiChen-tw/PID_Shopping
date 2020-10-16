@@ -25,7 +25,7 @@ class UserAjaxController extends Controller
     {
         $id = $request->user()->id;
         //$users = Profile::find($id);
-        $profile = Profile::select('name','email','addr','phone','coin','experience')
+        $profile = Profile::select('name','email','addr','phone','coin','level','exp_bar')
             ->where('id', $id)->first();
         
         //$users->save();

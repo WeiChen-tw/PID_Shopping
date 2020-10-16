@@ -32,8 +32,9 @@ $(document).ready(function(){
             $(form_name+' input[name=email]').val(data.email);
             $(form_name+' input[name=addr]').val(data.addr);
             $(form_name+' input[name=phone]').val(data.phone);
+            $(form_name+' input[name=level]').val(data.level);
+            $(form_name+' input[name=exp_bar]').val(data.exp_bar);
             $(form_name+' input[name=coin]').val(data.coin);
-            $(form_name+' select[name=banned]').val(data.banned);
          });
     }
     $('#v-pills-myShopCart-tab').on('click', function (e) {
@@ -57,6 +58,7 @@ $(document).ready(function(){
                 decimal:',',
                 thousands:'.'
             },
+            order:[0,"desc"],
             processing: true,
             serverSide: true,
             ajax: "./getOrder",
@@ -227,9 +229,12 @@ $(document).ready(function(){
         let chk_id = []; //定義一個產品編號陣列
         let chk_quantity = [];
         let price = [];
-        $('input[name="checkBuy"]:checked').each(function() { //遍歷每一個名字為checkBuy的核取方塊，其中選中的執行函式  
+        let idx =[];
+        $('input[name="checkBuy"]:checked').each(function(key) { //遍歷每一個名字為checkBuy的核取方塊，其中選中的執行函式  
             chk_id.push($(this).val()); //將選中的值新增到陣列chk_value中  
             chk_quantity.push($("#inputQuantity" + chk_id[chk_id.length - 1]).val());
+            idx.push(key);
+            price.push($("#price" +chk_id[chk_id.length-1]).attr('value')*chk_quantity[key]);
             //console.log(chk_quantity);
         });
         $("#form-sel").empty();
@@ -277,14 +282,17 @@ $(document).ready(function(){
             })
         }
         $("#ajaxCheckoutModel").modal('show');
-        $('#list-body-info .price').each(function(key) { 
-            price.push($(this).text())
-        });
+        // $('#list-body-info .price').each(function(key) { 
+        //     price.push($(this).text())
+        // });
         $("#checkDetail").empty();
         $('#list-body-info .datatime').each(function(key) { 
-            $("#checkDetail").append(`
+            if(key == idx[key]){
+                $("#checkDetail").append(`
                     <p>商品名稱:${$(this).text()} 數量${chk_quantity[key]} 金額:$${price[key]} </p>
-            `)
+                `);
+            }
+            
         })
         
     }
@@ -336,6 +344,8 @@ $(document).ready(function(){
                         delShopCartAll();
                         console.log('success');
                     }else{
+                        $("#ajaxCheckoutModel").modal('hide');
+                        $("#checkDetail").empty();
                         alert(data.wrong);
                         console.log('wrong');
                     }
@@ -370,9 +380,9 @@ $(document).ready(function(){
         });
         console.log(id);
     })
-    $('body').on('click','.收貨',function(){
+    $('body').on('click','.取貨',function(){
         let id = $(this).data('id');
-        yes = confirm("確定收貨 ？");
+        yes = confirm("確定取貨 ？");
         if(!yes){
             alert('你取消了操作');
             return;
@@ -416,6 +426,31 @@ $(document).ready(function(){
         });
         console.log(id);
     })
+    $('body').on('click','.商品退貨',function(){
+        let id = $(this).data('id');
+        let product_id = $(this).data('product_id');
+        yes = confirm("確定退貨該商品 ？");
+        if(!yes){
+            alert('你取消了操作');
+            return;
+        }
+        $.ajax({
+            data:{
+                id:id,
+                product_id:product_id
+            },
+            type: "POST",
+            url: "./returnOrderDetail" ,
+            success: function (data) {
+                alert(data.success);
+                orderTable.draw();
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+        console.log(id);
+    })
 
 })
 
@@ -448,8 +483,25 @@ function format ( d ,id) {
             <td>name : ${orderDetail[index].name}</td>
             <td>${orderDetail[index].quantity} 件</td>
             <td>$${orderDetail[index].total}</td>
-            
-        </tr>`
+            <td>${orderDetail[index].status}</td>
+        `;
+        if (orderDetail[index].status =='已付款取貨'){
+            htmlText+=`
+                <td> 
+                    <a href="javascript:void(0)" 
+                        data-toggle="tooltip"  
+                        data-table="order" 
+                        data-id="${orderDetail[index].id}" 
+                        data-product_id="${orderDetail[index].productID}"
+                        data-original-title="" 
+                        class="btn btn-danger btn-sm 商品退貨">商品退貨
+                    </a>
+                </td>
+            </tr>
+            `;
+        }else{
+            htmlText+='</tr>'
+        }
     }
     htmlText+= '</table>';
     return htmlText;

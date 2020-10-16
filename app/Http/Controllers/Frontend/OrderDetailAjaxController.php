@@ -74,11 +74,12 @@ class OrderDetailAjaxController extends Controller
             if ($product->quantity < $quantity) {
                 $wrong_id .= $request->productID[$key] . ' ';
                 $shopcart = ShopCart::where('user_id',$user_id)
-                    ->where('productID', $id)
+                    ->where('productID', $request->productID[$key])
                     ->delete();
             }
         }
         if ($wrong_id !== null) {
+
             return response()->json(['wrong' => '商品編號:' . $wrong_id . ' 數量不足,自動移出購物車']);
         }
         if (!isset($addr)) {
@@ -117,6 +118,7 @@ class OrderDetailAjaxController extends Controller
                         //紀錄優惠ID
                         array_push($discounts_id, $pd->discount_id);
                         $discount = Discount::find($pd->discount_id);
+                        
                         //紀錄優惠模式
                         array_push($discount_method, $discount->method);
                         array_push($sys_total, $discount->total);
@@ -146,13 +148,13 @@ class OrderDetailAjaxController extends Controller
                 $discount_flag .= $discount_id;
                 if ($discount_method[$key] == 1) {
                     $other_sum[$key] = '其他商品消費金額:$' . (string)($other_total - $order_total[$key]);
-                    $base = floor($order_total[$key] / $sys_total[$key]);
+                    $base = round($order_total[$key] / $sys_total[$key]);
                     $order_discount[$key] = $base * $sys_discount[$key];
                     $amount[$key] = $order_total[$key] + (string)($other_total - $order_total[$key]);
                 } else {
                     $other_sum[$key] = '其他商品消費金額:$' . (string)($other_total - $order_total[$key]);
-                    $order_discount[$key] =  floor($order_total[$key] * $sys_discount[$key] / $oneHundred);
-                    $amount[$key] = floor($order_total[$key] * $sys_discount[$key] / $oneHundred) + (string)($other_total - $order_total[$key]);
+                    $order_discount[$key] =  round($order_total[$key] * $sys_discount[$key] / $oneHundred);
+                    $amount[$key] = round($order_total[$key] * $sys_discount[$key] / $oneHundred) + (string)($other_total - $order_total[$key]);
                 }
                 $order_total[$key] = '優惠活動累計消費金額 $' . $order_total[$key];
             }
@@ -174,12 +176,12 @@ class OrderDetailAjaxController extends Controller
         array_unshift($amount, $other_total);
         array_unshift($other_sum, 0);
         array_unshift($discount_method, 0);
+        array_unshift($discounts_id, 0);
         $use_discount_flag =0;
         $obj = new myOrder;
         //判斷是否有可使用優惠
         if ($discount_flag != '') {
             if($request->sel_id>0){
-                $use_discount_flag=1;
                 $discount = Discount::find($request->discount_id);
                 $obj->id = $request->discount_id;
                 $obj->sysMethod = $discount_method[$request->sel_id];
@@ -216,6 +218,20 @@ class OrderDetailAjaxController extends Controller
             $product->quantity -= $request->quantity[$key];
             $product->quantitySold += $request->quantity[$key];
             $product->save();
+            $discount_flag ='0';
+            //TODO 設定在優惠活動範圍內的產編
+            
+            $products_discounts = Products_Discounts::where('product_id', '=', $product_id)
+                ->where('discount_id',$discounts_id[$request->sel_id])
+                ->get();
+            if($products_discounts){
+                foreach ($products_discounts as $key => $row) {
+                    if($row->prouct_id == $product_id){
+                        $discount_flag='1';
+                    }
+                }
+            }
+           
             
             OrderDetail::updateOrCreate(
                 [
@@ -226,7 +242,7 @@ class OrderDetailAjaxController extends Controller
                     'user_id' => $user_id,
                     'price' => $product->price,
                     'quantity' => $request->quantity[$key],
-                    //'discount' => '',
+                    'discount_flag' => $discount_flag,
                 ]);
         }
         
@@ -298,13 +314,13 @@ class OrderDetailAjaxController extends Controller
                 $discount_flag .= $discount_id;
                 if ($discount_method[$key] == 1) {
                     $other_sum[$key] = '其他商品消費金額:$' . (string)($other_total - $order_total[$key]);
-                    $base = floor($order_total[$key] / $sys_total[$key]);
+                    $base = round($order_total[$key] / $sys_total[$key]);
                     $order_discount[$key] = '可獲得 $' . $base * $sys_discount[$key] . '購物金';
                     $amount[$key] += $order_total[$key] + (string)($other_total - $order_total[$key]);
                 } else {
                     $other_sum[$key] = '其他商品消費金額:$' . (string)($other_total - $order_total[$key]);
-                    $order_discount[$key] = '折扣後金額 $' . floor($order_total[$key] * (1-$sys_discount[$key] / $oneHundred));
-                    $amount[$key] += floor($order_total[$key] * (1-$sys_discount[$key] / $oneHundred)) + (string)($other_total - $order_total[$key]);
+                    $order_discount[$key] = '折扣後金額 $' . round($order_total[$key] * (1-$sys_discount[$key] / $oneHundred));
+                    $amount[$key] += round($order_total[$key] * (1-$sys_discount[$key] / $oneHundred)) + (string)($other_total - $order_total[$key]);
                 }
                 $order_total[$key] = '優惠活動累計消費金額 $' . $order_total[$key];
             }
@@ -348,7 +364,7 @@ class OrderDetailAjaxController extends Controller
 
             $order = DB::table('orders')
                 ->join('orderDetails', 'orders.id', 'orderDetails.id')
-                ->select('orders.id', 'orders.created_at', 'orders.status', DB::raw('SUM(orderDetails.price * orderDetails.quantity - orders.orderDiscount) as total'))
+                ->select('orders.id', 'orders.created_at', 'orders.status', DB::raw('SUM(orderDetails.price * orderDetails.quantity )- orders.orderDiscount as total'))
                 ->groupBy('orders.id')
                 ->orderBy('orders.id', 'desc')
                 ->get();
@@ -368,9 +384,9 @@ class OrderDetailAjaxController extends Controller
                             $actionText = "取消訂單";
                             break;
                         case '已出貨':
-                            $actionText = "收貨";
+                            $actionText = "取貨";
                             break;
-                        case '已付款收貨':
+                        case '已付款取貨':
                             $actionText = "退貨";
                             break;
                         default:
@@ -408,7 +424,7 @@ class OrderDetailAjaxController extends Controller
                     'orderDetails.status',
                     'orderDetails.quantity',
                     'orderDetails.price',
-                    'orderDetails.discount',
+                    'orderDetails.discount_flag',
                     'orderDetails.created_at',
                     'orderDetails.updated_at',
                     'orderDetails.deleted_at',
@@ -471,54 +487,82 @@ class OrderDetailAjaxController extends Controller
         $orderDetail = OrderDetail::where('id',$request->id)->get();
         $amount=0;
         $lv = null;
+        $exp = null;
         
         foreach ($orderDetail as $key => $row) {
            $amount += $row->quantity * $row->price;
         }
         if($order->sysMethod==1){
-            $amount -= $order->orderDiscount;
-            $user->exp_bar += $amount;
-            $lv = floor($user->exp_bar/$config->moneyToLevel);
+            //計算經驗
+            $exp = $user->exp_bar + $amount;
+            $lv = round($exp/$config->moneyToLevel);
             if($lv>0 && $user->level < 10){
                 if($lv - $user->level > $config->upgrade_limit){
                     $user->level += $config->upgrade_limit;
+                    $exp = $config->moneyToLevel * $config->upgrade_limit;
+                    $user->exp_bar += $exp;
                 }else{
+                    $exp = $amount;
                     $user->level = $lv;
+                    $user->exp_bar += $exp;
                 }
             }
             $user->coin += $order->orderDiscount;
             $user->save();
-            $order->status = "已付款收貨";
+            $order->status = "已付款取貨";
             $order->save();
-            return response()->json(['success' => '您已成功付款收貨,本筆訂單獲得$'.$order->orderDiscount.'購物金,本次累積'.$amount.'經驗']);
-        }else if($order->sysMethod==2){
-            $user->exp_bar += $amount;
-            $lv = floor($user->exp_bar/$config->moneyToLevel);
-            if($lv>0 && $user->level < 10){
-                if($lv - $user->level > $config->upgrade_limit){
-                    $user->level += $config->upgrade_limit;
-                }else{
-                    $user->level = $lv;
-                }
+            foreach ($orderDetail as $key => $row) {
+                $row->status="已付款取貨";
+                $row->save();
             }
-            $usre->save();
-            $order->status = "已付款收貨";
-            $order->save();
-            return response()->json(['success' => '您已成功付款收貨,本次累積'.$amount.'經驗']);
-        }else {
-            $user->exp_bar += $amount;
-            $lv = floor($user->exp_bar/$config->moneyToLevel);
+            return response()->json(['success' => '您已成功付款取貨,本筆訂單獲得$'.$order->orderDiscount.'購物金,本次累積'.$exp.'經驗']);
+        }else if($order->sysMethod==2){
+            $amount -= $order->orderDiscount;
+            //計算經驗
+            $exp = $user->exp_bar + $amount;
+            $lv = round($exp/$config->moneyToLevel);
             if($lv>0 && $user->level < 10){
                 if($lv - $user->level > $config->upgrade_limit){
                     $user->level += $config->upgrade_limit;
+                    $exp = $config->moneyToLevel * $config->upgrade_limit;
+                    $user->exp_bar += $exp;
                 }else{
+                    $exp = $amount;
                     $user->level = $lv;
+                    $user->exp_bar += $exp;
                 }
             }
             $user->save();
-            $order->status = "已付款收貨";
+            $order->status = "已付款取貨";
             $order->save();
-            return response()->json(['success' => '您已成功付款收貨,本次累積'.$amount.'經驗']);
+            foreach ($orderDetail as $key => $row) {
+                $row->status="已付款取貨";
+                $row->save();
+            }
+            return response()->json(['success' => '您已成功付款取貨,本次累積'.$exp.'經驗']);
+        }else {
+            //計算經驗
+            $exp = $user->exp_bar + $amount;
+            $lv = round($exp/$config->moneyToLevel);
+            if($lv>0 && $user->level < 10){
+                if($lv - $user->level > $config->upgrade_limit){
+                    $user->level += $config->upgrade_limit;
+                    $exp = $config->moneyToLevel * $config->upgrade_limit;
+                    $user->exp_bar += $exp;
+                }else{
+                    $exp = $amount;
+                    $user->level = $lv;
+                    $user->exp_bar += $exp;
+                }
+            }
+            $user->save();
+            $order->status = "已付款取貨";
+            $order->save();
+            foreach ($orderDetail as $key => $row) {
+                $row->status="已付款取貨";
+                $row->save();
+            }
+            return response()->json(['success' => '您已成功付款取貨,本次累積'.$exp.'經驗']);
         }
         
         
@@ -528,17 +572,28 @@ class OrderDetailAjaxController extends Controller
     public function returnOrder(Request $request)
     {
         $order = Order::find($request->id);
-        $order->status = "退貨中";
+        $orderDetail = OrderDetail::where('id',$request->id)->get();
+        $order->status = "待退貨";
         $order->save();
-        //$order->delete();
+        foreach ($orderDetail as $key => $row) {
+            $row->status="待退貨";
+            $row->save();
+        }
         return response()->json(['success' => '等待賣家同意退貨中']);
     }
     public function returnOrderDetail(Request $request)
     {
         $order = Order::find($request->id);
-        $order->status = "退貨中";
+        $orderDetail = OrderDetail::where('id',$request->id)
+            ->where('productID',$request->product_id)
+            ->get();
+        $order->status = "部份商品待退貨";
         $order->save();
         //$order->delete();
+        foreach ($orderDetail as $key => $row) {
+            $row->status="待退貨";
+            $row->save();
+        }
         return response()->json(['success' => '等待賣家同意退貨中']);
     }
     // public function cancelOrderDetail(Request $request)

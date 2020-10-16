@@ -19,5 +19,5 @@ Route::delete('/cancelOrder', 'OrderDetailAjaxController@cancelOrder');
 Route::delete('/cancelOrderDetail', 'OrderDetailAjaxController@cancelOrderDetail');
 Route::post('/receipt', 'OrderDetailAjaxController@receipt');
 Route::post('/returnOrder', 'OrderDetailAjaxController@returnOrder');
-Route::post('/returnOrderDetail', 'OrderDetailAjaxController@receipt');
+Route::post('/returnOrderDetail', 'OrderDetailAjaxController@returnOrderDetail');
 Route::get('/getProduct/{id}', 'ShoppingCartAjaxController@getProduct');
