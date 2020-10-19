@@ -19,7 +19,7 @@ $(document).ready(function () {
         userTable.destroy();
     }
     userTable = $('#usersTable').DataTable( {
-        dom: "Bfrtip",
+        // dom: "Bfrtip",
         "scrollY": "400px",
         "scrollX": true,
         "scrollCollapse": true,
@@ -50,6 +50,8 @@ $(document).ready(function () {
         if (orderTable) {
             orderTable.destroy();
         }
+        $('#min-date').val('');
+        $('#max-date').val('');
         $.get("./home/ajaxuser", function (data) {
             $("#sel-user").empty();
             $("#sel-user").append('<option value="">查詢會員</option>')
@@ -196,6 +198,7 @@ $(document).ready(function () {
             ajax: "./home/ajaxdiscount",
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                { data: 'name', name: 'name' },
                 { data: 'null', render: function(data,type,row){
                     if(row.method=='1'){
                         return '滿額贈購物金';
@@ -205,6 +208,7 @@ $(document).ready(function () {
                 } },
                 { data: 'total', name: 'total' },
                 { data: 'discount', name: 'discount' },
+                { data: 'user_lv', name: 'user_lv' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             select: true,
@@ -400,11 +404,14 @@ $(document).ready(function () {
             $.get("./home/ajax" + obj.table_name + '/' + id + '/edit', function (data) {
                 $('#discountModelHeading').html("編輯優惠活動內容");
                 $(obj.model_name).modal('show');
+                $(obj.form_name+' input[name=name]').val(data.name);
                 $(obj.form_name+' input[name=id]').val(data.id);
                 $(obj.form_name+' input[name=total]').val(data.total);
                 $(obj.form_name+' input[name=discount]').val(data.discount);
+                $(obj.form_name+' input[name=user_lv]').val(data.user_lv);
                 $(obj.form_name+' select[name=method]').val(data.method);
-
+              
+                
                 console.log(data);
             })
         }
@@ -771,7 +778,7 @@ $(document).ready(function () {
         let id = $(this).data('id');
         yes = confirm("確定要出貨 ？");
         if(!yes){
-            alert('你不出貨');
+            alert('你取消了操作');
             return;
         }
         $.ajax({
@@ -782,6 +789,7 @@ $(document).ready(function () {
             url: "./ship" ,
             success: function (data) {
                 alert(data.success);
+                $('#v-pills-checkOrder-tab').trigger('click');
                 orderTable.draw();
             },
             error: function (data) {
@@ -806,6 +814,7 @@ $(document).ready(function () {
             url: "./returnOrder" ,
             success: function (data) {
                 alert(data.success);
+                $('#v-pills-checkOrder-tab').trigger('click');
                 orderTable.draw();
             },
             error: function (data) {
@@ -830,6 +839,7 @@ $(document).ready(function () {
             url: "./returnOrder" ,
             success: function (data) {
                 alert(data.success);
+                $('#v-pills-checkOrder-tab').trigger('click');
                 orderTable.draw();
             },
             error: function (data) {
@@ -840,6 +850,7 @@ $(document).ready(function () {
     })
     $('body').on('click','.同意商品退貨',function(){
         let id = $(this).data('id');
+        let product_id = $(this).data('product_id');
         yes = confirm("同意該商品退貨 ？");
         if(!yes){
             alert('你取消了操作');
@@ -848,12 +859,14 @@ $(document).ready(function () {
         $.ajax({
             data:{
                 id:id,
+                product_id:product_id,
                 action:'yes'
             },
             type: "POST",
             url: "./returnOrderDetail" ,
             success: function (data) {
                 alert(data.success);
+                $('#v-pills-checkOrder-tab').trigger('click');
                 orderTable.draw();
             },
             error: function (data) {
@@ -864,6 +877,7 @@ $(document).ready(function () {
     })
     $('body').on('click','.拒絕商品退貨',function(){
         let id = $(this).data('id');
+        let product_id = $(this).data('product_id');
         yes = confirm("拒絕該商品退貨 ？");
         if(!yes){
             alert('你取消了操作');
@@ -872,12 +886,14 @@ $(document).ready(function () {
         $.ajax({
             data:{
                 id:id,
+                product_id:product_id,
                 action:'no'
             },
             type: "POST",
             url: "./returnOrderDetail" ,
             success: function (data) {
                 alert(data.success);
+                $('#v-pills-checkOrder-tab').trigger('click');
                 orderTable.draw();
             },
             error: function (data) {
@@ -970,10 +986,11 @@ function format ( d ,id) {
         let name = 'drink';
         htmlText += `
         <tr>
-            <td>name : ${orderDetail[index].name}</td>
+            <td>編號 : ${orderDetail[index].productID}</td>
+            <td>商品名稱 : ${orderDetail[index].name}</td>
             <td>${orderDetail[index].quantity} 件</td>
             <td>$${orderDetail[index].total}</td>
-            
+            <td>${orderDetail[index].status}</td>
         `
         if (orderDetail[index].status =='待退貨'){
             htmlText+=`

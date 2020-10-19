@@ -24,7 +24,10 @@ class myOrder
 }
 class OrderDetailAjaxController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
 
      * Display a listing of the resource.
@@ -60,7 +63,7 @@ class OrderDetailAjaxController extends Controller
         $user_id = $request->user()->id;
         $wrong_id = null;
         $addr = $request->addr;
-        
+        $user =  User::find($request->user()->id);
         foreach ($request->quantity as $key => $quantity) {
             if ($quantity <= 0) {
                 $wrong_id .= $request->productID[$key] . ' ';
@@ -113,6 +116,10 @@ class OrderDetailAjaxController extends Controller
             if ($products_discounts) {
                 //遍歷優惠活動陣列
                 foreach ($products_discounts as $key2 => $pd) {
+                    $discount = Discount::find($pd->discount_id);
+                    if($user->level<$discount->user_lv){
+                        continue;
+                    }
                     //新增優惠
                     if (!in_array($pd->discount_id, $discounts_id)) {
                         //紀錄優惠ID
@@ -225,8 +232,8 @@ class OrderDetailAjaxController extends Controller
                 ->where('discount_id',$discounts_id[$request->sel_id])
                 ->get();
             if($products_discounts){
-                foreach ($products_discounts as $key => $row) {
-                    if($row->prouct_id == $product_id){
+                foreach ($products_discounts as $key2 => $row) {
+                    if($row->product_id == $product_id){
                         $discount_flag='1';
                     }
                 }
@@ -263,6 +270,7 @@ class OrderDetailAjaxController extends Controller
         $sys_discount = [];
         $other_total = 0;
         $amount = [];
+        $user =  User::find($request->user()->id);
         foreach ($request->quantity as $key => $quantity) {
             if ($quantity <= 0) {
                 $wrong_id .= $request->productID[$key] . ' ';
@@ -280,6 +288,10 @@ class OrderDetailAjaxController extends Controller
             if ($products_discounts) {
                 //遍歷優惠活動陣列
                 foreach ($products_discounts as $key2 => $pd) {
+                    $discount = Discount::find($pd->discount_id);
+                    if($user->level<$discount->user_lv){
+                        continue;
+                    }
                     //新增優惠
                     if (!in_array($pd->discount_id, $discounts_id)) {
                         //紀錄優惠ID
@@ -357,7 +369,7 @@ class OrderDetailAjaxController extends Controller
     {
         if ($request->ajax()) {
             $user_id = $request->user()->id;
-            $data = Order::where('user_id',$user_id)->get();
+            //$data = Order::where('user_id',$user_id)->get();
             //DB::enableQueryLog(); // Enable query log
 
             // Your Eloquent query executed by using get()
@@ -365,6 +377,7 @@ class OrderDetailAjaxController extends Controller
             $order = DB::table('orders')
                 ->join('orderDetails', 'orders.id', 'orderDetails.id')
                 ->select('orders.id', 'orders.created_at', 'orders.status', DB::raw('SUM(orderDetails.price * orderDetails.quantity )- orders.orderDiscount as total'))
+                ->where('orders.user_id',$user_id)
                 ->groupBy('orders.id')
                 ->orderBy('orders.id', 'desc')
                 ->get();
@@ -474,9 +487,20 @@ class OrderDetailAjaxController extends Controller
     public function cancelOrder(Request $request)
     {
         $order = Order::find($request->id);
+        $orderDetail = OrderDetail::where('id', $request->id)->get();
+        
         $order->status = "訂單取消";
         $order->save();
         $order->delete();
+        foreach ($orderDetail as $key => $row) {
+            $row->status = "訂單取消";
+            $row->delete();
+            $product = Product::find($row->productID);
+            $product->quantity += $row->quantity;
+            $product->quantitySold -= $row->quantity;
+            $row->save();
+            $product->save();
+        }
         return response()->json(['success' => '訂單取消成功']);
     }
     public function receipt(Request $request)
@@ -584,16 +608,15 @@ class OrderDetailAjaxController extends Controller
     public function returnOrderDetail(Request $request)
     {
         $order = Order::find($request->id);
-        $orderDetail = OrderDetail::where('id',$request->id)
-            ->where('productID',$request->product_id)
-            ->get();
+        $orderDetail = DB::table('orderDetails')
+            ->where('id','=',$request->id)
+            ->where('productID','=',$request->product_id)
+            ->update(['status' => "待退貨"]);
+       
         $order->status = "部份商品待退貨";
         $order->save();
-        //$order->delete();
-        foreach ($orderDetail as $key => $row) {
-            $row->status="待退貨";
-            $row->save();
-        }
+        //DB::enableQueryLog(); // Enable query log
+        //dd(DB::getQueryLog()); // Show results of log
         return response()->json(['success' => '等待賣家同意退貨中']);
     }
     // public function cancelOrderDetail(Request $request)

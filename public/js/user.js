@@ -117,12 +117,15 @@ $(document).ready(function(){
             </div>`)
         count = list.length;
         for (let i = 0; i < count; i++) {
-            id = list[i]['productID'];
-            name = list[i]['name'];
-            price = list[i]['price'];
-            quantity = list[i]['quantity'];;
-            sellerID = list[i]['sellerID'];
-            src = "data:image/jpeg;base64," + (list[i]['img']); 
+            let id = list[i]['productID'];
+            let name = list[i]['name'];
+            let price = list[i]['price'];
+            let quantity = list[i]['quantity'];;
+            let discount = list[i]['discount'];
+            if(discount==null){
+                discount='無';
+            }
+            let src = "data:image/jpeg;base64," + (list[i]['img']); 
             let idName = "listDivRow"
             idx = i;
             nextIdx = i + 1;
@@ -142,6 +145,7 @@ $(document).ready(function(){
         <label>商品編號:</label><span class="productID">${id}</span><br>
         <label>商品名稱:</label><span class="datatime">${name}</span><br>
         <label>價格:</label><span id="price${id}" value ="${price}" class="price">${price*quantity}</span><br>
+        <label>優惠活動名稱 #</label><span id="discount${id}" value ="${discount}" class="discount">${discount}</span><br>
         <label>數量:&nbsp;</label><button id="minus" name = "${id}"value="${quantity}"onclick="minus(this)">-</button><input class="w-25" name="${id}"id="inputQuantity${id}" type="text" value="${quantity}" onkeydown="" onkeyup="changePrice(this),value=value.replace(/[^\\d]/g,'')"><button id="plus" name = "${id}"value="${quantity}"onclick="plus(this)">+</button><br>
         `);
             $('#' + idName + ' #list-footer').append(`
@@ -260,7 +264,6 @@ $(document).ready(function(){
                             }
                             $("#form-sel").append('<option value="' + index + '">' + arr+data.discount[index]  +'</option>')
                         });
-                        // $("#checkoutForm div[name=result]").html('<p>'+data.other[0]+'</p><h3>總結帳金額$:'+data.amount[0]+'</h3>');
                         $("#checkoutForm input[name=discount]").val(0);
                         other_sum = data.other;
                         amount = data.amount;
@@ -268,11 +271,11 @@ $(document).ready(function(){
                     }else if(data.wrong){
                         alert(data.wrong);
                         console.log('wrong');
+                        initShopCart();
                     }else if(data.error){
                         $("#form-sel").append('<option value="0">' + data.error + '</option>')
                         $("#checkoutForm input[name=discount]").val('0');
                         $("#checkoutForm div[name=result]").html('<h3>總結帳金額$:'+data.amount+'</h3>');
-                       
                     }
                     
                 },
@@ -280,6 +283,9 @@ $(document).ready(function(){
                     console.log('Error:',data);
                 }
             })
+        }else{
+            alert('請選擇商品');
+            return;
         }
         $("#ajaxCheckoutModel").modal('show');
         // $('#list-body-info .price').each(function(key) { 
@@ -480,7 +486,8 @@ function format ( d ,id) {
         let name = 'drink';
         htmlText += `
         <tr>
-            <td>name : ${orderDetail[index].name}</td>
+            <td>編號 : ${orderDetail[index].productID}</td>
+            <td>商品名稱 : ${orderDetail[index].name}</td>
             <td>${orderDetail[index].quantity} 件</td>
             <td>$${orderDetail[index].total}</td>
             <td>${orderDetail[index].status}</td>

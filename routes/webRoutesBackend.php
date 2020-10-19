@@ -28,7 +28,7 @@ Route::get('/getOrder', 'OrderDetailAjaxController@getOrder');
 Route::post('/getOrderDetail', 'OrderDetailAjaxController@getOrderDetail');
 Route::post('/ship', 'OrderDetailAjaxController@ship');
 Route::post('/returnOrder', 'OrderDetailAjaxController@returnOrder');
-Route::post('/returnOrderDetail', 'OrderDetailAjaxController@receipt');
+Route::post('/returnOrderDetail', 'OrderDetailAjaxController@returnOrderDetail');
 Route::post('/upload', 'ProductAjaxController@uploadImg');
 Route::post('/setConfig', 'ConfigController@setConfig');
 Route::get('/getConfig', 'ConfigController@getConfig');

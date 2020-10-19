@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\DB;
 class ShoppingCartAjaxController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
 
      * Display a listing of the resource.
@@ -20,20 +24,29 @@ class ShoppingCartAjaxController extends Controller
      * @return \Illuminate\Http\Response
 
      */
-
+    // GROUP_CONCAT(DISTINCT c.name)
     public function index(Request $request)
     {
-
+        $user_id = $request->user()->id;
         if ($request->ajax()) {
+             //DB::enableQueryLog(); // Enable query log
+            
             $data = DB::table('shopCart')
                 ->join('products', 'shopCart.productID', '=', 'products.productID')
+                ->leftJoin('products_discounts', 'shopCart.productID', '=', 'products_discounts.product_id')
+                ->leftJoin('discounts', 'products_discounts.discount_id', '=', 'discounts.id')
                 ->select('shopCart.id',
                     'shopCart.productID',
                     'products.name',
                     'products.price',
                     'shopCart.quantity',
-                    'products.img')
+                    'products.img',
+                    DB::raw('GROUP_CONCAT(DISTINCT discounts.name) as discount')
+                    )
+                ->where('user_id',$user_id)
+                ->groupBy('shopCart.productID','shopCart.id','shopCart.price','shopCart.quantity','products.img') 
                 ->get();
+                //dd(DB::getQueryLog()); // Show results of log
             foreach ($data as $key => $value) {
                 //echo $value->name;
                 $value->img = base64_encode($value->img);
@@ -80,18 +93,17 @@ class ShoppingCartAjaxController extends Controller
     public function store(Request $request)
     {
         if(!Auth::check()){
-            return ;
+            return response()->json(['login' => '1']);
         }
         $user_id = $request->user()->id;
         $product_id = $request->id;
         $product = Product::find($product_id);
         ShopCart::updateOrCreate(['user_id' => $user_id, 'productID' => $product_id],
             [
-
                 'price' => $product->price,
                 'quantity' => $request->quantity,
             ]);
-        return response()->json(['success' => 'ShopCart saved successfully.']);
+        return response()->json(['success' => '成功將商品存於購物車中.']);
     }
 
     /**
@@ -143,7 +155,7 @@ class ShoppingCartAjaxController extends Controller
             ->delete();
         }
 
-        return response()->json(['success' => 'ShopCart deleted successfully.']);
+        return response()->json(['success' => '清理購物車']);
 
     }
 

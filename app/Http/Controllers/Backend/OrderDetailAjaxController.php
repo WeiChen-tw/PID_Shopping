@@ -24,7 +24,10 @@ class myDiscount
 }
 class OrderDetailAjaxController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
     /**
 
      * Display a listing of the resource.
@@ -340,6 +343,7 @@ class OrderDetailAjaxController extends Controller
                 ->orderBy('orders.id', 'desc')
                 ->get();
             //$data2 = DB::select('SELECT p.productID,c.id,p.name,c.name as category FROM `products` as p INNER JOIN products_categories as pc INNER JOIN categories as c on p.productID = pc.product_id and pc.category_id = c.id GROUP BY p.productID ,c.id,c.name');
+            
             //dd(DB::getQueryLog()); // Show results of log
             return Datatables::of($order)
                 ->addColumn('details', function ($row) {
@@ -500,6 +504,7 @@ class OrderDetailAjaxController extends Controller
                 foreach ($orderDetail as $key => $row) {
                     $product = Product::find($row->productID);
                     $product->quantity += $row->quantity;
+                    $product->quantitySold -= $row->quantity;
                     $product->save();
                     $row->status = "退貨成功";
                     $row->save();
@@ -518,6 +523,7 @@ class OrderDetailAjaxController extends Controller
                 foreach ($orderDetail as $key => $row) {
                     $product = Product::find($row->productID);
                     $product->quantity += $row->quantity;
+                    $product->quantitySold -= $row->quantity;
                     $product->save();
                     $row->status = "退貨成功";
                     $row->save();
@@ -536,6 +542,7 @@ class OrderDetailAjaxController extends Controller
                 foreach ($orderDetail as $key => $row) {
                     $product = Product::find($row->productID);
                     $product->quantity += $row->quantity;
+                    $product->quantitySold -= $row->quantity;
                     $product->save();
                     $row->status = "退貨成功";
                     $row->save();
@@ -565,9 +572,13 @@ class OrderDetailAjaxController extends Controller
             $product_id = null;
             $amount = 0;
             $exp = null;
+            $this_item = DB::table('orderDetails')
+                ->where('id','=',$request->id)
+                ->where('productID','=',$request->product_id)
+                ->first();
             $exp_max = $config->moneyToLevel * $config->upgrade_limit;
-            if ($request->productID) {
-                $product_id = $request->productID;
+            if ($request->product_id) {
+                $product_id = $request->product_id;
             }
             //計算退貨商品金額
             foreach ($orderDetail as $key => $row) {
@@ -577,15 +588,19 @@ class OrderDetailAjaxController extends Controller
                     }
                 }
             }
-            if($)
+            
             //優惠模式2 要計算折扣數
             if ($order->sysMethod == 2) {
                 //計算折扣數
-                $amount = $amount  *(1 - $order->sysDiscount/100);
+                if($this_item->discount_flag==1){
+                    $amount = round($amount  *(1 - $order->sysDiscount/100));
+                }
             } 
             //設定經驗為可接受最大值
             if ($amount > $exp_max) {
                 $exp = $exp_max;
+            }else{
+                $exp = $amount;
             }
             //判斷優惠模式
             if ($order->sysMethod == 1) {
@@ -598,19 +613,20 @@ class OrderDetailAjaxController extends Controller
                         $user->level = $lv;
                     }
                 }
-                $user->coin -= $order->orderDiscount;
                 $user->coin += $amount;
                 $user->save();
-                $order->status = "退貨成功";
+                $order->status = "部份商品退貨成功";
                 $order->save();
-                foreach ($orderDetail as $key => $row) {
-                    $product = Product::find($row->productID);
-                    $product->quantity += $row->quantity;
-                    $product->save();
-                    $row->status = "退貨成功";
-                    $row->save();
-                }
-                return response()->json(['success' => '退貨成功,系統收回$' . $order->orderDiscount . '購物金與經驗值' . $amount]);
+                
+                $product = Product::find($this_item->productID);
+                $product->quantity += $this_item->quantity;
+                $product->quantitySold -= $this_item->quantity;
+                $product->save();
+                DB::table('orderDetails')
+                ->where('id','=',$request->id)
+                ->where('productID','=',$request->product_id)
+                ->update(['status' => "退貨成功"]);
+                return response()->json(['success' => '退貨成功,系統退回$' . $amount  . '購物金與經驗值' . $exp]);
             } else if ($order->sysMethod == 2) {
                 $user->exp_bar -= $exp;
                 $lv = round($user->exp_bar / $config->moneyToLevel);
@@ -619,16 +635,19 @@ class OrderDetailAjaxController extends Controller
                 }
                 $user->coin += $amount;
                 $user->save();
-                $order->status = "退貨成功";
+                $order->status = "部份商品退貨成功";
                 $order->save();
-                foreach ($orderDetail as $key => $row) {
-                    $product = Product::find($row->productID);
-                    $product->quantity += $row->quantity;
-                    $product->save();
-                    $row->status = "退貨成功";
-                    $row->save();
-                }
-                return response()->json(['success' => '退貨成功,系統收回經驗值' . $amount]);
+               
+                $product = Product::find($this_item->productID);
+                $product->quantity += $this_item->quantity;
+                $product->quantitySold -= $this_item->quantity;
+                $product->save();
+                DB::table('orderDetails')
+                ->where('id','=',$request->id)
+                ->where('productID','=',$request->product_id)
+                ->update(['status' => "退貨成功"]);
+                
+                return response()->json(['success' => '退貨成功,退回購物金$'.$amount.',系統收回經驗值' . $exp]);
             } else {
                 $user->exp_bar -= $exp;
                 $lv = round($user->exp_bar / $config->moneyToLevel);
@@ -637,18 +656,20 @@ class OrderDetailAjaxController extends Controller
                 }
                 $user->coin += $amount;
                 $user->save();
-                $order->status = "退貨成功";
+                $order->status = "部份商品退貨成功";
                 $order->save();
-                foreach ($orderDetail as $key => $row) {
-                    $product = Product::find($row->productID);
-                    $product->quantity += $row->quantity;
-                    $product->save();
-                    $row->status = "退貨成功";
-                    $row->save();
-                }
-                return response()->json(['success' => '退貨成功,系統收回經驗值' . $amount]);
+               
+                $product = Product::find($this_item->productID);
+                $product->quantity += $this_item->quantity;
+                $product->quantitySold -= $this_item->quantity;
+                $product->save();
+                DB::table('orderDetails')
+                ->where('id','=',$request->id)
+                ->where('productID','=',$request->product_id)
+                ->update(['status' => "退貨成功"]);
+                
+                return response()->json(['success' => '退貨成功,退回購物金$'.$amount.',系統收回經驗值' . $exp]);
             }
-            //$order->delete();
             return response()->json(['success' => '退貨成功']);
         } else if ($request->action == 'no') {
             $order = Order::find($request->id);

@@ -9,7 +9,7 @@ class Discount extends Model
     protected $table = 'discounts';
     //白名單
     protected $fillable = [
-        'method', 'total', 'discount',
+        'name','method', 'total', 'discount','user_lv'
     ];
     public $timestamps = false;
 

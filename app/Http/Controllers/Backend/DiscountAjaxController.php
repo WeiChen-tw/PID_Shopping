@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\DB;
 
 class DiscountAjaxController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
     /**
 
      * Display a listing of the resource.
@@ -110,11 +113,30 @@ class DiscountAjaxController extends Controller
                 return response()->json(['error' => '確認優惠內容,請小於100%']);
             }
         }
+        if (!is_numeric($request->total) 
+            || !is_numeric($request->discount)
+            || !is_numeric($request->user_lv)
+            || !is_numeric($request->method)) {
+            return response()->json(['error' => '僅能輸入數字']);
+        }
+
+        if ($request->total <=0 || $request->discount <=0) {
+            return response()->json(['error' => '請輸入大於0的數字']);
+        }
+        if ($request->user_lv > 10 || $request->user_lv < 0) {
+            return response()->json(['error' => '單筆訂單升級限制不得大於10等或小於0等']);
+        }
+        if($request->method<0 || $request->method>2){
+            return response()->json(['error' => '輸入錯誤']);
+        }
+        
         Discount::updateOrCreate(['id' => $request->id],
             [
+                'name' => $request->name,
                 'method' => $request->method,
                 'total' => $request->total,
                 'discount' => $request->discount,
+                'user_lv' => $request->user_lv,
             ]);
 
         return response()->json(['success' => 'Discount saved successfully.']);

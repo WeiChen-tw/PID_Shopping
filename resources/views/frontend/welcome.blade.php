@@ -82,6 +82,7 @@
                         <div class="col-md-12 top-right links">
                             @auth
                                 <a href="{{ url('/home') }}">購物車</a>
+                                <a href="{{ url('/msgBoard') }}">留言板</a>
                                 @else
                                     <a href="{{ route('login') }}">Login</a>
                                     <a href="{{ route('register') }}">Register</a>
@@ -146,6 +147,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="shopCartForm" name="shopCartForm" class="form-horizontal">
+                    
                         <input type="hidden" name="id" id="id">
 
 

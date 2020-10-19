@@ -52,7 +52,7 @@
                                     <a class="btn btn-danger" href="javascript:void(0)" id="isBan" data-table="user">停權</a>
                                     <a class="btn btn-primary" href="javascript:void(0)" id="unBan" data-table="user">解除停權</a>
 
-                                    <table id="usersTable" class="display" >
+                                    <table id="usersTable" class="display" style="width:100%"> 
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" name="chkAll" data-table='#usersTable' /> </th>
@@ -385,10 +385,11 @@
                                     <h2>優惠活動管理</h2>
                                     <form class="form-inline" id = "discountForm">
                                         <div class="form-group mx-sm-3 mb-2">
-                                        <label  class="">設定優惠活動</label>
+                                            <label  for="discountName" class="">設定優惠活動名稱</label>
+                                                <input type="text" name="name" class="form-control" id="discountName" placeholder="活動名稱" required>
                                             <label for="method" class="">優惠模式</label>
                                             <div class="">
-                                                <select id="" name='method' class="form-control" data-table="discount">
+                                                <select id="sel-discountForm" name='method' class="form-control" data-table="discount" required>
                                                     <option value="1">滿額贈購物金</option>
                                                     <option value="2">滿額折扣%</option>
                                                 </select>
@@ -396,12 +397,16 @@
                                         </div>
                                         <div class="form-group mx-sm-3 mb-2">
                                             <label for="inputTotal" class="">滿額</label>
-                                            <input type="text" name="total" class="form-control" id="inputTotal" placeholder="$">
+                                            <input type="text" name="total" class="form-control" id="inputTotal" placeholder="$" required>
                                         </div>
                                         
                                         <div class="form-group mx-sm-3 mb-2">
                                             <label for="inputTotal" class="">優惠</label>
                                             <input type="text" name="discount" class="form-control" id="inputDiscount" placeholder="">
+                                        </div>
+                                        <div class="form-group mx-sm-3 mb-2">
+                                            <label for="inputLevel" class="">level</label>
+                                            <input type="text" name="user_lv" class="form-control" id="inputLevel" placeholder="適用等級含以上" required>
                                         </div>
                                         <a class="form-control btn btn-primary mb-2" href="javascript:void(0)" id="createNewDiscount"> 送出</a>
 
@@ -410,9 +415,11 @@
                                         <thead>
                                             <tr>
                                                 <th>流水號</th>
+                                                <th>名稱</th>
                                                 <th>優惠模式</th>
                                                 <th>滿額</th>
                                                 <th>優惠</th>
+                                                <th>適用等級</th>
                                                 <th width="320px">操作</th>
                                             </tr>
                                         </thead>
@@ -433,7 +440,12 @@
                                             <div class="modal-body">
                                                 <form id="discountForm2" name="discountForm2" class="form-horizontal">
                                                     <input type="hidden" name="id" id="id">
-                
+                                                    <div class="form-group">
+                                                        <label for="name" class="col-sm-4 control-label">名稱</label>
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control" id="" name="name" placeholder="輸入活動名稱" value="" maxlength="50" required="">
+                                                        </div>
+                                                    </div>
                                                     <div class="form-group">
                                                         <label for="method" class="col-sm-2 control-label">Method</label>
                                                         <div class="col-sm-12">
@@ -455,7 +467,12 @@
                                                             <input type="text" class="form-control" id="" name="discount" placeholder="" value="" maxlength="50" required="">
                                                         </div>
                                                     </div>
-                                                
+                                                    <div class="form-group">
+                                                        <label for="user_lv" class="col-sm-4 control-label">適用等級</label>
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control" id="" name="user_lv" placeholder="" value="" maxlength="50" required="">
+                                                        </div>
+                                                    </div>
                                                 </form>
                                             </div>
                                             <div class="modal-footer">
@@ -533,7 +550,7 @@
         </div>
     </div>
     @push('scripts')
-    <script src="{{ asset('js/product.js') }}"></script>
+    <script src="{{ asset('js/backend.js') }}"></script>
     <script src="{{ asset('js/table.js') }}"></script>
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
