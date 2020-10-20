@@ -1,20 +1,22 @@
 
-
-$.ajax({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    type:"GET",
-    url:"./load_product",
-    dataType:"json",
-    success:function(data){
-        $("#showBox").html(data.html)
-        console.log(data.success)
-    },
-    error:function(xhr){
-        alert(xhr.status)
-    }
-})
+function init(params) {
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type:"GET",
+        url:"./load_product",
+        dataType:"json",
+        success:function(data){
+            $("#showBox").html(data.html)
+            console.log(data.success)
+        },
+        error:function(xhr){
+            alert(xhr.status)
+        }
+    })
+}
+init();
 $(document).ready(function(){
 
     $.ajaxSetup({
@@ -22,6 +24,19 @@ $(document).ready(function(){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+    initSelect();
+    $("#form-sel").on('change',function(){
+        let category_id = $(this).val();
+        console.log('id',category_id);
+        if(category_id){
+            $.post('./searchCategory',{'category_id':category_id},function(data){
+                $("#showBox").html(data.html);
+            })
+        }else{
+            init();
+        }
+        
+    })
     $("#showBox").on('click','.this-product',function () {
         let product_id = $(this).data('id');
         $('#shoppingCartModel').modal();
@@ -57,6 +72,9 @@ $(document).ready(function(){
                     $(form_name).trigger("reset");
                     alert(data.success);
                 }
+                if(data.login){
+                    document.location.href="http://www.shopping.net/public/login"
+                }
                
             },
             error: function (data) {
@@ -66,4 +84,24 @@ $(document).ready(function(){
         });
 
     }
+    $("#searchKeyword").on('click',function(){
+        let keyword = $("#searchForm input[name=keyword]").val();
+        if(keyword.length<0){
+            alert('請輸入關鍵字');
+            return;
+        }
+        $.post('./searchKeyword',{'keyword':keyword},function(data){
+            $("#showBox").html(data.html);
+        })
+    });
 })
+
+function initSelect() {
+    $.get("./getCategory", function (data) {
+        $("#form-sel").empty();
+        $("#form-sel").append('<option value="">查詢分類</option>');
+        $.each(data.success, function (index, arr) {
+            $("#form-sel").append('<option value="' + arr.id + '">' + arr.name + '</option>');
+        });
+    })
+}

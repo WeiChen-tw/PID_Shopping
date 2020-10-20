@@ -331,7 +331,7 @@ class OrderDetailAjaxController extends Controller
         if ($request->ajax()) {
             //$user_id = $request->user()->id;
             $data = Order::get();
-            //DB::enableQueryLog(); // Enable query log
+            
 
             // Your Eloquent query executed by using get()
 
@@ -344,7 +344,6 @@ class OrderDetailAjaxController extends Controller
                 ->get();
             //$data2 = DB::select('SELECT p.productID,c.id,p.name,c.name as category FROM `products` as p INNER JOIN products_categories as pc INNER JOIN categories as c on p.productID = pc.product_id and pc.category_id = c.id GROUP BY p.productID ,c.id,c.name');
             
-            //dd(DB::getQueryLog()); // Show results of log
             return Datatables::of($order)
                 ->addColumn('details', function ($row) {
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-table="order" data-id="' . $row->id . '" data-original-title="Details" class="btn btn-primary btn-sm details-control">明細</a>';

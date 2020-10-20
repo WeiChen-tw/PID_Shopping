@@ -261,6 +261,9 @@ $(document).ready(function () {
         $('#productForm').trigger("reset");
         $('#modelProductHeading').html("Create New Product");
         $('#ajaxProductModel').modal('show');
+        $("#form-sel").selectpicker('val',['noneSelectedText']);
+        $("#form-sel").selectpicker('refresh');
+        $("#showPreviewImage").attr('src','http://www.admin.net/public/images/default.jpg');
          //get select option data
         
     });
@@ -359,7 +362,7 @@ $(document).ready(function () {
                 //$('#saveBtn').val("edit-user");
                 $(obj.form_name + ' input[name=product_id]').val(data.productID);
                 $(obj.form_name + ' input[name=name]').val(data.name);
-                //$(obj.form_name + ' input[name=category]').val(data.category);
+                $(obj.form_name + ' input[name=category]').val(data.category);
                 $(obj.form_name + ' input[name=price]').val(data.price);
                 $(obj.form_name + ' input[name=quantity]').val(data.quantity);
                 $(obj.form_name + ' input[name=quantitySold]').val(data.quantitySold);
@@ -369,7 +372,11 @@ $(document).ready(function () {
                 }
                 
                 $(obj.model_name).modal('show');
-                $('#form-sel').selectpicker('val',['noneSelectedText'])
+                $("#form-sel").selectpicker('val',['noneSelectedText']);
+                if(data.category){
+                    let str = data.category.split(',');
+                    $("#form-sel").selectpicker ("val",str).trigger("change");
+                }
                 $("#form-sel").selectpicker('refresh');
             })
         }
@@ -416,7 +423,7 @@ $(document).ready(function () {
             })
         }
     });
-    //save changes
+    //儲存
     $('body').on('click', '.saveBtn', function (e) {
         e.preventDefault();
         var formData = new FormData(); 
@@ -431,17 +438,17 @@ $(document).ready(function () {
         button.html('Sending..');
         setObjName(obj);
         console.log($(this).data("table"), $(this).data("id"))
-        console.log($(obj.form_name).serialize());
-        if(obj.table_name=="products"){
+        console.log($(obj.form_name).serialize());;
+        if(obj.table_name=="products" && $("#showPreviewImage").attr('src').length<24){
             var that = $("#banner_path"); 
             var imgpex = /.(jpg|png|jpeg|gif)$/i; 
             if (!imgpex.test(that.val())) {
                   alert("如無法上傳。請上傳JPG、PNG、JPEG格式的文件"); 
-                  $(button).html('Save Changes');
+                  $(button).html('儲存');
                   return;
             } else if (that[0].files[0].size > 2000000) {
                   alert("上傳的圖片大於2M"); 
-                  $(button).html('Save Changes');
+                  $(button).html('儲存');
                   return;
             } else {
                 formData.append("file", $('#banner_path')[0].files[0]); 
@@ -462,7 +469,7 @@ $(document).ready(function () {
             cache: false, 
             success: function (data) {
                 $(obj.form_name).trigger("reset");
-                $(button).html('Save Changes');
+                $(button).html('儲存');
                 $(obj.model_name).modal('hide');
                 obj.table.draw();
                 $('input[name=chkAll').prop('checked',false);
@@ -470,7 +477,7 @@ $(document).ready(function () {
             },
             error: function (data) {
                 console.log('Error:', data);
-                $(button).html('Save Changes');
+                $(button).html('儲存');
             }
         });
     
@@ -533,7 +540,7 @@ $(document).ready(function () {
        $("#saveProductBtn").attr('data-action', 'add');
         $(model_name).modal('show');
 
-        $.post("./getProductData", function (data) {
+        $.post("./getProductData",{'table':dataTable,'id':id,'action':'add'}, function (data) {
             $.each(data, function (index, arr) {
                 let cardBody;
                 if (arr.img != '') {

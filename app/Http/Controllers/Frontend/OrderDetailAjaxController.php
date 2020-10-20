@@ -64,6 +64,10 @@ class OrderDetailAjaxController extends Controller
         $wrong_id = null;
         $addr = $request->addr;
         $user =  User::find($request->user()->id);
+        $use_coin = null;
+        if($request->coin){
+            $use_coin =$request->coin;
+        }
         foreach ($request->quantity as $key => $quantity) {
             if ($quantity <= 0) {
                 $wrong_id .= $request->productID[$key] . ' ';
@@ -87,6 +91,9 @@ class OrderDetailAjaxController extends Controller
         }
         if (!isset($addr)) {
             return response()->json(['wrong' => '請輸入地址']);
+        }
+        if ($use_coin!=null && $use_coin > $user->coin ) {
+            return response()->json(['wrong' => '購物金錯誤']);
         }
         //----計算優惠開始----//
         $discount_method = [];
@@ -210,10 +217,13 @@ class OrderDetailAjaxController extends Controller
             $obj->orderDiscount = 0;
         }
         //----計算優惠結束----//
-
+        if($use_coin==null){
+            $use_coin='0';
+        }
         Order::updateOrCreate(['id' => $request->id],
             [
                 'user_id' => $user_id,
+                'use_coin' => $use_coin,
                 'addr' => $addr,
                 'sysTotal' => $obj->sysTotal,
                 'sysDiscount' => $obj->sysDiscount,
@@ -238,7 +248,7 @@ class OrderDetailAjaxController extends Controller
                     }
                 }
             }
-           
+            
             
             OrderDetail::updateOrCreate(
                 [
@@ -252,10 +262,7 @@ class OrderDetailAjaxController extends Controller
                     'discount_flag' => $discount_flag,
                 ]);
         }
-        
-       
-
-        return response()->json(['success' => '送出訂單']);
+        return response()->json(['success' => '送出訂單,本次預計使用$'+$use_coin+'購物金']);
     }
     public function calc(Request $request)
     {
@@ -359,9 +366,10 @@ class OrderDetailAjaxController extends Controller
                 'total' => $order_total,
                 'discount' => $order_discount,
                 'other' => $other_sum,
-                'amount' => $amount]);
+                'amount' => $amount,
+                'coin' => $user->coin]);
         } else {
-            return response()->json(['error' => '不符合優惠條件', 'amount' => $other_total]);
+            return response()->json(['error' => '不符合優惠條件', 'amount' => $other_total,'coin' => $user->coin]);
         }
 
     }
@@ -531,6 +539,9 @@ class OrderDetailAjaxController extends Controller
                     $user->exp_bar += $exp;
                 }
             }
+            if($order->use_coin!=null || $order->use_coin!='0'){
+                $user->coin -= $order->use_coin;
+            }
             $user->coin += $order->orderDiscount;
             $user->save();
             $order->status = "已付款取貨";
@@ -556,6 +567,10 @@ class OrderDetailAjaxController extends Controller
                     $user->exp_bar += $exp;
                 }
             }
+            if($order->use_coin!=null || $order->use_coin!='0'){
+                $user->coin -= $order->use_coin;
+            }
+            $user->save();
             $user->save();
             $order->status = "已付款取貨";
             $order->save();
@@ -578,6 +593,9 @@ class OrderDetailAjaxController extends Controller
                     $user->level = $lv;
                     $user->exp_bar += $exp;
                 }
+            }
+            if($order->use_coin!=null || $order->use_coin!='0'){
+                $user->coin -= $order->use_coin;
             }
             $user->save();
             $order->status = "已付款取貨";

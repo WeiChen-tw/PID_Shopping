@@ -156,7 +156,7 @@
 
                     <div class="col-sm-offset-2 col-sm-10">
 
-                     <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
+                     <button type="submit" class="btn btn-primary" id="saveBtn" value="create">儲存
 
                      </button>
 
@@ -327,7 +327,7 @@
           },
           error: function (data) {
               console.log('Error:', data);
-              $('#saveBtn').html('Save Changes');
+              $('#saveBtn').html('儲存');
           }
       });
     });

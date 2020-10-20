@@ -8,6 +8,12 @@ Auth::routes();
 
 Route::get('home', 'HomeController@index')->name('home');
 Route::get('load_product', 'HtmlController@loadProduct');
+Route::get('/msgBoard', 'ReMsgController@index');
+Route::post('/msgBoard/reply', 'ReMsgController@store');
+Route::post('/msgBoard/edit/{id}', 'ReMsgController@edit');
+Route::delete('/msgBoard/del/{id}', 'ReMsgController@destroy');
+Route::delete('/msgBoard/delUserMsg/{id}', 'ReMsgController@deleteUserMsg');
+
 //--
 Route::resource('home/ajaxproducts', 'ProductAjaxController');
 Route::resource('home/ajaxcategory', 'CategoryAjaxController');

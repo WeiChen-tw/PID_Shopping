@@ -38,7 +38,7 @@
                         <a class="nav-link" id="v-pills-category-tab" data-toggle="pill" href="#v-pills-category" role="tab" aria-controls="v-pills-category" aria-selected="false">商品分類管理</a>
                         <a class="nav-link" id="v-pills-discount-tab" data-toggle="pill" href="#v-pills-discount" role="tab" aria-controls="v-pills-discount" aria-selected="false">設定優惠活動</a>
                         <a class="nav-link" id="v-pills-experience-tab" data-toggle="pill" href="#v-pills-experience" role="tab" aria-controls="v-pills-experience" aria-selected="false">等級機制</a>
-                        <a class="nav-link" id="v-pills-myData-tab" data-toggle="pill" href="#v-pills-myData" role="tab" aria-controls="v-pills-myData" aria-selected="false">銷售數據</a>
+                        <a class="nav-link" id="v-pills-userMsgBoard-tab"  href="{{ url('/msgBoard') }}"  aria-selected="false">留言板</a>
                     </div>
                 </div>
             </div>
@@ -257,7 +257,7 @@
                                                         <div class="form-group">
                                                             <label for="category" class="col-sm-2 control-label">類別</label>
                                                             <div class="col-sm-12">
-                                                                <input  name="category" id="category">
+                                                                <input  type="hidden" name="category" id="category">
                                                                 <select class ="selectpicker"    id="form-sel" data-table="products" multiple>
                                                                         
                                                                         
@@ -303,7 +303,7 @@
 
 
                                                         <div class="col-sm-offset-2 col-sm-10">
-                                                            <a class="btn btn-primary mb-2 saveBtn" data-table="products" href="javascript:void(0)" > Save Changes</a>
+                                                            <a class="btn btn-primary mb-2 saveBtn" data-table="products" href="javascript:void(0)" > 儲存</a>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -368,7 +368,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-offset-2 col-sm-10">
-                                                            <a class="btn btn-primary mb-2 saveBtn" data-table="category" href="javascript:void(0)" > Save Changes</a>
+                                                            <a class="btn btn-primary mb-2 saveBtn" data-table="category" href="javascript:void(0)" > 儲存</a>
                                                         </div>
                                                     </form>
                                                 </div>

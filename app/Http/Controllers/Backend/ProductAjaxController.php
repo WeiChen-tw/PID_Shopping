@@ -83,8 +83,26 @@ class ProductAjaxController extends Controller
 
     public function getProductData(Request $request)
     {
-
-        if ($request->table == 'category' && isset($request->id)) {
+        $data=null;
+        if($request->action=='add'){
+            $data = Product::all();
+            //DB::enableQueryLog(); // Enable query log
+            // if($request->table == 'category'){
+            //     $data = DB::table('products')
+            //     ->leftJoin('products_categories', 'products.productID', '=', 'products_categories.product_id')
+            //     ->where('products_categories.category_id', '<>', $request->id)
+            //     ->groupBY('products.productID')
+            //     ->select(DB::raw('products.*'))
+            //     ->get();
+            // }else if($request->table == 'discount'){
+            //     $data = DB::table('products')
+            //     ->join('products_discounts', 'products.productID', '=', 'products_discounts.product_id')
+            //     ->where('products_discounts.discount_id', '<>', $request->id)
+            //     ->get();
+            // }
+            //dd(DB::getQueryLog()); // Show results of log
+        }
+        else if ($request->table == 'category' && isset($request->id)) {
             $data = DB::table('products')
                 ->join('products_categories', 'products.productID', '=', 'products_categories.product_id')
                 ->where('products_categories.category_id', '=', $request->id)
@@ -94,10 +112,7 @@ class ProductAjaxController extends Controller
                 ->join('products_discounts', 'products.productID', '=', 'products_discounts.product_id')
                 ->where('products_discounts.discount_id', '=', $request->id)
                 ->get();
-        } else {
-            $data = Product::all();
-        }
-
+        } 
         foreach ($data as $key => $value) {
             //echo $value->name;
             $value->img = base64_encode($value->img);
@@ -141,7 +156,8 @@ class ProductAjaxController extends Controller
         if($request->category){
             $new_category = explode(",", $request->category);
         }
-        $product = Product::updateOrCreate(['productID' => $request->product_id],
+        if($image){
+            $product = Product::updateOrCreate(['productID' => $request->product_id],
             ['id' => 1,
                 'name' => $request->name,
                 'img' => $image,
@@ -149,11 +165,21 @@ class ProductAjaxController extends Controller
                 'quantity' => $request->quantity,
                 'quantitySold' => $request->quantitySold,
                 'description' => $request->description]);
+        }else{
+            $product = Product::updateOrCreate(['productID' => $request->product_id],
+            ['id' => 1,
+                'name' => $request->name,
+                'price' => $request->price,
+                'quantity' => $request->quantity,
+                'quantitySold' => $request->quantitySold,
+                'description' => $request->description]);
+        }
+        
         $arr = Products_Categories::where('product_id', $product->productID)->get();
         $old_category = [];
         $add_arr = [];
         $remove_arr = [];
-        if (empty($arr)) {
+        if (!empty($arr)) {
 
             foreach ($arr as $key => $row) {
                 array_push($old_category, $row->category_id);
@@ -198,8 +224,15 @@ class ProductAjaxController extends Controller
     public function edit($id)
     {
         //$product = Product::find($id);
-        $product = Product::where('productID', $id)->first();
+        $product = DB::table('products')->where('productID', $id)
+            ->leftJoin('products_categories','products.productID','products_categories.product_id')
+            ->select('products.*',DB::raw('GROUP_CONCAT(DISTINCT products_categories.category_id) as category'))
+            ->groupBy('products.productID')
+            ->first();
+        
         $product->img = 'data:image/jpeg;base64,'.base64_encode($product->img);
+        
+        
         //$product->save();
         return response()->json($product);
     }

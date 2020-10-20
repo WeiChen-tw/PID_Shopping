@@ -99,27 +99,32 @@
 
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                                 <span class="navbar-toggler-icon"></span>
-                            </button> <a class=" brand" href="#">Brand</a>
+                            </button> <a class=" brand" href="#">購物網</a>
                             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                                <ul class="navbar-nav">
+                                <!-- <ul class="navbar-nav">
                                     <li class="nav-item active">
                                         <a class="nav-link" href="#">Link <span class="sr-only">(current)</span></a>
                                     </li>
 
-                                    <!-- <li class="nav-item dropdown">
+                                    <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown">Dropdown link</a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                             <a class="dropdown-item" href="#">Action</a> <a class="dropdown-item" href="#">Another action</a> <a class="dropdown-item" href="#">Something else here</a>
                                             <div class="dropdown-divider">
                                             </div> <a class="dropdown-item" href="#">Separated link</a>
                                         </div>
-                                    </li> -->
-                                </ul>
-                                <form class="form-inline">
-                                    <input class="form-control mr-sm-2" type="text" />
-                                    <button class="btn btn-primary my-2 my-sm-0" type="submit">
-                                        Search
-                                    </button>
+                                    </li>
+                                </ul> -->
+                                <form id="searchForm"   class="form-inline">
+                                <select id="form-sel" >
+                                </select>
+                                <select id="form-sel2" >
+                                
+                                </select>
+                                    <input name="keyword" class="form-control mr-sm-2" type="text" />
+                                    <a id="searchKeyword"class="btn btn-primary my-2 my-sm-0" style="color:white"type="button">
+                                        搜尋
+                                    </a>
                                 </form>
 
                             </div>

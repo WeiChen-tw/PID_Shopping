@@ -257,7 +257,7 @@ $(document).ready(function(){
                         //alert(data.success);
                         //delShopCartAll();
                         $("#form-sel").append('<option value="0">不使用優惠活動</option>')
-                        $("#checkoutForm div[name=result]").html('<h3>總結帳金額$:'+data.amount[0]+'</h3>');
+                        $("#checkoutForm div[name=result]").html('<h3>總結帳金額$:'+data.amount[0]+'</h3><h4>可使用購物金餘額$'+data.coin+'</h4>');
                         $.each(data.total, function (index, arr) {
                             if(index==0){
                                 return true;
@@ -275,7 +275,7 @@ $(document).ready(function(){
                     }else if(data.error){
                         $("#form-sel").append('<option value="0">' + data.error + '</option>')
                         $("#checkoutForm input[name=discount]").val('0');
-                        $("#checkoutForm div[name=result]").html('<h3>總結帳金額$:'+data.amount+'</h3>');
+                        $("#checkoutForm div[name=result]").html('<h3>總結帳金額$:'+data.amount+'</h3><h4>可使用購物金餘額$'+data.coin+'</h4>');
                     }
                     
                 },
@@ -458,6 +458,7 @@ $(document).ready(function(){
         console.log(id);
     })
 
+   
 })
 
 function format ( d ,id) {

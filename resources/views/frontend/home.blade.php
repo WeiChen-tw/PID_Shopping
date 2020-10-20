@@ -186,6 +186,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
+                                                    <label for="coin" class="col-sm-2 control-label">購物金</label>
+                                                    <div class="col-sm-12">
+                                                        <input type="text" class="form-control" id="" name="coin" placeholder="輸入購物金" value="" maxlength="50" required="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
                                                     <label for="addr" class="col-sm-2 control-label">地址</label>
                                                     <div class="col-sm-12">
                                                         <input type="text" class="form-control" id="" name="addr" placeholder="輸入地址" value="" maxlength="50" required="">
