@@ -39,8 +39,6 @@ class UserAjaxController extends Controller
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-table="user" data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm edit">Edit</a>';
                     $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="user" data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm delete">Delete</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="user" data-id="' . $row->id . '" data-original-title="Order" class="btn btn-success btn-sm order">Order</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="user" data-id="' . $row->id . '" data-original-title="Msg" class="btn btn-link btn-sm order">Msg</a>';
                     return $btn;
                 })
                 ->rawColumns(['action', 'check'])
@@ -94,7 +92,7 @@ class UserAjaxController extends Controller
                 'password' => bcrypt($request->password),
             ]);
 
-        return response()->json(['success' => 'User saved successfully.']);
+        return response()->json(['success' => '成功儲存使用者資訊.']);
     }
 
     /**
@@ -132,7 +130,7 @@ class UserAjaxController extends Controller
             $users->save();
         }
 
-        return response()->json(['success' => 'User  successfully.']);
+        return response()->json(['success' => '操作成功.']);
     }
 
     /**
@@ -152,7 +150,7 @@ class UserAjaxController extends Controller
 
         User::find($id)->delete();
 
-        return response()->json(['success' => 'User deleted successfully.']);
+        return response()->json(['success' => '成功刪除使用者.']);
 
     }
 

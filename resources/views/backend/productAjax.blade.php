@@ -334,7 +334,7 @@
 
     $('body').on('click', '.deleteProduct', function () {
         var product_id = $(this).data("id");
-        confirm("Are You sure want to delete !");
+        confirm("確定要刪除嗎?");
 
         $.ajax({
             type: "DELETE",

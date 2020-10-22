@@ -84,11 +84,13 @@ $(document).ready(function () {
                 { data: "name" },
                 { data: 'created_at' },
                 { data: 'status' },
-                { data: 'total' ,
-                    name:'total',
-                    render: function(data,type,full,meta){
-                        return '$'+data;
-                    }},
+                { data:null, render:function(data,type,row){
+                    if(row.sysMethod == '2'){
+                        return '$'+(row.total-row.orderDiscount);
+                    }else{
+                        return '$'+row.total;
+                    }
+                }},
                 { data: 'details', name: 'details', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
@@ -223,7 +225,7 @@ $(document).ready(function () {
             if(data.success){
                 $("#levelForm input[name=moneyToLevel]").val(data.moneyToLevel);
                 $("#levelForm input[name=upgrade_limit]").val(data.upgrade_limit);
-                alert(data.success);
+                //alert(data.success);
             }else if(data.error){
                 alert(data.error);
             }
@@ -439,20 +441,25 @@ $(document).ready(function () {
         setObjName(obj);
         console.log($(this).data("table"), $(this).data("id"))
         console.log($(obj.form_name).serialize());;
-        if(obj.table_name=="products" && $("#showPreviewImage").attr('src').length<24){
-            var that = $("#banner_path"); 
-            var imgpex = /.(jpg|png|jpeg|gif)$/i; 
-            if (!imgpex.test(that.val())) {
-                  alert("如無法上傳。請上傳JPG、PNG、JPEG格式的文件"); 
-                  $(button).html('儲存');
-                  return;
-            } else if (that[0].files[0].size > 2000000) {
-                  alert("上傳的圖片大於2M"); 
-                  $(button).html('儲存');
-                  return;
-            } else {
-                formData.append("file", $('#banner_path')[0].files[0]); 
-            } 
+        if(obj.table_name=="products"  ){
+            if($('#productForm input[name=file]').val()!=''){
+                var that = $("#banner_path"); 
+                var imgpex = /.(jpg|png|jpeg|gif)$/i; 
+                if (that[0].files[0].size > 2000000) {
+                      alert("上傳的圖片大於2M"); 
+                      $(button).html('儲存');
+                      return;
+                } else {
+                    
+                    if (!imgpex.test(that.val())) {
+                        alert("如無法上傳。請上傳JPG、PNG、JPEG格式的文件"); 
+                        $(button).html('儲存');
+                        return;
+                    }
+                    formData.append("file", $('#banner_path')[0].files[0]); 
+                } 
+            }
+            
         }
        
 
@@ -490,9 +497,9 @@ $(document).ready(function () {
         let table_name = $(this).data("table");
         let id = $(this).data("id");
         let yes;
-        yes = confirm("Are you sure want to delete !");
+        yes = confirm("確定要刪除嗎?");
         if(!yes){
-            alert('You cancel delete. ');
+            alert('你取消了刪除動作.');
             return;
         }
             
@@ -502,7 +509,8 @@ $(document).ready(function () {
             table = categoryTable;
         else if (table_name == 'discount')
             table = discountTable;
-
+        else if(table_name=='user')
+            table = userTable;
         $.ajax({
             type: "DELETE",
             //url: "{{ route('ajaxproducts.store') }}"+'/'+product_id,

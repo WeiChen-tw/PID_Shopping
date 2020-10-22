@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.adminApp')
 
 @section('content')
 <div class="container">
@@ -20,33 +20,52 @@
                                 
                             </h5>
                             <div class="card-body">
-                                <p class="card-text">
-                                    內容:{{$row->content}}
-                                </p>
-                                <small id="" class="float-md-right form-text text-muted">{{$row->updated_at}}</small>
-                                
-                            </div>
-                            <div id="showReplyMsg{{$row->id}}"class="card-footer ">
-                                @foreach($reMsgData as $reMsg)
-                                
-                                    @if($reMsg->id == $row->id)
-                                        <h5 class="card-header">官方回覆
-                                        <a href="javascript:void(0)"   data-id="{{$row->id}}"  class="float-md-right btn btn-danger btn-sm delAdminMsg">刪除</a>
-                                        <a href="javascript:void(0)"   data-id="{{$row->id}}"  class="float-md-right btn btn-success btn-sm editAdminMsg">編輯</a>
-                                        </h5>
-                                        <div class="card-body" style="background-color:white">
-                                            <p class="card-text">
-                                                內容:{{$reMsg->content}}
+                            <div id="showMsg{{$row->id}}">
+                                @foreach($msgDataDetail as $msg)
+                                    @if($msg->msgData_id == $row->id)
+                                        @if($msg->auth=='user')
+                                            <p id="userMsg{{$msg->id}}"class="card-text">
+                                            內容:{{$msg->content}}
+                                            <small  class="float-md-right form-text text-muted">{{$msg->updated_at}}</small>
                                             </p>
-                                            <small id="" class="float-md-right form-text text-muted">{{$reMsg->updated_at}}</small>
-                                        </div>
-                                        @break
-                                    @endif
-                                    @if($loop->last)
-                                        暫無回覆
-                                            <a href="javascript:void(0)"   data-id="{{$row->id}}"  class="float-md-right btn btn-primary btn-sm reply">回覆</a>
+                                        @else
+                                            <h5 class="card-header">官方回覆
+                                            <a href="javascript:void(0)"   data-id="{{$msg->id}}"  class="float-md-right btn btn-danger btn-sm delAdminMsg">刪除</a>
+                                            <a href="javascript:void(0)"   data-id="{{$msg->id}}"  class="float-md-right btn btn-success btn-sm editAdminMsg">編輯</a>
+
+                                            </h5>
+                                            <p id="adminMsg{{$msg->id}}" class="bg-light card-text">
+                                            內容:{{$msg->content}}
+                                            
+                                            <small  class="float-md-right form-text text-muted">{{$msg->updated_at}}</small>
+                                            </p>
+                                        @endif
                                     @endif
                                 @endforeach
+                            </div>
+                            </div>
+                            <div id="showReplyMsg{{$row->id}}"class="card-footer ">
+                            
+                                @if($reMsgData==='null')
+                                        暫無回覆
+                                        <a href="javascript:void(0)"   data-id="{{$row->id}}"   class="float-md-right btn btn-primary btn-sm reply">回覆</a>
+                                @else
+                                    @foreach($reMsgData as $reMsg)
+                                        @if($reMsg->id == $row->id)
+                                            <a href="javascript:void(0)"   data-id="{{$row->id}}"  class="float-md-right btn btn-primary btn-sm reply">回覆</a>
+                                        
+                                            @break
+                                        @endif
+                                        @if($loop->last)
+                                        暫無回覆
+                                        <a href="javascript:void(0)"   data-id="{{$row->id}}"  class="float-md-right btn btn-primary btn-sm reply">回覆</a>
+                                        
+                                        @endif
+                                    @endforeach
+                                @endif
+                               
+                               
+                                
                             </div>
                         </div>
                     </div>

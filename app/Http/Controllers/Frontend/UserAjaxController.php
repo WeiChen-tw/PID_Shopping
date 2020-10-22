@@ -64,7 +64,7 @@ class UserAjaxController extends Controller
                     'phone' => $request->phone,
                 ]
             );
-            return redirect('home')->withSuccess('Profile saved successfully.');
+            return redirect('home')->withSuccess('成功修改個人資料.');
              
         }else{
             $res = DB::table('users')->where('id',$id)->select('password')->first();
@@ -84,7 +84,7 @@ class UserAjaxController extends Controller
                     'password' => bcrypt($request->newPassword),
                 ]
             );
-            return redirect('home')->withSuccess('Profile && New Password saved successfully.');
+            return redirect('home')->withSuccess('個人資料及密碼修改成功');
              
             //return response()->json(['success' => 'Profile && New Password saved successfully.']);
         }
@@ -103,30 +103,9 @@ class UserAjaxController extends Controller
                 //'password' => bcrypt($request->password),
             ]);
 
-        return response()->json(['success' => 'Profile saved successfully.']);
+        return response()->json(['success' => '成功修改個人資料.']);
     }
 
-    /**
-
-     * Show the form for editing the specified resource.
-
-     *
-
-     * @param  \App\Profile  $users
-
-     * @return \Illuminate\Http\Response
-
-     */
-
-    public function edit(Request $request)
-    {
-        // $id = $request->user()->id;
-        // //$users = Profile::find($id);
-        // $users = Profile::where('id', $id)->first();
-        
-        // //$users->save();
-        // return response()->json($users);
-    }
 
     
 
@@ -142,13 +121,13 @@ class UserAjaxController extends Controller
 
      */
 
-    public function destroy($id)
-    {
+    // public function destroy($id)
+    // {
 
-        Profile::find($id)->delete();
+    //     Profile::find($id)->delete();
 
-        return response()->json(['success' => 'Profile deleted successfully.']);
+    //     return response()->json(['success' => '成功刪除個人資料.']);
 
-    }
+    // }
 
 }

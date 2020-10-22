@@ -135,14 +135,12 @@ class ProductAjaxController extends Controller
 
     public function store(Request $request)
     {
-        //$targetDir = config('blog._picture_upload_path') . date('Y-m-d');
+        
         $image=null;
         if($request->hasFile('file')){
             $file = $request->file('file');
         
-            // if (!is_dir($targetDir)) {
-            //     @mkdir($targetDir, 0777, true);
-            // }
+          
             $originFilename = $file->getClientOriginalName();
             $fileSize = $file->getSize();
             $file_mime = $file->getClientOriginalExtension();
@@ -206,7 +204,7 @@ class ProductAjaxController extends Controller
             }
         }
 
-        return response()->json(['success' => 'Product saved successfully.']);
+        return response()->json(['success' => '成功儲存商品.']);
     }
 
     /**
@@ -251,7 +249,7 @@ class ProductAjaxController extends Controller
             $product->save();
         }
 
-        return response()->json(['success' => 'Product  successfully.']);
+        return response()->json(['success' => '操作成功.']);
     }
 
     /**
@@ -271,7 +269,7 @@ class ProductAjaxController extends Controller
 
         Product::find($id)->delete();
 
-        return response()->json(['success' => 'Product deleted successfully.']);
+        return response()->json(['success' => '成功刪除商品.']);
 
     }
 

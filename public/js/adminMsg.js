@@ -9,7 +9,7 @@ $(document).ready(function(){
    
     $('body').on('click','.reply',function(){
         let id = $(this).data('id');
-        addTextarea(id,'');
+        addTextarea(id,'','');
         console.log(id);
     })
   
@@ -51,7 +51,11 @@ $(document).ready(function(){
     
     $('body').on('click','.saveMsg',function(){
         let id = $(this).data('id');
-        reply(id);
+        let msg_id = '';
+        if($(this).data('msg_id')){
+            msg_id = $(this).data('msg_id');
+        }
+        reply(id,msg_id);
         console.log(id);
     })
     $('body').on('click','.cancel',function(){
@@ -59,17 +63,22 @@ $(document).ready(function(){
         cancel(id);
         console.log(id);
     })
+    $('body').on('click','.cancel2',function(){
+        let id = $(this).data('id');
+        cancel2(id);
+        console.log(id);
+    })
 })
 
-function reply(id) {
+function reply(id,msg_id) {
     let content = $("#replyForm textarea").val();
     if(content.length<=0){
         alert("請輸入訊息")
         return;
     }
-    $.post('./msgBoard/reply',{'id':id,'content':content},function(data){
+    $.post('./msgBoard/reply',{'id':id,'msg_id':msg_id,'content':content},function(data){
         if(data.success){
-            alert(data.success);
+            //alert(data.success);
             window.location.reload();
         }
     })
@@ -78,7 +87,7 @@ function edit(id){
     $.post('./msgBoard/edit/'+id,function(data){
         console.log(data);
         if(data){
-            addTextarea(id,data.content)            
+            addTextarea(id,data.msgData_id,data.content)            
         }
     })
 }
@@ -88,7 +97,20 @@ function cancel(id) {
     `
     $("#showReplyMsg"+id).html(btnHtml);
 }
-function addTextarea(id,text) {
+function cancel2(id) {
+    $.post('./msgBoard/edit/'+id,function(data){
+        console.log(data);
+        if(data){
+            let btnHtml = 
+            `內容:${data.content}
+            <small  class="float-md-right form-text text-muted">${data.updated_at}</small>`
+            $("#adminMsg"+id).html(btnHtml);
+        }
+    })
+    
+}
+
+function addTextarea(id,msg_id,text) {
         
     if(text.length>0){
         let formHtml = `<form id="replyForm" class="">
@@ -97,11 +119,11 @@ function addTextarea(id,text) {
             <textarea class="form-control" name="content" placeholder="">${text}</textarea>
         </div>
         
-        <a href="javascript:void(0)" type="button" data-id="${id}" class="btn btn-primary saveMsg" >送出</a>
-        <a href="javascript:void(0)" type="button" data-id="${id}" class="btn btn-danger cancel" >取消</a>
+        <a href="javascript:void(0)" type="button" data-id="${id}" data-msg_id="${msg_id}" class="btn btn-primary saveMsg" >送出</a>
+        <a href="javascript:void(0)" type="button" data-id="${id}" data-msg_id="${msg_id}" class="btn btn-danger cancel2" >取消</a>
     </form>`
 
-    $("#showReplyMsg"+id).html(formHtml);
+    $("#adminMsg"+id).html(formHtml);
     }else{
         let formHtml = `<form id="replyForm" class="">
         <div class="form-group">

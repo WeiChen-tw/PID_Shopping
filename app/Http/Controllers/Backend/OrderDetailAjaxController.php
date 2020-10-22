@@ -338,7 +338,7 @@ class OrderDetailAjaxController extends Controller
             $order = DB::table('orders')
                 ->join('orderDetails', 'orders.id', 'orderDetails.id')
                 ->join('users', 'orders.user_id', 'users.id')
-                ->select('orders.id', 'orders.user_id', 'users.name', 'orders.created_at', 'orders.status', DB::raw('SUM(orderDetails.price * orderDetails.quantity)  - orders.orderDiscount as total'))
+                ->select('orders.id', 'orders.user_id', 'users.name', 'orders.created_at', 'orders.status','orders.sysMethod','orders.orderDiscount', DB::raw('SUM(orderDetails.price * orderDetails.quantity) as total'))
                 ->groupBy('orders.id')
                 ->orderBy('orders.id', 'desc')
                 ->get();
@@ -414,37 +414,8 @@ class OrderDetailAjaxController extends Controller
 
     }
 
-    /**
 
-     * Show the form for editing the specified resource.
 
-     *
-
-     * @param  \App\ShopCart  $product
-
-     * @return \Illuminate\Http\Response
-
-     */
-
-    public function edit($id)
-    {
-        //$product = ShopCart::find($id);
-        //$product = ShopCart::where('productID', $id)->first();
-        //$product->save();
-        return response()->json($product);
-    }
-
-    /**
-
-     * Remove the specified resource from storage.
-
-     *
-
-     * @param  \App\ShopCart  $product
-
-     * @return \Illuminate\Http\Response
-
-     */
 
     public function ship(Request $request)
     {
@@ -571,6 +542,7 @@ class OrderDetailAjaxController extends Controller
             $product_id = null;
             $amount = 0;
             $exp = null;
+            $sum = null;
             $this_item = DB::table('orderDetails')
                 ->where('id','=',$request->id)
                 ->where('productID','=',$request->product_id)
@@ -584,10 +556,12 @@ class OrderDetailAjaxController extends Controller
                 if ($product_id) {
                     if ($row->productID == $product_id) {
                         $amount += $row->quantity * $row->price;
+                    }else{
+                        $sum += $row->quantity*$row->price;
                     }
                 }
             }
-            
+            $sum += $amount;
             //優惠模式2 要計算折扣數
             if ($order->sysMethod == 2) {
                 //計算折扣數
@@ -595,16 +569,22 @@ class OrderDetailAjaxController extends Controller
                     $amount = round($amount  *(1 - $order->sysDiscount/100));
                 }
             } 
-            //設定經驗為可接受最大值
-            if ($amount > $exp_max) {
+            //設定經驗為可接受最大值 
+            //計算當筆訂單總額
+            // 回朔等級 重算訂單經驗值
+            if ($sum > $exp_max) {
                 $exp = $exp_max;
             }else{
-                $exp = $amount;
+                $exp = $sum;
+            }
+            if($sum-=$amount > $exp_max){
+                $sum = $exp_max;
             }
             //判斷優惠模式
             if ($order->sysMethod == 1) {
                 $user->exp_bar -= $exp;
-                $lv = round($user->exp_bar / $config->moneyToLevel);
+                $lv = round($user->exp_bar / $config->moneyToLevel) + $sum;
+
                 if ($lv >= 0 && $user->level < 10) {
                     if ($lv - $user->level <= $config->upgrade_limit) {
                         $user->level -= $config->upgrade_limit;
@@ -625,10 +605,10 @@ class OrderDetailAjaxController extends Controller
                 ->where('id','=',$request->id)
                 ->where('productID','=',$request->product_id)
                 ->update(['status' => "退貨成功"]);
-                return response()->json(['success' => '退貨成功,系統退回$' . $amount  . '購物金與經驗值' . $exp]);
+                return response()->json(['success' => '退貨成功,系統退回$' . $amount  . '購物金與重新計算獲得經驗值' . $sum]);
             } else if ($order->sysMethod == 2) {
                 $user->exp_bar -= $exp;
-                $lv = round($user->exp_bar / $config->moneyToLevel);
+                $lv = round($user->exp_bar / $config->moneyToLevel) + $sum;
                 if ($lv >= 0 && $user->level < 10) {
                     $user->level = $lv;
                 }
@@ -646,10 +626,10 @@ class OrderDetailAjaxController extends Controller
                 ->where('productID','=',$request->product_id)
                 ->update(['status' => "退貨成功"]);
                 
-                return response()->json(['success' => '退貨成功,退回購物金$'.$amount.',系統收回經驗值' . $exp]);
+                return response()->json(['success' => '退貨成功,退回購物金$'.$amount.',系統重新計算訂單經驗值' . $sum]);
             } else {
                 $user->exp_bar -= $exp;
-                $lv = round($user->exp_bar / $config->moneyToLevel);
+                $lv = round($user->exp_bar / $config->moneyToLevel) + $sum;
                 if ($lv >= 0 && $user->level < 10) {
                     $user->level = $lv;
                 }
@@ -667,7 +647,7 @@ class OrderDetailAjaxController extends Controller
                 ->where('productID','=',$request->product_id)
                 ->update(['status' => "退貨成功"]);
                 
-                return response()->json(['success' => '退貨成功,退回購物金$'.$amount.',系統收回經驗值' . $exp]);
+                return response()->json(['success' => '退貨成功,退回購物金$'.$amount.',系統重新計算訂單經驗值' . $sum]);
             }
             return response()->json(['success' => '退貨成功']);
         } else if ($request->action == 'no') {

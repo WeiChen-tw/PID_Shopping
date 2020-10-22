@@ -216,6 +216,8 @@
                                             <th>訂單編號</th>
                                             <th>時間</th>
                                             <th>狀態</th>
+                                            <th>地址</th>
+                                            <th>優惠</th>
                                             <th>總金額</th>
                                             <th width="80px">明細</th>
                                             <th width="120px">操作</th>

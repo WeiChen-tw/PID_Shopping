@@ -66,11 +66,24 @@ $(document).ready(function(){
                 { data: "id" },
                 { data: 'created_at' },
                 { data: 'status' },
-                { data: 'total' ,
-                    name:'total',
-                    render: function(data,type,full,meta){
-                        return '$'+data;
-                    }},
+                { data: 'addr'},
+                { data: 'null', render: function(data,type,row){
+                    if(row.sysMethod==null){
+                        return '無';
+                    }else if(row.sysMethod=='1'){
+                        return '滿'+row.sysTotal+'贈$'+row.sysDiscount+'購物金,得$'+row.orderDiscount;
+                    }else if(row.sysMethod=='2'){
+                        return '滿'+row.sysTotal+'折扣$'+row.sysDiscount+'%,折扣$'+row.orderDiscount;
+                    }
+                } },
+                { data:null, render:function(data,type,row){
+                    if(row.sysMethod == '2'){
+                        return '$'+(row.total-row.orderDiscount);
+                    }else{
+                        return '$'+row.total;
+                    }
+                }},
+                
                 { data: 'details', name: 'details', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
@@ -185,9 +198,9 @@ $(document).ready(function(){
         let id = obj.value;
         console.log(id)
         let yes;
-        yes = confirm("Are you sure want to delete !");
+        yes = confirm("確定要刪除嗎?");
         if(!yes){
-            alert('You cancel delete. ');
+            alert('你取消了刪除動作.');
             return;
         }
         $.ajax({
@@ -229,6 +242,7 @@ $(document).ready(function(){
      }
      let other_sum;
      let amount;
+     let coin;
      buy = function(obj) {
         let chk_id = []; //定義一個產品編號陣列
         let chk_quantity = [];
@@ -267,6 +281,7 @@ $(document).ready(function(){
                         $("#checkoutForm input[name=discount]").val(0);
                         other_sum = data.other;
                         amount = data.amount;
+                        coin = data.coin;
                         console.log(data);
                     }else if(data.wrong){
                         alert(data.wrong);
@@ -307,14 +322,15 @@ $(document).ready(function(){
         console.log('sel',$(this).val(),other_sum);
         $("#checkoutForm div[name=result]").empty();
         if($id=='0'){
-            $("#checkoutForm div[name=result]").html('<h3>總結帳金額$:'+amount[$id]+'</h3>');
+            $("#checkoutForm div[name=result]").html('<h3>總結帳金額$:'+amount[$id]+'</h3><h4>可使用購物金餘額$'+coin+'</h4>');
         }else{
-            $("#checkoutForm div[name=result]").html('<p>'+other_sum[$id]+'</p><h3>總結帳金額$:'+amount[$id]+'</h3>');
+            $("#checkoutForm div[name=result]").html('<p>'+other_sum[$id]+'</p><h3>總結帳金額$:'+amount[$id]+'</h3><h4>可使用購物金餘額$'+coin+'</h4>');
             $("#checkoutForm input[name=discount]").val($id);
         }
     })
     $(".buy").on('click',function(){
         let addr = $("#checkoutForm input[name=addr]").val();
+        let coin = $("#checkoutForm input[name=coin]").val();
         let discount_id = $("#checkoutForm input[name=discount]").val();
         let sel_id = $("#checkoutForm select option:selected").val();
         let chk_id = []; //定義一個產品編號陣列
@@ -340,6 +356,7 @@ $(document).ready(function(){
                     addr: addr,
                     quantity: chk_quantity,
                     productID: chk_id,
+                    coin:coin,
                 },
                 success: function(data) {
                     
@@ -352,7 +369,9 @@ $(document).ready(function(){
                     }else{
                         $("#ajaxCheckoutModel").modal('hide');
                         $("#checkDetail").empty();
+                        $('#v-pills-myShopCart-tab').trigger('click');
                         alert(data.wrong);
+                        
                         console.log('wrong');
                     }
                     

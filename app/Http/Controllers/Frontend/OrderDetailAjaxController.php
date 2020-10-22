@@ -161,14 +161,14 @@ class OrderDetailAjaxController extends Controller
             if ($order_total[$key] >= $sys_total[$key]) {
                 $discount_flag .= $discount_id;
                 if ($discount_method[$key] == 1) {
-                    $other_sum[$key] = '其他商品消費金額:$' . (string)($other_total - $order_total[$key]);
+                    $other_sum[$key] =(string)($other_total - $order_total[$key]);
                     $base = round($order_total[$key] / $sys_total[$key]);
                     $order_discount[$key] = $base * $sys_discount[$key];
                     $amount[$key] = $order_total[$key] + (string)($other_total - $order_total[$key]);
                 } else {
-                    $other_sum[$key] = '其他商品消費金額:$' . (string)($other_total - $order_total[$key]);
+                    $other_sum[$key] =  (string)($other_total - $order_total[$key]);
                     $order_discount[$key] =  round($order_total[$key] * $sys_discount[$key] / $oneHundred);
-                    $amount[$key] = round($order_total[$key] * $sys_discount[$key] / $oneHundred) + (string)($other_total - $order_total[$key]);
+                    $amount[$key] = $order_total[$key] - round($order_total[$key] * $sys_discount[$key] / $oneHundred) ;
                 }
                 $order_total[$key] = '優惠活動累計消費金額 $' . $order_total[$key];
             }
@@ -220,6 +220,9 @@ class OrderDetailAjaxController extends Controller
         if($use_coin==null){
             $use_coin='0';
         }
+        if($use_coin>$amount[$request->sel_id]+$other_sum[$request->sel_id]){
+            return response()->json(['wrong' => '購物金大於結帳金額']);
+        }
         Order::updateOrCreate(['id' => $request->id],
             [
                 'user_id' => $user_id,
@@ -262,7 +265,7 @@ class OrderDetailAjaxController extends Controller
                     'discount_flag' => $discount_flag,
                 ]);
         }
-        return response()->json(['success' => '送出訂單,本次預計使用$'+$use_coin+'購物金']);
+        return response()->json(['success' => '送出訂單,本次預計使用$'.$use_coin.'購物金']);
     }
     public function calc(Request $request)
     {
@@ -384,12 +387,13 @@ class OrderDetailAjaxController extends Controller
 
             $order = DB::table('orders')
                 ->join('orderDetails', 'orders.id', 'orderDetails.id')
-                ->select('orders.id', 'orders.created_at', 'orders.status', DB::raw('SUM(orderDetails.price * orderDetails.quantity )- orders.orderDiscount as total'))
+                ->select(DB::raw('orders.* ,SUM(orderDetails.price * orderDetails.quantity ) as total'))
                 ->where('orders.user_id',$user_id)
                 ->groupBy('orders.id')
                 ->orderBy('orders.id', 'desc')
                 ->get();
             //$data2 = DB::select('SELECT p.productID,c.id,p.name,c.name as category FROM `products` as p INNER JOIN products_categories as pc INNER JOIN categories as c on p.productID = pc.product_id and pc.category_id = c.id GROUP BY p.productID ,c.id,c.name');
+            
             //dd(DB::getQueryLog()); // Show results of log
             return Datatables::of($order)
                 ->addColumn('details', function ($row) {
@@ -460,38 +464,7 @@ class OrderDetailAjaxController extends Controller
 
     }
 
-    /**
 
-     * Show the form for editing the specified resource.
-
-     *
-
-     * @param  \App\ShopCart  $product
-
-     * @return \Illuminate\Http\Response
-
-     */
-
-    public function edit($id)
-    {
-        //$product = ShopCart::find($id);
-        //$product = ShopCart::where('productID', $id)->first();
-        //$product->save();
-        return response()->json($product);
-    }
-
-    /**
-
-     * Remove the specified resource from storage.
-
-     *
-
-     * @param  \App\ShopCart  $product
-
-     * @return \Illuminate\Http\Response
-
-     */
-    
     public function cancelOrder(Request $request)
     {
         $order = Order::find($request->id);

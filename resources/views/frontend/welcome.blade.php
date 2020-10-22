@@ -8,7 +8,7 @@
     <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <title>Laravel</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -81,11 +81,19 @@
                     @if (Route::has('login'))
                         <div class="col-md-12 top-right links">
                             @auth
-                                <a href="{{ url('/home') }}">購物車</a>
+                                <a href="{{ url('/home') }}">會員中心</a>
                                 <a href="{{ url('/msgBoard') }}">留言板</a>
+                                <a href="{{ route('logout') }}" 
+                                   onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                    {{Auth::user()->name}}登出
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                      style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
                                 @else
-                                    <a href="{{ route('login') }}">Login</a>
-                                    <a href="{{ route('register') }}">Register</a>
+                                    <a href="{{ route('login') }}">登入</a>
+                                    <a href="{{ route('register') }}">註冊</a>
                                     @endauth
                         </div>
                     @endif
@@ -119,7 +127,9 @@
                                 <select id="form-sel" >
                                 </select>
                                 <select id="form-sel2" >
-                                
+                                    <option value="--">默認排序</option>
+                                    <option value="updated_at">最新上架</option>
+                                    <option value="price">最低價格</option>
                                 </select>
                                     <input name="keyword" class="form-control mr-sm-2" type="text" />
                                     <a id="searchKeyword"class="btn btn-primary my-2 my-sm-0" style="color:white"type="button">
@@ -138,8 +148,7 @@
                     </div>
             </div>
             <div id ="showBox" class="row pre-scrollable ">
-                    @section('showBox')
-                    @show
+                    
             </div>
 
     </div>

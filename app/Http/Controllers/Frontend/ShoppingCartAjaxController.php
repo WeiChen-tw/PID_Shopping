@@ -95,9 +95,13 @@ class ShoppingCartAjaxController extends Controller
         if(!Auth::check()){
             return response()->json(['login' => '1']);
         }
+        
         $user_id = $request->user()->id;
         $product_id = $request->id;
         $product = Product::find($product_id);
+        if($product->quantity<=0){
+            return response()->json(['wrong' => '敬請期待.']);
+        }
         ShopCart::updateOrCreate(['user_id' => $user_id, 'productID' => $product_id],
             [
                 'price' => $product->price,

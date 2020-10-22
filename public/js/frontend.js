@@ -35,9 +35,27 @@ $(document).ready(function(){
         }else{
             init();
         }
-        
     })
-    $("#showBox").on('click','.this-product',function () {
+    $("#form-sel2").on('change',function(){
+        let category_id = $("#form-sel").val();
+        let sortBy = $(this).val();
+        console.log('id',category_id,'sortBy',sortBy);
+        if(sortBy){
+            $.post('./orderBy',{'category_id':category_id,'sortBy':sortBy},function(data){
+                $("#showBox").html(data.html);
+            })
+        }else{
+            init();
+        }
+    })
+    $("#showBox").on('click','.buy',function(e){
+        clickCard2($(this))
+        e.stopPropagation();
+        e.preventDefault();
+    })
+    
+    $("#showBox").on('click','.this-product',function (e) {
+        //e.stopPropagation();
         let product_id = $(this).data('id');
         $('#shoppingCartModel').modal();
         $('#shopCartForm input[name=id]').val(product_id);
@@ -50,11 +68,49 @@ $(document).ready(function(){
             $('#shopCartForm textarea[name=description]').val(data.description);
         });
     })
+   
     $('body').on('click','.saveBtn',function(){
         clickCard($(this))
     })
+    function clickCard2(obj) {
+        let htmlText = $(obj).html();
+        $(obj).html('Sending..');
+        console.log("clickCard", $(obj).attr("value"));
+        let id = $(obj).data("id");
+        let form_name = '#shopCartForm';
+        console.log($(form_name).serialize());
+        $.ajax({
+            data: {'id':id,'quantity':'1'},
+            url: "./home/ajaxshopcart",
+            type: "POST",
+            dataType: 'json',
+            success: function (data) {
+                if(data.success){
+                    $('#shoppingCartModel').modal('hide');
+                    $(obj).html(htmlText);
+                    $(form_name).trigger("reset");
+                    alert(data.success);
+                }
+                if(data.login){
+                    document.location.href="http://www.shopping.net/public/login"
+                }
+               if(data.wrong){
+                    $('#shoppingCartModel').modal('hide');
+                    $(obj).html(htmlText);
+                    $(form_name).trigger("reset");
+                    
+                   alert(data.wrong);
+               }
+            },
+            error: function (data) {
+                $('#createNewCategory').html('送出');
+                console.log('Error:', data);
+            }
+        });
+
+    }
     function clickCard(obj) {
-       
+        let htmlText = $(obj).html();
         $(obj).html('Sending..');
         console.log("clickCard", $(obj).attr("value"));
         let id = $(obj).data("id");
@@ -68,14 +124,20 @@ $(document).ready(function(){
             success: function (data) {
                 if(data.success){
                     $('#shoppingCartModel').modal('hide');
-                    $(obj).html('送出');
+                    $(obj).html(htmlText);
                     $(form_name).trigger("reset");
                     alert(data.success);
                 }
                 if(data.login){
                     document.location.href="http://www.shopping.net/public/login"
                 }
-               
+               if(data.wrong){
+                    $('#shoppingCartModel').modal('hide');
+                    $(obj).html(htmlText);
+                    $(form_name).trigger("reset");
+                    
+                   alert(data.wrong);
+               }
             },
             error: function (data) {
                 $('#createNewCategory').html('送出');

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.adminApp')
 
 @section('content')
 <!-- <div class="container">
@@ -80,17 +80,17 @@
                                             </div>
                                             <div class="modal-body">
                                                 <form id="userForm" name="userForm" class="form-horizontal">
-                                                    <input type="hidden" name="id" id="id">
+                                                    <input type="hidden" name="id" >
                                                     <div class="form-group">
                                                         <label for="name" class="col-sm-2 control-label">名稱</label>
                                                         <div class="col-sm-12">
-                                                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
+                                                            <input type="text" class="form-control"  name="name" placeholder="Enter Name" value="" maxlength="50" required="">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="name" class="col-sm-2 control-label">停權</label>
                                                         <div class="col-sm-12">
-                                                            <select id="" name='banned' data-table="user">
+                                                            <select  name='banned' data-table="user">
                                                                 <option value="N">N</option>
                                                                 <option value="Y">Y</option>
                                                             </select>
@@ -128,8 +128,8 @@
                                                 </form>
                                             </div>
                                             <div class="modal-footer">
-                                                <a class="btn btn-primary mb-2 saveBtn" href="javascript:void(0)" data-table="user" id=""> 儲存</a>
-                                                <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" id=""> 關閉</a>
+                                                <a class="btn btn-primary mb-2 saveBtn" href="javascript:void(0)" data-table="user" > 儲存</a>
+                                                <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" > 關閉</a>
                                             </div>
                                         </div>
                                     </div>
@@ -250,7 +250,7 @@
                                                         <div class="form-group">
                                                             <label for="name" class="col-sm-2 control-label">名稱</label>
                                                             <div class="col-sm-12">
-                                                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
+                                                                <input type="text" class="form-control"  name="name" placeholder="Enter Name" value="" maxlength="50" required="">
                                                             </div>
                                                         </div>
 
@@ -360,11 +360,11 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <form id="categoryForm2" name="categoryForm" class="form-horizontal">
-                                                        <input type="hidden" name="id" id="id">
+                                                        <input type="hidden" name="id" >
                                                         <div class="form-group">
                                                             <label for="name" class="col-sm-4 control-label">類別名稱</label>
                                                             <div class="col-sm-12">
-                                                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="" maxlength="50" required="">
+                                                                <input type="text" class="form-control"  name="name" placeholder="Enter Name" value="" maxlength="50" required="">
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-offset-2 col-sm-10">
@@ -405,7 +405,7 @@
                                             <input type="text" name="discount" class="form-control" id="inputDiscount" placeholder="">
                                         </div>
                                         <div class="form-group mx-sm-3 mb-2">
-                                            <label for="inputLevel" class="">level</label>
+                                            <label for="inputLevel" class="">等級</label>
                                             <input type="text" name="user_lv" class="form-control" id="inputLevel" placeholder="適用等級含以上" required>
                                         </div>
                                         <a class="form-control btn btn-primary mb-2" href="javascript:void(0)" id="createNewDiscount"> 送出</a>
@@ -443,13 +443,13 @@
                                                     <div class="form-group">
                                                         <label for="name" class="col-sm-4 control-label">名稱</label>
                                                         <div class="col-sm-12">
-                                                            <input type="text" class="form-control" id="" name="name" placeholder="輸入活動名稱" value="" maxlength="50" required="">
+                                                            <input type="text" class="form-control"  name="name" placeholder="輸入活動名稱" value="" maxlength="50" required="">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="method" class="col-sm-2 control-label">Method</label>
+                                                        <label for="method" class="col-sm-2 control-label">優惠模式</label>
                                                         <div class="col-sm-12">
-                                                            <select id="" name='method' data-table="discount">
+                                                            <select  name='method' data-table="discount">
                                                                 <option value="1">滿額贈購物金</option>
                                                                 <option value="2">滿額折扣%</option>
                                                             </select>
@@ -458,26 +458,26 @@
                                                     <div class="form-group">
                                                         <label for="total" class="col-sm-2 control-label">金額</label>
                                                         <div class="col-sm-12">
-                                                            <input type="text" class="form-control" id="" name="total" placeholder="Enter $" value="" maxlength="50" required="">
+                                                            <input type="text" class="form-control"  name="total" placeholder="Enter $" value="" maxlength="50" required="">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="discount" class="col-sm-2 control-label">優惠</label>
                                                         <div class="col-sm-12">
-                                                            <input type="text" class="form-control" id="" name="discount" placeholder="" value="" maxlength="50" required="">
+                                                            <input type="text" class="form-control"  name="discount" placeholder="" value="" maxlength="50" required="">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="user_lv" class="col-sm-4 control-label">適用等級</label>
+                                                        <label for="user_lv" class="col-sm-4 control-label">適用等級含以上</label>
                                                         <div class="col-sm-12">
-                                                            <input type="text" class="form-control" id="" name="user_lv" placeholder="" value="" maxlength="50" required="">
+                                                            <input type="text" class="form-control"  name="user_lv" placeholder="" value="" maxlength="50" required="">
                                                         </div>
                                                     </div>
                                                 </form>
                                             </div>
                                             <div class="modal-footer">
-                                                <a class="btn btn-primary mb-2 saveBtn" href="javascript:void(0)" data-table="discount" id=""> 儲存</a>
-                                                <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" id=""> 關閉</a>
+                                                <a class="btn btn-primary mb-2 saveBtn" href="javascript:void(0)" data-table="discount" > 儲存</a>
+                                                <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" > 關閉</a>
                                             </div>
                                         </div>
                                     </div>
@@ -490,7 +490,7 @@
                                     <h1>等級機制</h1>
                                     <h5>經驗計算</h5>
                                     <form id="levelForm" name="categoryForm" class="form-horizontal">
-                                        <input type="hidden" name="id" id="id">
+                                        <input type="hidden" name="id" >
                                         <div class="form-group">
                                             <label for="name" class="col-sm-6 control-label">提升一等所需的消費金額</label>
                                             <div class="col-sm-12">
@@ -541,7 +541,7 @@
                         </div>
                         <div class="modal-footer">
                             <a class="btn btn-primary mb-2" href="javascript:void(0)" id="saveProductBtn"> 送出</a>
-                            <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" id=""> 關閉</a>
+                            <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" > 關閉</a>
                         </div>
                     </div>
                 </div>
@@ -551,7 +551,6 @@
     </div>
     @push('scripts')
     <script src="{{ asset('js/backend.js') }}"></script>
-    <script src="{{ asset('js/table.js') }}"></script>
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script> -->

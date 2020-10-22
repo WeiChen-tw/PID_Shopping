@@ -19,27 +19,35 @@
                             <h5 class="card-header bg-primary" style="color:white">
                                 #{{$row->id}} 留言者:{{$row->email}}
                                 @if($row->email==Auth::user()->email )
-                                    <a href="javascript:void(0)"   data-id="{{$row->id}}"  class="float-md-right btn btn-success btn-sm editMsg">編輯</a>
+                                    <a href="javascript:void(0)"   data-id="{{$row->id}}"  class="float-md-right btn btn-warning btn-sm replyMsg">回覆</a>
                                     <a href="javascript:void(0)"   data-id="{{$row->id}}"  class="float-md-right btn btn-danger btn-sm delMsg">刪除</a>
                                 @endif
                             </h5>
                             <div class="card-body">
-                            
-                                <p id="showUserMsg{{$row->id}}"class="card-text">
-                                    內容:{{$row->content}}
-                                </p>
+                            <div id="showMsg{{$row->id}}">
+                                @foreach($msgDataDetail as $msg)
+                                    @if($msg->msgData_id == $row->id)
+                                        @if($msg->auth=='user')
+                                            <p id="userMsg{{$msg->id}}"class="card-text">
+                                            內容:{{$msg->content}}
+                                            <small  class="float-md-right form-text text-muted">{{$msg->updated_at}}</small>
+                                            <a href="javascript:void(0)"   data-id="{{$msg->id}}"  class="float-md-right btn btn-success btn-sm editMsg">編輯</a>
+                                            </p>
+                                        @else
+                                            <h5 class="card-header">官方回覆</h5>
+                                            <p id="adminMsg{{$msg->id}}" class="bg-light card-text">
+                                            內容:{{$msg->content}}
+                                            <small  class="float-md-right form-text text-muted">{{$msg->updated_at}}</small>
+                                            </p>
+                                        @endif
+                                    @endif
+                                @endforeach
+                            </div>
                             </div>
                             <div id="showReplyMsg{{$row->id}}"class="card-footer ">
                                 @foreach($reMsgData as $reMsg)
-                                
                                     @if($reMsg->id == $row->id)
-                                        <h5 class="card-header">官方回覆</h5>
-                                        <div class="card-body" style="background-color:white">
-                                            <p class="card-text">
-                                                內容:{{$reMsg->content}}
-                                            </p>
-                                            <small id="" class="float-md-right form-text text-muted">{{$reMsg->updated_at}}</small>
-                                        </div>
+                                        
                                         @break
                                     @endif
                                     @if($loop->last)

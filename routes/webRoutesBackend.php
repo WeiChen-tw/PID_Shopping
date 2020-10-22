@@ -1,7 +1,7 @@
 <?php
 
 Route::get('/', function () {
-    return view('backend.welcome');
+    return view('backend.auth.login');
 });
 
 Auth::routes();

@@ -3,13 +3,16 @@
 Route::get('/', function () {
     return view('frontend.welcome');
 });
-
+// Route::get('/', 'HtmlController@loadProduct');
 Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/msgBoard', 'MsgController@index');
 Route::post('/msgBoard/sendMsg', 'MsgController@store');
+Route::post('/msgBoard/editMsg', 'MsgController@editMsg');
 Route::post('/msgBoard/edit/{id}', 'MsgController@edit');
+Route::post('/msgBoard/reply', 'MsgController@reply');
+Route::post('/msgBoard/getMsg/{id}', 'MsgController@getMsg');
 Route::delete('/msgBoard/del/{id}', 'MsgController@destroy');
 
 
@@ -17,6 +20,8 @@ Route::get('/load_product', 'HtmlController@loadProduct');
 Route::get('/getCategory', 'HtmlController@getCategory');
 Route::post('/searchCategory', 'HtmlController@searchCategory');
 Route::post('/searchKeyword', 'HtmlController@searchKeyword');
+Route::post('/orderBy', 'HtmlController@orderBy');
+
 Route::resource('home/ajaxshopcart', 'ShoppingCartAjaxController');
 Route::get('/getProduct/{id}', 'ShoppingCartAjaxController@getProduct');
 

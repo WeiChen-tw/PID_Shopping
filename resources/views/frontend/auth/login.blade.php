@@ -5,13 +5,13 @@
     <div class="row justify-content-md-center mt-5">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Login</div>
+                <div class="card-header">登入</div>
                 <div class="card-body">
                     <form class="form-horizontal" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group row">
-                            <label for="email" class="col-lg-4 col-form-label text-lg-right">E-Mail Address</label>
+                            <label for="email" class="col-lg-4 col-form-label text-lg-right">電子信箱</label>
 
                             <div class="col-lg-6">
                                 <input
@@ -33,7 +33,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-lg-4 col-form-label text-lg-right">Password</label>
+                            <label for="password" class="col-lg-4 col-form-label text-lg-right">密碼</label>
 
                             <div class="col-lg-6">
                                 <input
@@ -56,7 +56,7 @@
                             <div class="col-lg-6 offset-lg-4">
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input type="checkbox" class="form-check-input" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+                                        <input type="checkbox" class="form-check-input" name="remember" {{ old('remember') ? 'checked' : '' }}> 記住我
                                     </label>
                                 </div>
                             </div>
@@ -65,7 +65,7 @@
                             <label class="col-lg-4 col-form-label text-lg-right">驗證碼</label>
         
                             <div class="col-md-4">
-                                <input id="captcha" class="" name="captcha" >
+                                <input id="captcha" class="" name="captcha" autocomplete="off">
                                 <img class="{{$errors->has('captcha')?'parsley-error':''}}" src="{{captcha_src('flat')}}" style="cursor: pointer" onclick="this.src='{{captcha_src('flat')}}'+Math.random()">
                             
                             </div>
@@ -80,11 +80,11 @@
                         <div class="form-group row">
                             <div class="col-lg-8 offset-lg-4">
                                 <button type="submit" class="btn btn-primary">
-                                    Login
+                                    登入
                                 </button>
 
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    Forgot Your Password?
+                                    忘記密碼?
                                 </a>
                             </div>
                         </div>

@@ -42,10 +42,10 @@ class DiscountAjaxController extends Controller
                
                 ->addColumn('action', function ($row) {
                    
-                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-table="discount" data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm edit">Edit</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="discount" data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm delete">Delete</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="discount" data-id="' . $row->id . '" data-original-title="Set" class="btn btn-success btn-sm setProduct">Set Product</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="discount" data-id="' . $row->id . '" data-original-title="Set" class="btn btn-success btn-sm removeProduct">Remove Product</a>';
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-table="discount" data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm edit">編輯</a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="discount" data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm delete">刪除</a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="discount" data-id="' . $row->id . '" data-original-title="Set" class="btn btn-success btn-sm setProduct">加入商品</a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="discount" data-id="' . $row->id . '" data-original-title="Set" class="btn btn-success btn-sm removeProduct">移除商品</a>';
 
                     return $btn;
 
@@ -139,7 +139,7 @@ class DiscountAjaxController extends Controller
                 'user_lv' => $request->user_lv,
             ]);
 
-        return response()->json(['success' => 'Discount saved successfully.']);
+        return response()->json(['success' => '成功儲存優惠.']);
     }
 
     /**
@@ -180,7 +180,7 @@ class DiscountAjaxController extends Controller
 
         Discount::find($id)->delete();
 
-        return response()->json(['success' => 'Discount deleted successfully.']);
+        return response()->json(['success' => '成功刪除優惠.']);
 
     }
 
