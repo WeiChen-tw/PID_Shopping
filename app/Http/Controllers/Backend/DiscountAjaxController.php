@@ -88,14 +88,14 @@ class DiscountAjaxController extends Controller
                     ['product_id' => $product_id, 'discount_id' => $request->id]
                 );
             }
-            return response()->json(['success' => 'Product Discount Add Successfully.']);
+            return response()->json(['success' => '商品加入優惠活動成功.']);
         }else if($request->action=='remove'){
             foreach ($request->product_id_arr as $key => $product_id) {
                 Products_Discounts::where('product_id',$product_id)
                     ->where('discount_id',$request->id)
                     ->delete();
             }
-            return response()->json(['success' => 'Product Discount Remove Successfully.']);
+            return response()->json(['success' => '商品移出優惠活動成功.']);
         }
         
     }

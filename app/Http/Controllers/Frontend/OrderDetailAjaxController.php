@@ -183,9 +183,12 @@ class OrderDetailAjaxController extends Controller
                 array_splice($amount, $key - $offset, 1);
                 array_splice($other_sum, $key - $offset, 1);
                 array_splice($discount_method, $key - $offset, 1);
+                array_splice($discounts_id, $key - $offset, 1);
                 $offset++;
             }
         }
+        array_unshift($sys_total, 0);
+        array_unshift($sys_discount, 0);
         array_unshift($order_total, 0);
         array_unshift($order_discount, 0);
         array_unshift($amount, $other_total);
@@ -197,11 +200,10 @@ class OrderDetailAjaxController extends Controller
         //判斷是否有可使用優惠
         if ($discount_flag != '') {
             if($request->sel_id>0){
-                $discount = Discount::find($request->discount_id);
                 $obj->id = $request->discount_id;
                 $obj->sysMethod = $discount_method[$request->sel_id];
-                $obj->sysTotal = $discount->total;
-                $obj->sysDiscount = $discount->discount;
+                $obj->sysTotal = $sys_total[$request->sel_id];
+                $obj->sysDiscount = $sys_discount[$request->sel_id];
                 $obj->orderDiscount = $order_discount[$request->sel_id];
             }else{
                 $obj->id = null;

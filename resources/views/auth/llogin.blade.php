@@ -11,7 +11,7 @@
                         {{ csrf_field() }}
 
                         <div class="form-group row">
-                            <label for="email" class="col-lg-4 col-form-label text-lg-right">E-Mail Address</label>
+                            <label for="email" class="col-lg-4 col-form-label text-lg-right">電子信箱</label>
 
                             <div class="col-lg-6">
                                 <input

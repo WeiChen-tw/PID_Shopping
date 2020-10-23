@@ -57,7 +57,7 @@ class OrderDetailAjaxController extends Controller
             $order = DB::table('orders')
                 ->join('orderDetails', 'orders.id', 'orderDetails.id')
                 ->join('users', 'orders.user_id', 'users.id')
-                ->select('orders.id', 'orders.user_id', 'users.name', 'orders.created_at', 'orders.status','orders.sysMethod','orders.orderDiscount', DB::raw('SUM(orderDetails.price * orderDetails.quantity) as total'))
+                ->select('orders.id', 'orders.user_id', 'users.name', 'orders.created_at', 'orders.use_coin','orders.status','orders.sysMethod','orders.orderDiscount', DB::raw('SUM(orderDetails.price * orderDetails.quantity) as total'))
                 ->groupBy('orders.id')
                 ->orderBy('orders.id', 'desc')
                 ->get();
@@ -178,6 +178,8 @@ class OrderDetailAjaxController extends Controller
             //設定經驗為可接受最大值
             if ($amount > $exp_max) {
                 $exp = $exp_max;
+            }else{
+                $exp = $amount;
             }
             if ($order->sysMethod == 1) {
                 $user->exp_bar -= $exp;
@@ -188,6 +190,8 @@ class OrderDetailAjaxController extends Controller
                     } else {
                         $user->level = $lv;
                     }
+                }else{
+                    $exp ='等級已達上限';
                 }
                 $user->coin -= $order->orderDiscount;
                 $user->coin += $amount;
@@ -205,7 +209,7 @@ class OrderDetailAjaxController extends Controller
                     }
                 });
                 
-                return response()->json(['success' => '退貨成功,系統收回$' . $order->orderDiscount . '購物金與經驗值' . $amount]);
+                return response()->json(['success' => '退貨成功,系統收回$' . $order->orderDiscount . '購物金與經驗值' . $exp]);
             } else if ($order->sysMethod == 2) {
                 $user->exp_bar -= $exp;
                 $lv = round($user->exp_bar / $config->moneyToLevel);
@@ -227,7 +231,7 @@ class OrderDetailAjaxController extends Controller
                     }
                 });
                 
-                return response()->json(['success' => '退貨成功,系統收回經驗值' . $amount]);
+                return response()->json(['success' => '退貨成功,系統收回經驗值' . $exp]);
             } else {
                 $user->exp_bar -= $exp;
                 $lv = round($user->exp_bar / $config->moneyToLevel);
@@ -249,7 +253,7 @@ class OrderDetailAjaxController extends Controller
                     }
                 });
               
-                return response()->json(['success' => '退貨成功,系統收回經驗值' . $amount]);
+                return response()->json(['success' => '退貨成功,系統收回經驗值' . $exp]);
             }
             //$order->delete();
             return response()->json(['success' => '退貨成功']);
@@ -326,6 +330,8 @@ class OrderDetailAjaxController extends Controller
                     } else {
                         $user->level = $lv;
                     }
+                }else{
+                    $sum = '等級已達上限';
                 }
                 $user->coin += $amount;
                 DB::transaction(function() use($request,$user,$order,$this_item){
@@ -349,6 +355,8 @@ class OrderDetailAjaxController extends Controller
                 $lv = round($user->exp_bar / $config->moneyToLevel) + $sum;
                 if ($lv >= 0 && $user->level < 10) {
                     $user->level = $lv;
+                }else{
+                    $sum = '等級已達上限';
                 }
                 $user->coin += $amount;
                 DB::transaction(function() use($request,$user,$order,$this_item){
@@ -373,6 +381,8 @@ class OrderDetailAjaxController extends Controller
                 $lv = round($user->exp_bar / $config->moneyToLevel) + $sum;
                 if ($lv >= 0 && $user->level < 10) {
                     $user->level = $lv;
+                }else{
+                    $sum = '等級已達上限';
                 }
                 $user->coin += $amount;
                 DB::transaction(function() use($request,$user,$order,$this_item){

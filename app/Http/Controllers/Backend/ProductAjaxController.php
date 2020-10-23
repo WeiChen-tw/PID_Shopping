@@ -85,22 +85,26 @@ class ProductAjaxController extends Controller
     {
         $data=null;
         if($request->action=='add'){
-            $data = Product::all();
-            //DB::enableQueryLog(); // Enable query log
-            // if($request->table == 'category'){
-            //     $data = DB::table('products')
-            //     ->leftJoin('products_categories', 'products.productID', '=', 'products_categories.product_id')
-            //     ->where('products_categories.category_id', '<>', $request->id)
-            //     ->groupBY('products.productID')
-            //     ->select(DB::raw('products.*'))
-            //     ->get();
-            // }else if($request->table == 'discount'){
-            //     $data = DB::table('products')
-            //     ->join('products_discounts', 'products.productID', '=', 'products_discounts.product_id')
-            //     ->where('products_discounts.discount_id', '<>', $request->id)
-            //     ->get();
-            // }
-            //dd(DB::getQueryLog()); // Show results of log
+            //$data = Product::all();
+            
+            DB::enableQueryLog(); // Enable query log
+            if($request->table == 'category'){
+                
+                $data = DB::select('select products.* from products   left join products_categories on products.productID = products_categories.product_id  where products_categories.product_id not in (SELECT product_id FROM products_categories WHERE category_id = '.$request->id.') or products_categories.product_id IS NULL GROUP BY products.productID');
+                // $data = DB::table('products')
+                // ->leftJoin('products_categories', 'products.productID', '=', 'products_categories.product_id')
+                // ->where('products_categories.category_id', '<>', $request->id)
+                // ->groupBY('products.productID')
+                // ->select(DB::raw('products.*'))
+                // ->get();
+            }else if($request->table == 'discount'){
+                $data = DB::select('select products.* from products   left join products_discounts on products.productID = products_discounts.product_id  where products_discounts.product_id not in (SELECT product_id FROM products_discounts WHERE discount_id ='.$request->id.') or products_discounts.product_id IS NULL GROUP BY products.productID');
+                // $data = DB::table('products')
+                // ->join('products_discounts', 'products.productID', '=', 'products_discounts.product_id')
+                // ->where('products_discounts.discount_id', '<>', $request->id)
+                // ->get();
+            }
+            // dd(DB::getQueryLog()); // Show results of log
         }
         else if ($request->table == 'category' && isset($request->id)) {
             $data = DB::table('products')

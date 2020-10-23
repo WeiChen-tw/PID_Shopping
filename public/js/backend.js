@@ -12,6 +12,7 @@ $(document).ready(function () {
     let userTable;
     let discountTable;
     let orderTable;
+    let locationURL = window.document.location.origin;
     //會員管理分頁
    $('#v-pills-management-tab').on('click', function (e) {
     e.preventDefault()
@@ -23,6 +24,9 @@ $(document).ready(function () {
         "scrollY": "400px",
         "scrollX": true,
         "scrollCollapse": true,
+        language:{
+            url: locationURL+'/public/Chinese-traditional.json',
+        },
         processing: true,
         serverSide: true,
         ajax: "./home/ajaxuser",
@@ -71,6 +75,7 @@ $(document).ready(function () {
             // "scrollX": true,
             // "scrollCollapse": true,
             language:{
+                url: locationURL+'/public/Chinese-traditional.json',
                 decimal:',',
                 thousands:'.'
             },
@@ -91,6 +96,7 @@ $(document).ready(function () {
                         return '$'+row.total;
                     }
                 }},
+                { data:'use_coin'},
                 { data: 'details', name: 'details', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
@@ -136,6 +142,9 @@ $(document).ready(function () {
             "scrollX": true,
             "scrollCollapse": true,
             //"paging": false,
+            language:{
+                url: locationURL+'/public/Chinese-traditional.json',
+            },
             processing: true,
             serverSide: true,
             ajax: "./home/ajaxproducts",
@@ -169,6 +178,9 @@ $(document).ready(function () {
             //"scrollX": true,
             "scrollCollapse": true,
             //"paging": false,
+            language:{
+                url: locationURL+'/public/Chinese-traditional.json',
+            },
             processing: true,
             serverSide: true,
             ajax: "./home/ajaxcategory",
@@ -195,6 +207,9 @@ $(document).ready(function () {
             // "scrollX": true,
             // "scrollCollapse": true,
             //"paging": false,
+            language:{
+                url: locationURL+'/public/Chinese-traditional.json',
+            },
             processing: true,
             serverSide: true,
             ajax: "./home/ajaxdiscount",
@@ -552,13 +567,13 @@ $(document).ready(function () {
             $.each(data, function (index, arr) {
                 let cardBody;
                 if (arr.img != '') {
-                    cardBody = `<img class="img-fluid" src="data:image/jpeg;base64,` + arr.img + `" ></img>`;
+                    cardBody = `<img class="img-fluid" style="height:6rem" src="data:image/jpeg;base64,` + arr.img + `" ></img>`;
                 } else {
                     cardBody = `<h3>No Image</h3>`
                 }
                 $("#showBox").append(` <div class="product col-md-4 " style="padding-bottom: 1.25rem;">
                         <div class="product-list card bg-default" data-product_id="`+ arr.productID + `">
-                            <h5 class="card-header">`
+                            <h5 class="card-header" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">`
                     + arr.name +
                     `</h5>
                             <div class="card-body">`
@@ -568,7 +583,7 @@ $(document).ready(function () {
                     `</p>
                             </div>
                             <div class="card-footer ">
-                                Card footer
+                                
                             </div>
                         </div>
                     </div>`
@@ -605,13 +620,13 @@ $(document).ready(function () {
             $.each(data, function (index, arr) {
                 let cardBody;
                 if (arr.img != '') {
-                    cardBody = `<img class="img-fluid" src="data:image/jpeg;base64,` + arr.img + `" ></img>`;
+                    cardBody = `<img class="img-fluid" style="height:6rem" src="data:image/jpeg;base64,` + arr.img + `" ></img>`;
                 } else {
                     cardBody = `<h3>No Image</h3>`
                 }
                 $("#showBox").append(` <div class="product col-md-4 " style="padding-bottom: 1.25rem;">
                         <div class="product-list card bg-default" data-product_id="`+ arr.productID + `">
-                            <h5 class="card-header">`
+                            <h5 class="card-header" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">`
                     + arr.name +
                     `</h5>
                             <div class="card-body">`
@@ -621,7 +636,7 @@ $(document).ready(function () {
                     `</p>
                             </div>
                             <div class="card-footer ">
-                                Card footer
+                                
                             </div>
                         </div>
                     </div>`
@@ -676,13 +691,13 @@ $(document).ready(function () {
                         $.each(data, function (index, arr) {
                             let cardBody;
                             if (arr.img != '') {
-                                cardBody = `<img class="img-fluid" src="data:image/jpeg;base64,` + arr.img + `" ></img>`;
+                                cardBody = `<img class="img-fluid"  style="height:6rem" src="data:image/jpeg;base64,` + arr.img + `" ></img>`;
                             } else {
                                 cardBody = `<h3>No Image</h3>`
                             }
                             $("#showBox").append(` <div class="product col-md-4 " style="padding-bottom: 1.25rem;">
                                     <div class="product-list card bg-default" data-product_id="`+ arr.productID + `">
-                                        <h5 class="card-header">`
+                                        <h5 class="card-header" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">`
                                 + arr.name +
                                 `</h5>
                                         <div class="card-body">`
@@ -692,7 +707,7 @@ $(document).ready(function () {
                                 `</p>
                                         </div>
                                         <div class="card-footer ">
-                                            Card footer
+                                            
                                         </div>
                                     </div>
                                 </div>`

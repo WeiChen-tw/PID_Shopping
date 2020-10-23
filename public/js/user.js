@@ -49,12 +49,14 @@ $(document).ready(function(){
         if (orderTable) {
             orderTable.destroy();
         }
+        let locationURL = window.document.location.origin;
         orderTable = $('#orderTable').DataTable( {
             // dom: "Bfrtip",
             // "scrollY": "400px",
             // "scrollX": true,
             // "scrollCollapse": true,
             language:{
+                url: locationURL+'/public/Chinese-traditional.json',
                 decimal:',',
                 thousands:'.'
             },
@@ -83,7 +85,7 @@ $(document).ready(function(){
                         return '$'+row.total;
                     }
                 }},
-                
+                { data: 'use_coin'},
                 { data: 'details', name: 'details', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
@@ -159,7 +161,7 @@ $(document).ready(function(){
         <label>商品名稱:</label><span class="datatime">${name}</span><br>
         <label>價格:</label><span id="price${id}" value ="${price}" class="price">${price*quantity}</span><br>
         <label>優惠活動名稱 #</label><span id="discount${id}" value ="${discount}" class="discount">${discount}</span><br>
-        <label>數量:&nbsp;</label><button id="minus" name = "${id}"value="${quantity}"onclick="minus(this)">-</button><input class="w-25" name="${id}"id="inputQuantity${id}" type="text" value="${quantity}" onkeydown="" onkeyup="changePrice(this),value=value.replace(/[^\\d]/g,'')"><button id="plus" name = "${id}"value="${quantity}"onclick="plus(this)">+</button><br>
+        <label>數量:&nbsp;</label><button id="minus" name = "${id}"value="${quantity}"onclick="minus(this)">-</button><input class="w-25 changePrice"   name="${id}"id="inputQuantity${id}" type="text" value="${quantity}"  ><button id="plus" name = "${id}"value="${quantity}"onclick="plus(this)">+</button><br>
         `);
             $('#' + idName + ' #list-footer').append(`
         <button class="form-control btn-link" onclick="delShopCart(this)" value="${id}">刪除</button>`)
@@ -189,11 +191,11 @@ $(document).ready(function(){
         $("#price" + obj.name).text(price * value);
         //console.log("plus",value,$(obj.name));
     }
-    changePrice = function(obj){
-        price = $("#price" + obj.name).attr("value");
-        $("#price" + obj.name).text(price * obj.value);
-        console.log(obj.value);
-    }
+   
+    
+    $('#v-pills-tabContent').on('change','.changePrice',function(){
+        changePrice($(this));
+    })
     delShopCart = function(obj) {
         let id = obj.value;
         console.log(id)
@@ -532,4 +534,9 @@ function format ( d ,id) {
     }
     htmlText+= '</table>';
     return htmlText;
+}
+function changePrice(obj) {
+    price = $("#price" + obj.name).attr("value");
+    $("#price" + obj.name).text(price * obj.value);
+    console.log(obj.value);
 }
