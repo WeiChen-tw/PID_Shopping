@@ -53,7 +53,9 @@ $(document).ready(function(){
         e.stopPropagation();
         e.preventDefault();
     })
-    
+    $(".closeModal").on('click',function(){
+        $('#shoppingCartModel').modal('hide');
+    })
     $("#showBox").on('click','.this-product',function (e) {
         //e.stopPropagation();
         let product_id = $(this).data('id');

@@ -55,7 +55,7 @@ $(document).ready(function () {
         $.get("./home/ajaxuser", function (data) {
             $("#sel-user").empty();
             $("#sel-user").append('<option value="">查詢會員</option>')
-            console.log(data);
+            
             $.each(data.data, function (index, arr) {
                 $("#sel-user").append('<option value="' + arr.name + '">' + arr.name + '</option>')
                 
@@ -713,7 +713,8 @@ $(document).ready(function () {
 
     
     $(".closeModal").on('click', function () {
-        $("#ajaxProductListModel").modal('hide')
+        let modal = $(this).data('modal');
+        $('#'+modal).modal('hide')
         console.log($(this))
     })
     //---------------------- Create -------------------//
@@ -926,7 +927,6 @@ $(document).ready(function () {
           var min = $('#min-date').val();
           var max = $('#max-date').val();
           var created_at = data[3] || 0; // Our date column in the table
-           console.log(max)
           if ((min == "" || max == "") ||
             (moment(created_at).isSameOrAfter(min) && moment(created_at).isSameOrBefore(max))
           ) {

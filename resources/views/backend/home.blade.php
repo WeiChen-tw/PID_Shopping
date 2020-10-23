@@ -129,7 +129,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <a class="btn btn-primary mb-2 saveBtn" href="javascript:void(0)" data-table="user" > 儲存</a>
-                                                <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" > 關閉</a>
+                                                <a class="btn btn-danger mb-2 closeModal" data-modal="ajaxUserModel" href="javascript:void(0)" > 關閉</a>
                                             </div>
                                         </div>
                                     </div>
@@ -477,7 +477,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <a class="btn btn-primary mb-2 saveBtn" href="javascript:void(0)" data-table="discount" > 儲存</a>
-                                                <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" > 關閉</a>
+                                                <a class="btn btn-danger mb-2 closeModal"data-modal="ajaxDiscountModel" href="javascript:void(0)" > 關閉</a>
                                             </div>
                                         </div>
                                     </div>
@@ -541,7 +541,7 @@
                         </div>
                         <div class="modal-footer">
                             <a class="btn btn-primary mb-2" href="javascript:void(0)" id="saveProductBtn"> 送出</a>
-                            <a class="btn btn-danger mb-2 closeModal" href="javascript:void(0)" > 關閉</a>
+                            <a class="btn btn-danger mb-2 closeModal" data-modal="ajaxProductListModel" href="javascript:void(0)" > 關閉</a>
                         </div>
                     </div>
                 </div>

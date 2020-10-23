@@ -5,13 +5,13 @@
     <div class="row justify-content-md-center mt-5">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Register</div>
+                <div class="card-header">註冊</div>
                 <div class="card-body">
                     <form role="form" method="POST" action="{{ url('/register') }}">
                         {!! csrf_field() !!}
 
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Name</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">名稱</label>
 
                             <div class="col-lg-6">
                                 <input
@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">E-Mail Address</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">電子郵件</label>
 
                             <div class="col-lg-6">
                                 <input
@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Password</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">密碼</label>
 
                             <div class="col-lg-6">
                                 <input
@@ -68,7 +68,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Confirm Password</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">確認密碼</label>
 
                             <div class="col-lg-6">
                                 <input
@@ -84,11 +84,26 @@
                                 @endif
                             </div>
                         </div>
-
+                        <div class="form-group row {{ $errors->has('captcha') ? 'has-error' : ''}}">
+                            <label class="col-lg-4 col-form-label text-lg-right">驗證碼</label>
+        
+                            <div class="col-md-4">
+                                <input id="captcha" class="" name="captcha" autocomplete="off">
+                                <img class="{{$errors->has('captcha')?'parsley-error':''}}" src="{{captcha_src('flat')}}" style="cursor: pointer" onclick="this.src='{{captcha_src('flat')}}'+Math.random()">
+                            
+                            </div>
+                            <div class="col-md-4">
+                                </div>
+                            @if($errors->has('captcha'))
+                                <div class="col-md-12">
+                                    <p class="text-danger text-left"><strong>{{$errors->first('captcha')}}</strong></p>
+                                </div>
+                            @endif
+                        </div>
                         <div class="form-group row">
                             <div class="col-lg-6 offset-lg-4">
                                 <button type="submit" class="btn btn-primary">
-                                    Register
+                                    註冊
                                 </button>
                             </div>
                         </div>

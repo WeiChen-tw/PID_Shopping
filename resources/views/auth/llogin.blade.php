@@ -56,7 +56,7 @@
                             <div class="col-lg-6 offset-lg-4">
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input type="checkbox" class="form-check-input" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+                                        <input type="checkbox" class="form-check-input" name="remember" {{ old('remember') ? 'checked' : '' }}> 記住我
                                     </label>
                                 </div>
                             </div>

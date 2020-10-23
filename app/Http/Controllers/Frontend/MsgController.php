@@ -79,9 +79,15 @@ class MsgController extends Controller
     public function destroy($id)
     {
 
-        MsgData::find($id)->delete();
-        ReMsgData::find($id)->delete();
-        return response()->json(['success' => '成功刪除回覆']);
+        $msgData = MsgData::find($id);
+        if($msgData){
+            $msgData->delete();
+        }
+        $reMsgData = ReMsgData::find($id);
+        if($reMsgData){
+            $reMsgData->delete();
+        }
+        return response()->json(['success' => '成功刪除留言']);
 
     }
     public function edit($id)

@@ -100,8 +100,14 @@ class ReMsgController extends Controller
     public function deleteUserMsg($id)
     {
 
-        MsgData::find($id)->delete();
-        ReMsgData::find($id)->delete();
+        $msgData = MsgData::find($id);
+        if($msgData){
+            $msgData->delete();
+        }
+        $reMsgData = ReMsgData::find($id);
+        if($reMsgData){
+            $reMsgData->delete();
+        }
         return response()->json(['success' => '成功刪除留言']);
 
     }
