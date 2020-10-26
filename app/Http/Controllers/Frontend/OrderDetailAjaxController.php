@@ -9,6 +9,7 @@ use App\Product;
 use App\Products_Discounts;
 use App\ShopCart;
 use App\User;
+use App\Record;
 use App\Models\Config;
 use DataTables;
 use Illuminate\Http\Request;
@@ -163,7 +164,7 @@ class OrderDetailAjaxController extends Controller
                 $discount_flag .= $discount_id;
                 if ($discount_method[$key] == 1) {
                     $other_sum[$key] =(string)($other_total - $order_total[$key]);
-                    $base = round($order_total[$key] / $sys_total[$key]);
+                    $base = floor($order_total[$key] / $sys_total[$key]);
                     $order_discount[$key] = $base * $sys_discount[$key];
                     $amount[$key] = $order_total[$key] + (string)($other_total - $order_total[$key]);
                 } else {
@@ -294,6 +295,7 @@ class OrderDetailAjaxController extends Controller
         $other_total = 0;
         $amount = [];
         $user =  User::find($request->user()->id);
+        $addr = $user->addr;
         foreach ($request->quantity as $key => $quantity) {
             if ($quantity <= 0) {
                 $wrong_id .= $request->productID[$key] . ' ';
@@ -349,7 +351,7 @@ class OrderDetailAjaxController extends Controller
                 $discount_flag .= $discount_id;
                 if ($discount_method[$key] == 1) {
                     $other_sum[$key] = '其他商品消費金額:$' . (string)($other_total - $order_total[$key]);
-                    $base = round($order_total[$key] / $sys_total[$key]);
+                    $base = floor($order_total[$key] / $sys_total[$key]);
                     $order_discount[$key] = '可獲得 $' . $base * $sys_discount[$key] . '購物金';
                     $amount[$key] += $order_total[$key] + (string)($other_total - $order_total[$key]);
                 } else {
@@ -383,9 +385,10 @@ class OrderDetailAjaxController extends Controller
                 'discount' => $order_discount,
                 'other' => $other_sum,
                 'amount' => $amount,
-                'coin' => $user->coin]);
+                'coin' => $user->coin,
+                'addr' => $addr]);
         } else {
-            return response()->json(['error' => '不符合優惠條件', 'amount' => $other_total,'coin' => $user->coin]);
+            return response()->json(['error' => '不符合優惠條件', 'amount' => $other_total,'coin' => $user->coin,'addr' => $addr]);
         }
 
     }
@@ -516,8 +519,8 @@ class OrderDetailAjaxController extends Controller
         if($order->sysMethod==1){
             //計算經驗
             $exp = $user->exp_bar + $amount;
-            $lv = round($exp/$config->moneyToLevel);
-            if($lv>0 && $user->level < 10){
+            $lv = floor($exp/$config->moneyToLevel);
+            if($lv>=0 && $user->level < 10){
                 if($lv - $user->level > $config->upgrade_limit){
                     $user->level += $config->upgrade_limit;
                     $exp = $config->moneyToLevel * $config->upgrade_limit;
@@ -531,8 +534,16 @@ class OrderDetailAjaxController extends Controller
                 $exp ='等級已達上限';
             }
             if($order->use_coin!=null || $order->use_coin!='0'){
+                Record::create(array('user_id' => $user->id,
+                'field' => 'coin',
+                'src' => $user->coin,
+                'status' => '-'.$order->use_coin));
                 $user->coin -= $order->use_coin;
             }
+            Record::create(array('user_id' => $user->id,
+                'field' => 'coin',
+                'src' => $user->coin,
+                'status' => '+'.$order->orderDiscount));
             $user->coin += $order->orderDiscount;
             DB::transaction(function() use($user,$order,$orderDetail){
                 $user->save();
@@ -549,8 +560,8 @@ class OrderDetailAjaxController extends Controller
             $amount -= $order->orderDiscount;
             //計算經驗
             $exp = $user->exp_bar + $amount;
-            $lv = round($exp/$config->moneyToLevel);
-            if($lv>0 && $user->level < 10){
+            $lv = floor($exp/$config->moneyToLevel);
+            if($lv>=0 && $user->level < 10){
                 if($lv - $user->level > $config->upgrade_limit){
                     $user->level += $config->upgrade_limit;
                     $exp = $config->moneyToLevel * $config->upgrade_limit;
@@ -564,6 +575,10 @@ class OrderDetailAjaxController extends Controller
                 $exp ='等級已達上限';
             }
             if($order->use_coin!=null || $order->use_coin!='0'){
+                Record::create(array('user_id' => $user->id,
+                'field' => 'coin',
+                'src' => $user->coin,
+                'status' => '-'.$order->use_coin));
                 $user->coin -= $order->use_coin;
             }
             DB::transaction(function() use($user,$order,$orderDetail){
@@ -581,8 +596,8 @@ class OrderDetailAjaxController extends Controller
         }else {
             //計算經驗
             $exp = $user->exp_bar + $amount;
-            $lv = round($exp/$config->moneyToLevel);
-            if($lv>0 && $user->level < 10){
+            $lv = floor($exp/$config->moneyToLevel);
+            if($lv>=0 && $user->level < 10){
                 if($lv - $user->level > $config->upgrade_limit){
                     $user->level += $config->upgrade_limit;
                     $exp = $config->moneyToLevel * $config->upgrade_limit;
@@ -596,6 +611,10 @@ class OrderDetailAjaxController extends Controller
                 $exp ='等級已達上限';
             }
             if($order->use_coin!=null || $order->use_coin!='0'){
+                Record::create(array('user_id' => $user->id,
+                'field' => 'coin',
+                'src' => $user->coin,
+                'status' => '-'.$order->use_coin));
                 $user->coin -= $order->use_coin;
             }
             DB::transaction(function() use($user,$order,$orderDetail){

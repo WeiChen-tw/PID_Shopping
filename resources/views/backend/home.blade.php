@@ -169,6 +169,7 @@
                                             <th>客戶名稱</th>
                                             <th>時間</th>
                                             <th>狀態</th>
+                                            <th>優惠</th>
                                             <th>總金額</th>
                                             <th>使用購物金</th>
                                             <th width="80px">明細</th>

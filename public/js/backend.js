@@ -89,6 +89,15 @@ $(document).ready(function () {
                 { data: "name" },
                 { data: 'created_at' },
                 { data: 'status' },
+                { data: 'null', render: function(data,type,row){
+                    if(row.sysMethod==null){
+                        return '無';
+                    }else if(row.sysMethod=='1'){
+                        return '滿'+row.sysTotal+'贈$'+row.sysDiscount+'購物金,得$'+row.orderDiscount;
+                    }else if(row.sysMethod=='2'){
+                        return '滿'+row.sysTotal+'折扣$'+row.sysDiscount+'%,折扣'+row.orderDiscount;
+                    }
+                } },
                 { data:null, render:function(data,type,row){
                     if(row.sysMethod == '2'){
                         return '$'+(row.total-row.orderDiscount);

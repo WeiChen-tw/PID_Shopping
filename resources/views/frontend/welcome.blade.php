@@ -82,6 +82,7 @@
                         <div class="col-md-12 top-right links">
                             @auth
                                 <a href="{{ url('/home') }}">會員中心</a>
+                                <a href="{{ url('/shopcart') }}">購物車</a>
                                 <a href="{{ url('/msgBoard') }}">留言板</a>
                                 <a href="{{ route('logout') }}" 
                                    onclick="event.preventDefault();document.getElementById('logout-form').submit();">

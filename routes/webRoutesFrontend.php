@@ -7,7 +7,9 @@ Route::get('/', function () {
 Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/home/profile', 'HomeController@index')->name('home');
+Route::get('/shopcart', 'HomeController@shopcart')->name('home');
+Route::resource('/record', 'RecordAjaxController');
+
 Route::get('/msgBoard', 'MsgController@index');
 Route::post('/msgBoard/sendMsg', 'MsgController@store');
 Route::post('/msgBoard/editMsg', 'MsgController@editMsg');
@@ -23,7 +25,7 @@ Route::post('/searchCategory', 'HtmlController@searchCategory');
 Route::post('/searchKeyword', 'HtmlController@searchKeyword');
 Route::post('/orderBy', 'HtmlController@orderBy');
 
-Route::resource('home/ajaxshopcart', 'ShoppingCartAjaxController');
+Route::resource('/home/ajaxshopcart', 'ShoppingCartAjaxController');
 Route::get('/getProduct/{id}', 'ShoppingCartAjaxController@getProduct');
 
 Route::resource('home/ajaxorderdetail', 'OrderDetailAjaxController');

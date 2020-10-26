@@ -8,7 +8,6 @@ $(document).ready(function(){
     });
     let orderTable;
     let orderDetailTable;
-    let recordTable;
     function initShopCart(){
         $.ajax({
             url: "./home/ajaxshopcart",
@@ -43,32 +42,6 @@ $(document).ready(function(){
     });
     $('#v-pills-profile-tab').on('click', function (e) {
         initProfile();
-    })
-    $("#checkRecord").on('click',function(e){
-        let locationURL = window.document.location.origin;
-        e.preventDefault()
-        if (recordTable) {
-            recordTable.destroy();
-        }
-        recordTable = $("#recordTable").DataTable({
-            language:{
-                url: locationURL+'/public/Chinese-traditional.json',
-                decimal:',',
-                thousands:'.'
-            },
-            order:[0,"desc"],
-            processing: true,
-            serverSide: true,
-            ajax: "./record",
-            columns: [
-                { data: "id" },
-                { data: 'src' },
-                { data: 'status' },
-                { data: 'created_at' },
-            ],
-            select: true,
-        } );
-       $("#ajaxRecordModel").modal('show');
     })
     $('#v-pills-checkOrder-tab').on('click', function (e) {
         
@@ -133,7 +106,7 @@ $(document).ready(function(){
             console.log(id)
         }
     })
-     $('#v-pills-profile-tab').trigger('click');
+     $('#v-pills-myShopCart-tab').trigger('click');
     $('#profileResetBtn').on('click',function(){
         initProfile();
     })
