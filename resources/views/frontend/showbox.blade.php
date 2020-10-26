@@ -18,7 +18,11 @@
             </p>
         </div>
         <div class="card-footer ">
-            <a href="javascript:void(0)"   data-id="{{$product->productID}}"  class=" btn btn-primary btn-sm buy">加入購物車</a>
+            <a href="javascript:void(0)"   data-id="{{$product->productID}}"  class=" btn btn-primary btn-sm buy">
+            
+            加入購物車
+            
+            </a>
         </div>
         <div class="card-footer ">
         

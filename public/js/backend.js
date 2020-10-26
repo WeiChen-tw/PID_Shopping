@@ -564,8 +564,12 @@ $(document).ready(function () {
         $(model_name).modal('show');
 
         $.post("./getProductData",{'table':dataTable,'id':id,'action':'add'}, function (data) {
+            if (data.length == 0) {
+                $("#showBox").append(`<h3>查無商品</h3`);
+            }
             $.each(data, function (index, arr) {
                 let cardBody;
+                
                 if (arr.img != '') {
                     cardBody = `<img class="img-fluid" style="height:6rem" src="data:image/jpeg;base64,` + arr.img + `" ></img>`;
                 } else {
@@ -681,7 +685,7 @@ $(document).ready(function () {
             type: "POST",
             dataType: 'json',
             success: function (data) {
-                if(action =='remove'){
+                if(action =='remove' ){
                     $("#showBox").empty();
                     $.post("./getProductData", { 'table':table,'id': id }, function (data) {
                         if (data.length == 0) {
@@ -715,6 +719,40 @@ $(document).ready(function () {
                         })
                     })
                     
+                }else if(action == 'add'){
+                    $("#showBox").empty();
+                    $.post("./getProductData",{'table':table,'id':id,'action':'add'}, function (data) {
+                        if (data.length == 0) {
+                            $("#showBox").append(`<h3>查無商品</h3`);
+                        }
+                        $.each(data, function (index, arr) {
+                            let cardBody;
+                            
+                            if (arr.img != '') {
+                                cardBody = `<img class="img-fluid" style="height:6rem" src="data:image/jpeg;base64,` + arr.img + `" ></img>`;
+                            } else {
+                                cardBody = `<h3>No Image</h3>`
+                            }
+                            $("#showBox").append(` <div class="product col-md-4 " style="padding-bottom: 1.25rem;">
+                                    <div class="product-list card bg-default" data-product_id="`+ arr.productID + `">
+                                        <h5 class="card-header" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;">`
+                                + arr.name +
+                                `</h5>
+                                        <div class="card-body">`
+                                + cardBody +
+                                `<p class="card-text">`
+                                + arr.description +
+                                `</p>
+                                        </div>
+                                        <div class="card-footer ">
+                                            
+                                        </div>
+                                    </div>
+                                </div>`
+                            );
+                        })
+                    })
+            
                 }
                 alert(data.success);
             },

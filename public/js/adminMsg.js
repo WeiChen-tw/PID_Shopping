@@ -116,7 +116,7 @@ function addTextarea(id,msg_id,text) {
         let formHtml = `<form id="replyForm" class="">
         <div class="form-group">
             <label for="content">訊息</label>
-            <textarea class="form-control" name="content" placeholder="">${text}</textarea>
+            <textarea class="form-control" name="content" maxlength="120" placeholder="">${text}</textarea>
         </div>
         
         <a href="javascript:void(0)" type="button" data-id="${id}" data-msg_id="${msg_id}" class="btn btn-primary saveMsg" >送出</a>
@@ -128,7 +128,7 @@ function addTextarea(id,msg_id,text) {
         let formHtml = `<form id="replyForm" class="">
         <div class="form-group">
             <label for="content">訊息</label>
-            <textarea class="form-control" name="content" placeholder="輸入訊息"></textarea>
+            <textarea class="form-control" name="content" maxlength="120" placeholder="輸入訊息"></textarea>
         </div>
         
         <a href="javascript:void(0)" type="button" data-id="${id}" class="btn btn-primary saveMsg" >送出</a>

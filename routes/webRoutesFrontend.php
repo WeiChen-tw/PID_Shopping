@@ -7,6 +7,7 @@ Route::get('/', function () {
 Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home/profile', 'HomeController@index')->name('home');
 Route::get('/msgBoard', 'MsgController@index');
 Route::post('/msgBoard/sendMsg', 'MsgController@store');
 Route::post('/msgBoard/editMsg', 'MsgController@editMsg');

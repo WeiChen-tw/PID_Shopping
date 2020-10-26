@@ -31,7 +31,10 @@
                                             <p id="userMsg{{$msg->id}}"class="card-text">
                                             內容:{{$msg->content}}
                                             <small  class="float-md-right form-text text-muted">{{$msg->updated_at}}</small>
-                                            <a href="javascript:void(0)"   data-id="{{$msg->id}}"  class="float-md-right btn btn-success btn-sm editMsg">編輯</a>
+                                            @if($row->email==Auth::user()->email )
+                                                <a href="javascript:void(0)"   data-id="{{$msg->id}}"  class="float-md-right btn btn-success btn-sm editMsg">編輯</a>
+                                            
+                                            @endif
                                             </p>
                                         @else
                                             <h5 class="card-header">官方回覆</h5>
@@ -52,6 +55,7 @@
                                     @endif
                                     @if($loop->last)
                                         暫無回覆
+                                    
                                     @endif
                                 @endforeach
                             </div>
@@ -72,7 +76,8 @@
                     </div>
                     <div class="form-group">
                         <label for="content">訊息</label>
-                        <textarea class="form-control" name="content" placeholder="輸入訊息"></textarea>
+                        <textarea class="form-control" name="content" maxlength="120" placeholder="輸入訊息"></textarea>
+                        <small class="float-right form-text text-muted">字數限制120字元</small>
                     </div>
                     
                     <a type="button" class="btn btn-primary user-msg">送出</a>

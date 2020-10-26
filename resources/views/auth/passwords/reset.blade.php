@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Password</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">密碼</label>
 
                             <div class="col-lg-6">
                                 <input
@@ -48,7 +48,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label text-lg-right">Confirm Password</label>
+                            <label class="col-lg-4 col-form-label text-lg-right">確認密碼</label>
                             <div class="col-lg-6">
                                 <input
                                         type="password"

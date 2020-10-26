@@ -18,7 +18,7 @@ class MsgController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('checkstatus');
     }
 
     /**
@@ -29,21 +29,19 @@ class MsgController extends Controller
     public function index()
     {
         $msgData = DB::table('msgData')->orderBy('created_at', 'desc')->paginate(3);
-        // $reMsgData=DB::table('reMsgData')->orderBy('created_at','desc')->get();
+        $reMsgData=DB::table('reMsgData')->orderBy('created_at','desc')->get();
         //DB::enableQueryLog(); // Enable query log
+       
+       $msgDataDetail = DB::table('msgDataDetails')
+           ->join('msgData','msgDataDetails.msgData_id','msgData.id')
+           ->orderBy('msgDataDetails.created_at','asc')
+           ->select(DB::raw('msgDataDetails.*,msgData.email'))
+           ->get();
 
-        $msgDataDetail = DB::table('msgDataDetails')
-            ->join('msgData', 'msgDataDetails.msgData_id', 'msgData.id')
-            ->orderBy('msgDataDetails.created_at', 'asc')
-            ->select(DB::raw('msgDataDetails.*,msgData.email'))
-            ->get();
         //dd(DB::getQueryLog()); // Show results of log
-        $reMsgData = DB::table('msgDataDetails')
-            ->join('reMsgData', 'msgDataDetails.msgData_id', 'reMsgData.id')
-            ->where('msgDataDetails.auth', 'admin')
-            ->orderBy('msgDataDetails.created_at', 'desc')
-            ->select(DB::raw('msgDataDetails.*'))
-            ->get();
+        if($reMsgData->isEmpty()){
+            $reMsgData = 'null';
+        }
         return view('frontend.msgBoard')
             ->with('msgData', $msgData)
             ->with('msgDataDetail', $msgDataDetail)

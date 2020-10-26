@@ -143,7 +143,8 @@
                         <div class="tab-pane fade " id="v-pills-myShopCart" role="tabpanel" aria-labelledby="v-pills-myShopCart-tab">
                             <form class="form-inline">
                                 <div class="form-group ">
-                                    <lable  class="" for="chkAll"> 全選 </lable><input class="form-control" type="checkbox" name="chkAll"  />
+                                    <lable  class="" for="chkAll"> 全選 </lable><input class="form-control" type="checkbox" style="zoom:180%" name="chkAll"  />
+                                
                                 </div>
                                 <div class="form-group">
                                     <a class="form-control btn btn-danger" href="javascript:void(0)" onclick="delShopCartAll()">刪除</a> 

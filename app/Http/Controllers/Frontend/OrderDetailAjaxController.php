@@ -26,7 +26,7 @@ class OrderDetailAjaxController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('checkstatus');
     }
     /**
 
@@ -81,14 +81,14 @@ class OrderDetailAjaxController extends Controller
             $product = Product::find($request->productID[$key]);
             if ($product->quantity < $quantity) {
                 $wrong_id .= $request->productID[$key] . ' ';
-                $shopcart = ShopCart::where('user_id',$user_id)
-                    ->where('productID', $request->productID[$key])
-                    ->delete();
+                // $shopcart = ShopCart::where('user_id',$user_id)
+                //     ->where('productID', $request->productID[$key])
+                //     ->delete();
             }
         }
         if ($wrong_id !== null) {
 
-            return response()->json(['wrong' => '商品編號:' . $wrong_id . ' 數量不足,自動移出購物車']);
+            return response()->json(['wrong' => '商品編號:' . $wrong_id . ' 數量不足']);
         }
         if (!isset($addr)) {
             return response()->json(['wrong' => '請輸入地址']);

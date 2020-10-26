@@ -122,7 +122,7 @@
                                                     <div class="form-group">
                                                         <label for="name" class="col-sm-2 control-label">購物金</label>
                                                         <div class="col-sm-12">
-                                                            <input type="text" class="form-control" id="coin" name="coin" placeholder="Enter Coin" value="" maxlength="50" required="">
+                                                            <input type="text" class="form-control" id="coin" oninput="value=value.replace(/[^\d]/g,'')" name="coin" placeholder="Enter Coin" value="" maxlength="50" required="">
                                                         </div>
                                                     </div>
                                                 </form>
@@ -251,7 +251,7 @@
                                                         <div class="form-group">
                                                             <label for="name" class="col-sm-2 control-label">名稱</label>
                                                             <div class="col-sm-12">
-                                                                <input type="text" class="form-control"  name="name" placeholder="Enter Name" value="" maxlength="50" required="">
+                                                                <input type="text" class="form-control"  name="name" placeholder="輸入商品名稱" value="" maxlength="50" required="">
                                                             </div>
                                                         </div>
 
@@ -269,28 +269,28 @@
                                                         <div class="form-group">
                                                             <label for="price" class="col-sm-2 control-label">價格</label>
                                                             <div class="col-sm-12">
-                                                                <input type="text" class="form-control" id="price" name="price" placeholder="Enter Price" value="" maxlength="50" required="">
+                                                                <input type="text" class="form-control" id="price" oninput="value=value.replace(/[^\d]/g,'')" name="price" placeholder="輸入價格" value="" maxlength="50" required="">
                                                             </div>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label for="quantity" class="col-sm-2 control-label">庫存量</label>
                                                             <div class="col-sm-12">
-                                                                <input type="text" class="form-control" id="quantity" name="quantity" placeholder="Enter Quantity" value="" maxlength="50" required="">
+                                                                <input type="text" class="form-control" id="quantity" oninput="value=value.replace(/[^\d]/g,'')" name="quantity" placeholder="輸入數量" value="" maxlength="50" required="">
                                                             </div>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label for="quantitySold" class="col-sm-2 control-label">售出量</label>
                                                             <div class="col-sm-12">
-                                                                <input type="text" class="form-control" id="quantitySold" name="quantitySold" placeholder="Enter QuantitySold" value="" maxlength="50" required="">
+                                                                <input type="text" class="form-control" id="quantitySold" oninput="value=value.replace(/[^\d]/g,'')" name="quantitySold" placeholder="輸入售出數量" value="" maxlength="50" required="">
                                                             </div>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label class="col-sm-2 control-label">商品介紹</label>
                                                             <div class="col-sm-12">
-                                                                <textarea id="description" name="description" required="" placeholder="Enter Descriptions" class="form-control"></textarea>
+                                                                <textarea id="description" name="description" maxlength="120" required="" placeholder="輸入商品描述" class="form-control"></textarea>
                                                             </div>
                                                         </div>
                                                         <div class="form-group"> 
@@ -398,16 +398,16 @@
                                         </div>
                                         <div class="form-group mx-sm-3 mb-2">
                                             <label for="inputTotal" class="">滿額</label>
-                                            <input type="text" name="total" class="form-control" id="inputTotal" placeholder="$" required>
+                                            <input type="text" name="total" class="form-control" oninput="value=value.replace(/[^\d]/g,'')" id="inputTotal" placeholder="$" required>
                                         </div>
                                         
                                         <div class="form-group mx-sm-3 mb-2">
                                             <label for="inputTotal" class="">優惠</label>
-                                            <input type="text" name="discount" class="form-control" id="inputDiscount" placeholder="">
+                                            <input type="text" name="discount" class="form-control" oninput="value=value.replace(/[^\d]/g,'')" id="inputDiscount" placeholder="">
                                         </div>
                                         <div class="form-group mx-sm-3 mb-2">
                                             <label for="inputLevel" class="">等級</label>
-                                            <input type="text" name="user_lv" class="form-control" id="inputLevel" placeholder="適用等級含以上" required>
+                                            <input type="text" name="user_lv" class="form-control" oninput="value=value.replace(/[^\d]/g,'')" id="inputLevel" placeholder="適用等級含以上" required>
                                         </div>
                                         <a class="form-control btn btn-primary mb-2" href="javascript:void(0)" id="createNewDiscount"> 送出</a>
 
@@ -495,13 +495,13 @@
                                         <div class="form-group">
                                             <label for="name" class="col-sm-6 control-label">提升一等所需的消費金額</label>
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="moneyToLevel" name="moneyToLevel" placeholder="$" value="" maxlength="50" required="">
+                                                <input type="text" class="form-control" id="moneyToLevel" oninput="value=value.replace(/[^\d]/g,'')" name="moneyToLevel" placeholder="$" value="" maxlength="50" required="">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="name" class="col-sm-6 control-label">設定單筆訂單的升級限制</label>
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="upgrade_limit" name="upgrade_limit" placeholder="level" value="" maxlength="50" required="">
+                                                <input type="text" class="form-control" id="upgrade_limit" oninput="value=value.replace(/[^\d]/g,'')" name="upgrade_limit" placeholder="level" value="" maxlength="50" required="">
                                             </div>
                                         </div>
                                         <div class="col-sm-offset-2 col-sm-10">

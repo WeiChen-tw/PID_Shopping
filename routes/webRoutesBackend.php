@@ -7,6 +7,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('home', 'HomeController@index')->name('home');
+
 Route::get('load_product', 'HtmlController@loadProduct');
 Route::get('/msgBoard', 'ReMsgController@index');
 Route::post('/msgBoard/reply', 'ReMsgController@store');

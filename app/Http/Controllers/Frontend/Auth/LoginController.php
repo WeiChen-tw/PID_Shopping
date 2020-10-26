@@ -6,7 +6,7 @@ use App\Http\Controllers\Frontend\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\User;
 class LoginController extends Controller
 {
     /*
@@ -34,12 +34,39 @@ class LoginController extends Controller
     }
     protected function credentials(Request $request)
     {
-        $credentials = $request->only($this->username(), 'password');
+        // $credentials = $request->only($this->username(), 'password');
 
-        $credentials['banned'] = 'N';
+        // $credentials['banned'] = 'N';
+        return array_merge($request->only($this->username(), 'password'), ['banned' => 'N']);
+    
+        // return $credentials;
 
-        return $credentials;
+    }
+    /**
+     * Get the failed login response instance.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        $errors = [$this->username() => trans('auth.failed')];
 
+        // Load user from database
+        $user = User::where($this->username(), $request->{$this->username()})->first();
+
+        // Check if user was successfully loaded, that the password matches
+        // and active is not 1. If so, override the default error message.
+        if ($user && \Hash::check($request->password, $user->password) && $user->banned != 'N') {
+            $errors = [$this->username() => trans('auth.banned')];
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json($errors, 422);
+        }
+        return redirect()->back()
+            ->withInput($request->only($this->username(), 'remember'))
+            ->withErrors($errors);
     }
     protected function validateLogin(Request $request)
     {

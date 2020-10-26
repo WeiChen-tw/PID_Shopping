@@ -150,7 +150,11 @@
             <div id ="showBox" class="row pre-scrollable ">
                     
             </div>
-
+            <div class="row footer">
+                <address>
+                    <strong>聯絡資訊</strong><br /> 福德區<br /> 福德路3號<br /> <abbr title="Phone">P:</abbr> (03)) 5311-6820
+                </address>
+            </div>
     </div>
     <!-- Discount Modal -->
     <div class="modal fade" id="shoppingCartModel" aria-hidden="true">

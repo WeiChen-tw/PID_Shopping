@@ -23,27 +23,23 @@ class ProductAjaxController extends Controller
      * @return \Illuminate\Http\Response
 
      */
-
+   
     public function index(Request $request)
     {
-
+       
         if ($request->ajax()) {
             $data = Product::latest()->get();
 
-            // $sql = <<<'STR'
-            // SELECT p.productID,p.name,GROUP_CONCAT(DISTINCT c.name) as category,GROUP_CONCAT(DISTINCT d.method)as discount,p.quantity,p.quantitySold ,p.price,p.description,p.img,p.onMarket
-            // FROM products as p
-            // INNER JOIN products_categories as pc
-            // LEFT JOIN categories as c
-            // on p.productID = pc.product_id
-            // and pc.category_id = c.id
-            // INNER JOIN products_discounts as pd
-            // LEFT JOIN discounts as d
-            // on p.productID = pd.product_id
-            // and pd.discount_id = d.id
-            // GROUP BY p.productID
-            // STR;
-            $data2 = DB::select('SELECT p.productID,p.name,GROUP_CONCAT(DISTINCT c.name) as category,GROUP_CONCAT(DISTINCT d.method)as discount,p.quantity,p.quantitySold ,p.price,p.description,p.img,p.onMarket FROM `products` as p INNER JOIN products_categories as pc LEFT JOIN categories as c on p.productID = pc.product_id and pc.category_id = c.id INNER JOIN products_discounts as pd LEFT JOIN discounts as d on p.productID = pd.product_id and pd.discount_id = d.id GROUP BY p.productID');
+            $sql = <<<STR
+            SELECT p.productID,p.name,GROUP_CONCAT(DISTINCT c.name) as category,GROUP_CONCAT(DISTINCT d.method)as discount,p.quantity,p.quantitySold ,p.price,p.description,p.img,p.onMarket 
+            FROM `products` as p 
+            INNER JOIN products_categories as pc 
+            LEFT JOIN categories as c on p.productID = pc.product_id and pc.category_id = c.id 
+            INNER JOIN products_discounts as pd 
+            LEFT JOIN discounts as d on p.productID = pd.product_id and pd.discount_id = d.id 
+            GROUP BY p.productID
+STR;
+            $data2 = DB::select($sql);
             return Datatables::of($data2)
             //->addIndexColumn()
 

@@ -151,17 +151,20 @@ $(document).ready(function(){
             }
             $('#' + idName + ' #list-header img').attr("src", src);
             $('#' + idName + ' #list-check').append(`
-        <input name="checkBuy" type="checkbox" value ="${id}" style="width:30%;height:30%;margin-left:2.25rem;margin-top:2.25rem;"class="form-check-input">                            
-        <label class="form-check-label"style="margin-left:2.55rem" for="checkbox">
+            <label class="" for="checkbox${id}">
         選取                            
         </label>
+        <input name="checkBuy" type="checkbox" id=checkbox${id} value ="${id}" style="zoom:180%;margin-left:0.25rem;margin-top:0.25rem;"class="">                            
+        
         `);
             $('#' + idName + ' #list-body-info').append(`
         <label>商品編號:</label><span class="productID">${id}</span><br>
         <label>商品名稱:</label><span class="datatime">${name}</span><br>
         <label>價格:</label><span id="price${id}" value ="${price}" class="price">${price*quantity}</span><br>
         <label>優惠活動名稱 #</label><span id="discount${id}" value ="${discount}" class="discount">${discount}</span><br>
-        <label>數量:&nbsp;</label><button id="minus" name = "${id}"value="${quantity}"onclick="minus(this)">-</button><input class="w-25 changePrice"   name="${id}"id="inputQuantity${id}" type="text" value="${quantity}"  ><button id="plus" name = "${id}"value="${quantity}"onclick="plus(this)">+</button><br>
+        <label>數量:&nbsp;</label><button id="minus" name = "${id}"value="${quantity}"onclick="minus(this)">-</button>
+        <input class="w-25 changePrice"   name="${id}"id="inputQuantity${id}" oninput="value=value.replace(/[^\\d]/g,'')" type="text" value="${quantity}"  >
+        <button id="plus" name = "${id}"value="${quantity}"onclick="plus(this)">+</button><br>
         `);
             $('#' + idName + ' #list-footer').append(`
         <button class="form-control btn-link" onclick="delShopCart(this)" value="${id}">刪除</button>`)
