@@ -14,7 +14,7 @@ class Order extends Model
     //白名單
     protected $fillable = [
 
-        'id', 'user_id', 'use_coin','addr', 'sysMethod','sysTotal', 'sysDiscount', 'orderDiscount', 'status', 'total', 'created_at',
+        'id', 'user_id', 'use_coin','addr', 'active','sysMethod','sysTotal', 'sysDiscount', 'orderDiscount', 'status', 'total', 'created_at',
 
     ];
     public $timestamps = true;

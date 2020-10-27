@@ -95,7 +95,7 @@ $(document).ready(function () {
                     }else if(row.sysMethod=='1'){
                         return '滿'+row.sysTotal+'贈$'+row.sysDiscount+'購物金,得$'+row.orderDiscount;
                     }else if(row.sysMethod=='2'){
-                        return '滿'+row.sysTotal+'折扣$'+row.sysDiscount+'%,折扣'+row.orderDiscount;
+                        return '滿'+row.sysTotal+'折扣'+row.sysDiscount+'%,折扣$'+row.orderDiscount;
                     }
                 } },
                 { data:null, render:function(data,type,row){
@@ -1060,13 +1060,20 @@ function format ( d ,id) {
     });
     console.log(orderDetail)
     for (let index = 0; index < orderDetail.length; index++) {
-        let name = 'drink';
+       
+        let text = null;
+        if(orderDetail[index].discount_flag=='1'){
+            text = '優惠項目';
+        }else{
+            text = '無';
+        }
         htmlText += `
         <tr>
             <td>編號 : ${orderDetail[index].productID}</td>
             <td>商品名稱 : ${orderDetail[index].name}</td>
             <td>${orderDetail[index].quantity} 件</td>
             <td>$${orderDetail[index].total}</td>
+            <td>${text}</td>
             <td>${orderDetail[index].status}</td>
         `
         if (orderDetail[index].status =='待退貨'){

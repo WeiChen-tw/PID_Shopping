@@ -22,11 +22,13 @@ class myDiscount
 }
 class myRefund
 {
-    public $Money =array(
-        refund => '',
-        other => '',
+    public $money = array(
+        'refund' => null,
+        'other' => null,
+        'sum' => null,
+        'coinDiscountSum' => null,
     );
-    
+
 }
 class OrderDetailAjaxController extends Controller
 {
@@ -80,11 +82,18 @@ class OrderDetailAjaxController extends Controller
                         case '待退貨':
                             $actionText = "同意退貨";
                             break;
+                        case '部份商品待退貨':
+                            $actionText = "請點選明細確認退貨";
+                            break;
                         default:
                             return;
                             break;
                     }
-                    $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="order" data-id="' . $row->id . '" data-original-title="' . $actionText . '" class="btn btn-danger btn-sm ' . $actionText . '">' . $actionText . '</a>';
+                    if($actionText !== '請點選明細確認退貨'){
+                        $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="order" data-id="' . $row->id . '" data-original-title="' . $actionText . '" class="btn btn-danger btn-sm ' . $actionText . '">' . $actionText . '</a>';
+                    }else{
+                        $btn = $actionText;
+                    }
                     if ($actionText === "同意退貨") {
                         $actionText2 = "拒絕退貨";
                         $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip"  data-table="order" data-id="' . $row->id . '" data-original-title="' . $actionText2 . '" class="btn btn-success btn-sm ' . $actionText2 . '">' . $actionText2 . '</a>';
@@ -294,10 +303,12 @@ class OrderDetailAjaxController extends Controller
             $user = User::find($order->user_id);
             $product_id = null;
             $amount = 0;
-            $discountCoin =0;
+            $discountCoin = 0;
             $exp = null;
             $sum = null;
-            $msgFlag=null;
+            $coinDiscountSum = null;
+            $msgFlag = null;
+            $coinMsg = null;
             $this_item = DB::table('orderDetails')
                 ->where('id', '=', $request->id)
                 ->where('productID', '=', $request->product_id)
@@ -308,178 +319,104 @@ class OrderDetailAjaxController extends Controller
             }
             //計算退貨商品金額
             foreach ($orderDetail as $key => $row) {
-                if ($product_id) {
+                if ($product_id && $row->status != '退貨成功') {
+                    //計算退貨商品金額
+                    //優惠模式2 要計算折扣
                     if ($row->productID == $product_id) {
-                        $amount += $row->quantity * $row->price;
-                        if ($row->discount_flag == 1) {
-                            $orderTotal[0] += $amount;
-                        }
-                    } else {
-                        $sum += $row->quantity * $row->price;
-                        $orderTotal[1] += $sum;
-                    }
-                }
-            }
-            $sum += $amount;
-            $orderTotal[1] += $amount;
-            //優惠模式2 要計算折扣數
-            if ($order->sysMethod == 2) {
-                //計算折扣數
-                if ($this_item->discount_flag == 1) {
-                    $amount = round($amount * (1 - $order->sysDiscount / 100));
-                }
-            }
-            //設定經驗為可接受最大值
-            //計算當筆訂單總額
-            // 回朔等級 重算訂單經驗值
-            if ($sum > $exp_max) {
-                
-                $exp = $exp_max;
-            } else {
-                //優惠模式2 要計算折扣數
-                 if ($order->sysMethod == 2) {
-                    //計算折扣數
-                    if ($this_item->discount_flag == 1) {
-                        $exp = round($sum * (1 - $order->sysDiscount / 100));
-                    }
-                }else{
-                    $exp = $sum;
-                }
-                
-            }
-            //剩餘訂單金額大於訂單經驗上限
-            if (($sum -= $amount) > $exp_max) {
-                $sum = $exp_max;
-                $msgFlag =1;
-            }
-            //判斷優惠模式 1 購物金 2 折扣
-            if ($order->sysMethod == 1) {
-                $user->exp_bar -= $exp;
-                $lv = floor(($user->exp_bar+ $sum) / $config->moneyToLevel) ;
-                if($msgFlag!=1){
-                    if ($lv >= 0 && $user->level < 10) {
-                        if ($lv - $user->level <= $config->upgrade_limit) {
-                            $user->level -= $config->upgrade_limit;
+                        if ($order->sysMethod == 2 && $row->discount_flag == 1) {
+                            $amount += round($row->quantity * $row->price * (1 - $order->sysDiscount / 100));
                         } else {
-                            $user->level = $lv;
+                            $amount += $row->quantity * $row->price;
                         }
                     } else {
-                        $sum = '等級已達上限';
+                        //計算非退貨商品金額
+                        //優惠活動內商品
+                        if ($row->discount_flag == 1) {
+                            //計算活動累計金額之後判斷是否達標
+                            if ($order->sysMethod == 1) {
+                                $coinDiscountSum += $row->quantity * $row->price;
+                            } else if ($order->sysMethod == 2) {
+                                //計算折扣
+                                $sum += round($row->quantity * $row->price * (1 - $order->sysDiscount / 100));
+                            }
+                        } else {
+                            //無優惠商品
+                            $sum += $row->quantity * $row->price;
+
+                        }
                     }
                 }
-               
-                if (($orderTotal[1] - $orderTotal[0]) >= $order->sysTotal) {
-                    $base = floor(($orderTotal[1] - $orderTotal[0]) / $order->sysTotal);
-                    $discountCoin = $order->orderDiscount - ($base * $order->sysDiscount);
-                    Record::create(array('user_id' => $order->user_id,
-                        'field' => 'coin',
-                        'src' => $user->coin,
-                        'status' => '-' . $discountCoin));
-                    $user->coin -= $discountCoin;
-                }
-                Record::create(array('user_id' => $order->user_id,
-                    'field' => 'coin',
-                    'src' => $user->coin,
-                    'status' => '+' . $amount));
-                $user->coin += $amount;
-                DB::transaction(function () use ($request, $user, $order, $this_item) {
-                    $user->save();
-                    $order->status = "部份商品退貨成功";
-                    $order->save();
-
-                    $product = Product::find($this_item->productID);
-                    $product->quantity += $this_item->quantity;
-                    $product->quantitySold -= $this_item->quantity;
-                    $product->save();
-                    DB::table('orderDetails')
-                        ->where('id', '=', $request->id)
-                        ->where('productID', '=', $request->product_id)
-                        ->update(['status' => "退貨成功"]);
-                });
-                 
-                if($msgFlag==null){
-                    return response()->json(['success' => '退貨成功,系統退回$' . $amount - $discountCoin. '購物金與回收獲得經驗值' . $exp]);
-                }else if($msgFlag==1){
-                    return response()->json(['success' => '退貨成功,系統退回$' . $amount - $discountCoin. '購物金,維持經驗值']);
-                }
-                
-            } else if ($order->sysMethod == 2) {
-                $user->exp_bar -= $exp;
-                
-                $lv = floor(($user->exp_bar+ $sum) / $config->moneyToLevel) ;
-                if($msgFlag!=1){
-                    if ($lv >= 0 && $user->level < 10) {
-                        $user->level = $lv;
-                    } else {
-                        $sum = '等級已達上限';
-                    }
-                }
-                
-                Record::create(array('user_id' => $order->user_id,
-                    'field' => 'coin',
-                    'src' => $user->coin,
-                    'status' => '+' . $amount));
-                $user->coin += $amount;
-                DB::transaction(function () use ($request, $user, $order, $this_item) {
-                    $user->save();
-                    $order->status = "部份商品退貨成功";
-                    $order->save();
-
-                    $product = Product::find($this_item->productID);
-                    $product->quantity += $this_item->quantity;
-                    $product->quantitySold -= $this_item->quantity;
-                    $product->save();
-                    DB::table('orderDetails')
-                        ->where('id', '=', $request->id)
-                        ->where('productID', '=', $request->product_id)
-                        ->update(['status' => "退貨成功"]);
-
-                });
-
-               if($msgFlag==null){
-                    return response()->json(['success' => '退貨成功,系統退回$' . $amount . '購物金與回收獲得經驗值' . $exp]);
-                }else if($msgFlag==1){
-                    return response()->json(['success' => '退貨成功,系統退回$' . $amount . '購物金,維持經驗值']);
-                }
-            } else {
-                $user->exp_bar -= $exp;
-                $lv = floor(($user->exp_bar+ $sum) / $config->moneyToLevel) ;
-                if($msgFlag!=1){
-                    if ($lv >= 0 && $user->level < 10) {
-                        $user->level = $lv;
-                    } else {
-                        $sum = '等級已達上限';
-                    }
-                }
-                
-                Record::create(array('user_id' => $order->user_id,
-                    'field' => 'coin',
-                    'src' => $user->coin,
-                    'status' => '+' . $amount));
-                $user->coin += $amount;
-                DB::transaction(function () use ($request, $user, $order, $this_item) {
-                    $user->save();
-                    $order->status = "部份商品退貨成功";
-                    $order->save();
-
-                    $product = Product::find($this_item->productID);
-                    $product->quantity += $this_item->quantity;
-                    $product->quantitySold -= $this_item->quantity;
-                    $product->save();
-                    DB::table('orderDetails')
-                        ->where('id', '=', $request->id)
-                        ->where('productID', '=', $request->product_id)
-                        ->update(['status' => "退貨成功"]);
-
-                });
-                if($msgFlag==null){
-                    return response()->json(['success' => '退貨成功,系統退回$' . $amount . '購物金與回收獲得經驗值' . $exp]);
-                }else if($msgFlag==1){
-                    return response()->json(['success' => '退貨成功,系統退回$' . $amount . '購物金,維持經驗值']);
-                }
-                
             }
-            return response()->json(['success' => '退貨成功']);
+
+            $item = new myRefund;
+            $item->money['refund'] = $amount;
+            $item->money['other'] = $sum;
+            $item->money['coinDiscountSum'] = $coinDiscountSum;
+            $item->money['sum'] = $item->money['refund'] + $item->money['other'];
+            $expMsg = $this->refundExp($user, $item);
+           
+            //判斷優惠模式
+            // 1 購物金 2 折扣
+            if ($order->sysMethod == 1) {
+                //計算退貨購物金
+                $coinMsg = $this->refundCoin($user, $order, $item);
+                DB::transaction(function () use ($request, $user, $order, $this_item) {
+                    $user->save();
+                    $order->status = "部份商品退貨成功";
+                    $order->save();
+
+                    $product = Product::find($this_item->productID);
+                    $product->quantity += $this_item->quantity;
+                    $product->quantitySold -= $this_item->quantity;
+                    $product->save();
+                    DB::table('orderDetails')
+                        ->where('id', '=', $request->id)
+                        ->where('productID', '=', $request->product_id)
+                        ->update(['status' => "退貨成功"]);
+                });
+                $amount -= $discountCoin;
+                return response()->json(['success' => '退貨成功,' . $coinMsg . ',' . $expMsg]);
+
+            } else if ($order->sysMethod == 2) {
+                //計算退貨購物金
+                $coinMsg = $this->refundCoin($user, $order, $item);
+                DB::transaction(function () use ($request, $user, $order, $this_item) {
+                    $user->save();
+                    $order->status = "部份商品退貨成功";
+                    $order->save();
+                    $product = Product::find($this_item->productID);
+                    $product->quantity += $this_item->quantity;
+                    $product->quantitySold -= $this_item->quantity;
+                    $product->save();
+                    DB::table('orderDetails')
+                        ->where('id', '=', $request->id)
+                        ->where('productID', '=', $request->product_id)
+                        ->update(['status' => "退貨成功"]);
+
+                });
+                return response()->json(['success' => '退貨成功,' . $coinMsg . ',' . $expMsg]);
+            } else {
+                //計算退貨購物金
+                $coinMsg = $this->refundCoin($user, $order, $item);
+
+                DB::transaction(function () use ($request, $user, $order, $this_item) {
+                    $user->save();
+                    $order->status = "部份商品退貨成功";
+                    $order->save();
+
+                    $product = Product::find($this_item->productID);
+                    $product->quantity += $this_item->quantity;
+                    $product->quantitySold -= $this_item->quantity;
+                    $product->save();
+                    DB::table('orderDetails')
+                        ->where('id', '=', $request->id)
+                        ->where('productID', '=', $request->product_id)
+                        ->update(['status' => "退貨成功"]);
+
+                });
+                return response()->json(['success' => '退貨成功,' . $coinMsg . ',' . $expMsg]);
+            }
+
         } else if ($request->action == 'no') {
             DB::transaction(function () use ($order, $orderDetail) {
                 $order = Order::find($request->id);
@@ -494,14 +431,102 @@ class OrderDetailAjaxController extends Controller
             return response()->json(['success' => '拒絕退貨成功']);
         }
     }
-    public function refund ($info , $obj,$orderDetail,$user )
+
+    public function refundItem($info, $obj, $orderDetail, $user)
     {
-        if($info->method==1){
+        if ($info->method == 1) {
 
-        }else if($info->method==2){
+        } else if ($info->method == 2) {
 
-        }else{
+        } else {
 
         }
+    }
+
+    public function refundExp($user, $item)
+    {
+        //$user = User::find($user_id);
+        $config = Config::find(1);
+        $exp_max = $config->moneyToLevel * $config->upgrade_limit;
+        $old_exp = null;
+        $msg = null;
+        //重新計算訂單經驗
+        //計算該訂單原本經驗
+        if ($item->money['sum'] > $exp_max) {
+            $old_exp = $exp_max;
+        } else {
+            $old_exp = $item->money['sum'];
+        }
+        //回溯經驗
+        $user->exp_bar -= $old_exp;
+        //重新計算訂單經驗
+        //判斷剩餘訂單經驗是否超出上限
+        if ($item->money['other'] > $exp_max) {
+            $user->exp_bar += $exp_max;
+        } else {
+            $user->exp_bar += $item->money['other'];
+        }
+        $lv = floor($user->exp_bar / $config->moneyToLevel);
+
+        if ($lv >= 0 && $user->level < 10) {
+            $user->level = $lv;
+            $msg = "重新計算後等級" . $user->level . ",經驗值" . $user->exp_bar;
+        } else {
+            $msg = '等級已達上限';
+        }
+        if ($user->level < 0 || $user->exp_bar < 0) {
+            $msg = '計算錯誤';
+        }
+        return $msg;
+
+    }
+    public function refundCoin($user, $order, $item)
+    {
+        $coinDiff = null;
+        $msg = null;
+        $flag = 0;
+
+        //計算購物金優惠活動是否成立與贈送金額
+        if ($order->sysMethod == 1 && $order->active !='-1') {
+            $flag = 1;
+            //活動成立,扣除贈送購物金差額
+            if ($item->money['coinDiscountSum'] >= $order->sysTotal) {
+                $base = floor($item->money['coinDiscountSum'] / $order->sysTotal);
+                $discountCoin = $order->orderDiscount - ($base * $order->sysDiscount);
+                Record::create(array('user_id' => $order->user_id,
+                    'field' => 'coin',
+                    'src' => $user->coin,
+                    'status' => '-' . $discountCoin));
+                $user->coin -= $discountCoin;
+                $coinDiff = $discountCoin;
+            } else {
+                //活動不成立,回收贈送的全額購物金
+                //將優惠觸發改為無觸發
+                // $order->sysMethod = null;
+                // $order->sysTotal = null;
+                // $order->sysDiscount = null;
+                // $order->orderDiscount ='0';
+                $order->active ='-1';
+                Record::create(array('user_id' => $order->user_id,
+                    'field' => 'coin',
+                    'src' => $user->coin,
+                    'status' => '-' . $order->orderDiscount));
+                $user->coin -= $order->orderDiscount;
+                $coinDiff = $order->orderDiscount;
+            }
+        }
+        //退貨金額轉購物金
+        Record::create(array('user_id' => $order->user_id,
+            'field' => 'coin',
+            'src' => $user->coin,
+            'status' => '+' . $item->money['refund']));
+        $user->coin += $item->money['refund'];
+        if ($flag == 0) {
+            $msg = '系統退還$' . $item->money['refund'] . '購物金';
+        } else if ($flag == 1) {
+            $msg = '系統退還$' . $item->money['refund'] . '購物金,回收贈送購物金$' . $coinDiff;
+        }
+        return $msg;
+
     }
 }

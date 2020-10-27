@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 class myOrder
 {
     public $id;
+    public $acitve;
     public $sysMethod;
     public $sysTotal;
     public $sysDiscount;
@@ -206,12 +207,14 @@ class OrderDetailAjaxController extends Controller
                 $obj->sysTotal = $sys_total[$request->sel_id];
                 $obj->sysDiscount = $sys_discount[$request->sel_id];
                 $obj->orderDiscount = $order_discount[$request->sel_id];
+                $obj->active ='1';
             }else{
                 $obj->id = null;
                 $obj->sysMethod = null;
                 $obj->sysTotal=null;
                 $obj->sysDiscount=null;
                 $obj->orderDiscount = 0;
+                $obj->active= null;
             }
         } else {
             $obj->id = null;
@@ -219,6 +222,7 @@ class OrderDetailAjaxController extends Controller
             $obj->sysTotal=null;
             $obj->sysDiscount=null;
             $obj->orderDiscount = 0;
+            $obj->active=null;
         }
         //----計算優惠結束----//
         if($use_coin==null){
@@ -242,6 +246,7 @@ class OrderDetailAjaxController extends Controller
                     'sysTotal' => $obj->sysTotal,
                     'sysDiscount' => $obj->sysDiscount,
                     'sysMethod'=> $obj->sysMethod,
+                    'active' => $obj->active,
                     'orderDiscount' => $obj->orderDiscount,
                 ]);
                 foreach ($request->productID as $key => $product_id) {
