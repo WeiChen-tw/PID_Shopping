@@ -40,10 +40,10 @@ class RouteServiceProvider extends ServiceProvider
         // echo $currentDomain;
         // return;
         switch ($currentDomain) {
-            case 'www.shopping.net':
+            case 'www.shopping.net:8002':
                 $this->mapWebFrontendRoutes();
                 break;
-            case 'www.admin.net':
+            case 'www.admin.net:8001':
                 $this->mapWebBackendRoutes();
                 break;          
             default:
