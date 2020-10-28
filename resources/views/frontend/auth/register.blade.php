@@ -80,9 +80,9 @@
                                         required
                                 >
                                 @if ($errors->has('phone'))
-                                    <div class="invalid-feedback">
-                                        <strong>{{ $errors->first('phone') }}</strong>
-                                    </div>
+                                        <div class="col-md-12">
+                                            <strong class="text-danger">{{ $errors->first('phone') }}</strong>
+                                        </div>
                                 @endif
                             </div>
                         </div>

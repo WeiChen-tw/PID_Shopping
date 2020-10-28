@@ -432,16 +432,7 @@ class OrderDetailAjaxController extends Controller
         }
     }
 
-    public function refundItem($info, $obj, $orderDetail, $user)
-    {
-        if ($info->method == 1) {
-
-        } else if ($info->method == 2) {
-
-        } else {
-
-        }
-    }
+    
 
     public function refundExp($user, $item)
     {

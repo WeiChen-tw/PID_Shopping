@@ -104,6 +104,11 @@
                                                 <div class="col-sm-12">
                                                     <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Phone" value="" maxlength="50" required="">
                                                 </div>
+                                                @if ($errors->has('phone'))
+                                                        <div class="col-md-12">
+                                                            <strong class="text-danger">{{ $errors->first('phone') }}</strong>
+                                                        </div>
+                                                @endif
                                             </div>
                                             <div class="form-group">
                                                 <label for="name" class="col-sm-2 control-label">等級</label>

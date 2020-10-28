@@ -57,10 +57,11 @@ class RegisterController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
             'addr' => 'required|string|max:255',
-            'phone' => 'required|string|min:6',
+            'phone' => 'required|regex:/^09[0-9]{8}$/',
             'captcha' => 'required|captcha',
 
         ], [
+            'phone.regex' => '請輸入正確的手機號碼',
             'captcha.required' => '驗證碼不能為空',
             'captcha.captcha' => '請輸入正確的驗證碼',
         ]);

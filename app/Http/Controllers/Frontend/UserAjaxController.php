@@ -56,6 +56,11 @@ class UserAjaxController extends Controller
         if($request->oldPassword === null){
             $validataedData= $request->validate([
                 'name' => 'required|string|max:255',
+                'phone' => 'required|regex:/^09[0-9]{8}$/',
+                'addr' => 'required|string|max:255',
+            ],
+            [
+                'phone.regex' => '請輸入正確的手機號碼',
             ]);
     
             Profile::updateOrCreate(['id' => $id],
@@ -69,12 +74,17 @@ class UserAjaxController extends Controller
         }else{
             $res = DB::table('users')->where('id',$id)->select('password')->first();
             if(!Hash::check($request->oldPassword,$res->password)){
-                return redirect('home')->withErrors(['oldPassword'=>'The original passowrd is wrong.']);
+                return redirect('home')->withErrors(['oldPassword'=>'原密碼錯誤.']);
              }
             $validataedData= $request->validate([
                 'name' => 'required|string|max:255',
+                'phone' => 'required|regex:/^09[0-9]{8}$/',
+                'addr' => 'required|string|max:255',
                 'oldPassword' => 'required|string|min:6|',
                 'newPassword' => 'required|string|min:6|confirmed',
+            ],
+            [
+                'phone.regex' => '請輸入正確的手機號碼',
             ]);
     
             Profile::updateOrCreate(['id' => $id],

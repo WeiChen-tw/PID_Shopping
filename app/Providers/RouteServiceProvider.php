@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-
+use App\Exceptions\Handler;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -37,6 +37,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         //$currentDomain = 'www.admin.net';
         $currentDomain = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : "";
+        // echo $currentDomain;
+        // return;
         switch ($currentDomain) {
             case 'www.shopping.net':
                 $this->mapWebFrontendRoutes();
