@@ -1,4 +1,5 @@
 # 購物網專案
+## [環境安裝文件](https://docs.google.com/presentation/d/15EFSNWqlMVlAhhywFbNxTK3VIgTWckzQwpQSpE94peE/edit?usp=sharing)
 ## 安裝 apache2
 sudo apt install apache2<br>
 ## 安裝 php7.2
@@ -10,14 +11,14 @@ https://dev.mysql.com/downloads/repo/apt/<br>
 下載後在存放目錄執行 dpkg 指令安裝<br>
 sudo dpkg -i mysql-apt-conifg_0.8.15-1_all.deb<br>
 config 設定選擇 Mysql 8.0 版本 然後選擇 OK 按下 Enter<br>
-![image]()
+
 sudo apt-get update<br>
-sudo apt-get install mysql-server
-畫面會要求你設定Mysql root 帳號的密碼 輸入password 
-![image]()
-畫面詢問你密碼難度規定 我們使用第二個選項 按下Enter
-選擇 Use Legacy Authentication Method (Retain Mysql 5.x Compatibility)
-![image]()
+sudo apt-get install mysql-server<br>
+畫面會要求你設定Mysql root 帳號的密碼 輸入password <br>
+
+畫面詢問你密碼難度規定 我們使用第二個選項 按下Enter<br>
+選擇 Use Legacy Authentication Method (Retain Mysql 5.x Compatibility)<br>
+
 
 ## 安裝 composer 並安裝專案套件
 在PID_Shopping-master專案目錄執行指令安裝composer<br>
@@ -45,9 +46,9 @@ ctrl + X 輸入 Y 按下 Enter
 ## apache2 設置多站點
 在PID_Shopping-master專案目錄下的 apache2_config 資料夾內編輯設定檔<br>
 sudo nano www-admin-net.conf<br>
-![image]()
+
 sudo nano www-shopping-net.conf<br>
-![image]()
+
 複製設定檔到 apache2 資料夾<br>
 cd PID_Shopping-master/apache2_config <br>
 sudo cp www-admin-net.conf www-shopping-net.conf  /etc/apache2/sites-available <br>
