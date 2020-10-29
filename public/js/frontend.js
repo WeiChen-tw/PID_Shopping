@@ -76,7 +76,7 @@ $(document).ready(function(){
     })
     function clickCard2(obj) {
         let htmlText = $(obj).html();
-        $(obj).html('Sending..');
+        $(obj).html('傳送中..');
         console.log("clickCard", $(obj).attr("value"));
         let id = $(obj).data("id");
         let form_name = '#shopCartForm';
@@ -113,7 +113,7 @@ $(document).ready(function(){
     }
     function clickCard(obj) {
         let htmlText = $(obj).html();
-        $(obj).html('Sending..');
+        $(obj).html('傳送中..');
         console.log("clickCard", $(obj).attr("value"));
         let id = $(obj).data("id");
         let form_name = '#shopCartForm';

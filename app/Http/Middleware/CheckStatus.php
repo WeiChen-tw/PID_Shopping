@@ -15,12 +15,13 @@ class CheckStatus
      */
     public function handle($request, Closure $next)
     {
-        $response = $next($request);
+       
+       
         //If the status is not approved redirect to login 
         if(Auth::check() && Auth::user()->banned != 'N'){
             Auth::logout();
             return redirect('/login')->with('erro_login', '此帳號停權');
         }
-        return $response;
+        return $next($request);
     }
 }

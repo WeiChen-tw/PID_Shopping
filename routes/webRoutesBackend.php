@@ -20,6 +20,7 @@ Route::resource('home/ajaxproducts', 'ProductAjaxController');
 Route::resource('home/ajaxcategory', 'CategoryAjaxController');
 Route::resource('home/ajaxuser', 'UserAjaxController');
 Route::resource('home/ajaxdiscount', 'DiscountAjaxController');
+Route::resource('/record', 'RecordAjaxController');
 //--
 Route::post('setProductCategory', 'CategoryAjaxController@setProductCategory');
 

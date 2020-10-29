@@ -12,6 +12,7 @@ $(document).ready(function () {
     let userTable;
     let discountTable;
     let orderTable;
+    let recordTable;
     let locationURL = window.document.location.origin;
     //會員管理分頁
    $('#v-pills-management-tab').on('click', function (e) {
@@ -418,7 +419,7 @@ $(document).ready(function () {
         }
         else if(obj.table_name == 'user'){
             $.get("./home/ajax" + obj.table_name + '/' + id + '/edit', function (data) {
-                $('#userModelHeading').html("Edit User Info");
+                $('#userModelHeading').html("編輯會員資料");
                 //$('#saveBtn').val("edit-user");
                 $(obj.model_name).modal('show');
                 $(obj.form_name+' input[name=id]').val(data.id);
@@ -461,7 +462,7 @@ $(document).ready(function () {
             model_name:null
         };
              
-        button.html('Sending..');
+        button.html('傳送中..');
         setObjName(obj);
         console.log($(this).data("table"), $(this).data("id"))
         console.log($(obj.form_name).serialize());;
@@ -782,7 +783,7 @@ $(document).ready(function () {
     //---------------------- Create -------------------//
     $('#createNewCategory').click(function (e) {
         e.preventDefault();
-        $(this).html('Sending..');
+        $(this).html('傳送中..');
         console.log($('#categoryForm').serialize());
         if($("#inputCaretory").val().length!=0){
             $.ajax({
@@ -813,7 +814,7 @@ $(document).ready(function () {
     $('#createNewDiscount').click(function (e) {
         let formName = '#discountForm';
         e.preventDefault();
-        $(this).html('Sending..');
+        $(this).html('傳送中..');
         console.log($(formName).serialize());
         let isTotal = $("#inputTotal").val().length!=0;
         let isDiscount = $("#inputDiscount").val().length!=0;
@@ -852,6 +853,38 @@ $(document).ready(function () {
         $('#category').val( $('.selectpicker').val());
         //alert(selectedItem);
     });
+    $("#checkRecord").on('click',function(e){
+        let locationURL = window.document.location.origin;
+        let id =$("#userForm input[name=id]").val();
+        e.preventDefault()
+        if (recordTable) {
+            recordTable.destroy();
+        }
+        recordTable = $("#recordTable").DataTable({
+            language:{
+                url: locationURL+'/public/Chinese-traditional.json',
+                decimal:',',
+                thousands:'.'
+            },
+            order:[0,"desc"],
+            processing: true,
+            serverSide: true,
+            ajax: {
+                'url':"./record",
+                'data':{
+                    'user_id':id
+                }
+            },
+            columns: [
+                { data: "id" },
+                { data: 'src' },
+                { data: 'status' },
+                { data: 'created_at' },
+            ],
+            select: true,
+        } );
+       $("#ajaxRecordModel").modal('show');
+    })
     $('body').on('click','.出貨',function(){
         let id = $(this).data('id');
         yes = confirm("確定要出貨 ？");

@@ -14,6 +14,7 @@
             
             <div id="showMsgBox" style="height:60%;overflow:auto;">
                 @foreach ($msgData as $row)
+                    @if($row->email==Auth::user()->email )
                     <div class=" col-md-12 " style="padding-top: 1.25rem;padding-bottom: 1.25rem;">
                         <div class="card border-primary " data-id="{{$row->id}}">
                             <h5 class="card-header bg-primary" style="color:white">
@@ -61,6 +62,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 @endforeach
             </div>
             <div>

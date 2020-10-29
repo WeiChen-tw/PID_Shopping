@@ -26,6 +26,7 @@ $(document).ready(function(){
     }
     function initProfile(){
         $.get("./home/ajaxuser", function (data) {
+            console.log(data);
             let form_name = "#profileForm"
             $(form_name+' input[name=id]').val(data.id);
             $(form_name+' input[name=name]').val(data.name);

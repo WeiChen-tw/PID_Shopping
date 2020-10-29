@@ -123,7 +123,9 @@
                                                         <label for="name" class="col-sm-2 control-label">購物金</label>
                                                         <div class="col-sm-12">
                                                             <input type="text" class="form-control" id="coin" oninput="value=value.replace(/[^\d]/g,'')" name="coin" placeholder="Enter Coin" value="" maxlength="50" required="">
+                                                            <a id="checkRecord" type ="button" class="form-control btn btn-success">歷史紀錄</a>
                                                         </div>
+                                                        
                                                     </div>
                                                 </form>
                                             </div>
@@ -544,6 +546,43 @@
                         <div class="modal-footer">
                             <a class="btn btn-primary mb-2" href="javascript:void(0)" id="saveProductBtn"> 送出</a>
                             <a class="btn btn-danger mb-2 closeModal" data-modal="ajaxProductListModel" href="javascript:void(0)" > 關閉</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END -->
+             <!-- Record Modal -->
+             <div class="modal fade" id="ajaxRecordModel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="recordModelHeading"></h4>
+
+                            <input type="hidden" name="id" >
+                        </div>
+                        <div class="modal-body">
+                            <div name ="list" class="row pre-scrollable ">
+                            <!-- <div  class="row"> -->
+                                <h1>購物金明細</h1>
+                                <table id="recordTable" class="table table-bordered " style="width:100%"> 
+                                    <thead>
+                                        <tr>
+                                            <th>編號</th>
+                                            <th>原始</th>
+                                            <th>操作</th>
+                                            <th>時間</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                    
+                                </table>
+                               
+                            <!-- </div> -->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
                         </div>
                     </div>
                 </div>

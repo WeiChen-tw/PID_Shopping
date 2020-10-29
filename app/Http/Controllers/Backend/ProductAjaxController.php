@@ -33,10 +33,10 @@ class ProductAjaxController extends Controller
             $sql = <<<STR
             SELECT p.productID,p.name,GROUP_CONCAT(DISTINCT c.name) as category,GROUP_CONCAT(DISTINCT d.method)as discount,p.quantity,p.quantitySold ,p.price,p.description,p.img,p.onMarket 
             FROM `products` as p 
-            INNER JOIN products_categories as pc 
-            LEFT JOIN categories as c on p.productID = pc.product_id and pc.category_id = c.id 
-            INNER JOIN products_discounts as pd 
-            LEFT JOIN discounts as d on p.productID = pd.product_id and pd.discount_id = d.id 
+            INNER JOIN products_categories as pc  on p.productID = pc.product_id
+            LEFT JOIN categories as c  on pc.category_id = c.id 
+            INNER JOIN products_discounts as pd on p.productID = pd.product_id
+            LEFT JOIN discounts as d  on pd.discount_id = d.id 
             GROUP BY p.productID
 STR;
             $data2 = DB::select($sql);

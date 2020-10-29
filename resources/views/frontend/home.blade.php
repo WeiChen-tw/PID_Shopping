@@ -125,7 +125,7 @@
                                                 <label for="name" class="col-sm-2 control-label">購物金</label>
                                                 <div class="col-sm-12">
                                                     <input type="text" class="form-control" id="coin" name="coin" placeholder="Enter Coin" value="" maxlength="50" disabled>
-                                                    <a id="checkRecord" type ="button" class="form-control btn btn-success">明細</a>
+                                                    <a id="checkRecord" type ="button" class="form-control btn btn-success">歷史紀錄</a>
                                                 </div>
                                                 
                                             </div>
