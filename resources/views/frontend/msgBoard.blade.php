@@ -49,6 +49,9 @@
                             </div>
                             </div>
                             <div id="showReplyMsg{{$row->id}}"class="card-footer ">
+                            @if($reMsgData==='null')
+                                暫無回覆
+                            @else
                                 @foreach($reMsgData as $reMsg)
                                     @if($reMsg->id == $row->id)
                                         
@@ -59,6 +62,7 @@
                                     
                                     @endif
                                 @endforeach
+                            @endif
                             </div>
                         </div>
                     </div>
