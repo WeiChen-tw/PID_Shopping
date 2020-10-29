@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機: localhost:3306
--- 產生時間： 2020 年 10 月 29 日 16:35
+-- 產生時間： 2020 年 10 月 29 日 16:56
 -- 伺服器版本: 8.0.21
 -- PHP 版本： 7.2.33-1+ubuntu18.04.1+deb.sury.org+1
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- 資料庫： `homestead`
 --
+CREATE DATABASE IF NOT EXISTS `homestead` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `homestead`;
 
 -- --------------------------------------------------------
 
