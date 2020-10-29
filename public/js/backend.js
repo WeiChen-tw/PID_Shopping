@@ -26,7 +26,7 @@ $(document).ready(function () {
         "scrollX": true,
         "scrollCollapse": true,
         language:{
-            url: locationURL+'/public/Chinese-traditional.json',
+            url: locationURL+'/Chinese-traditional.json',
         },
         processing: true,
         serverSide: true,
@@ -76,7 +76,7 @@ $(document).ready(function () {
             // "scrollX": true,
             // "scrollCollapse": true,
             language:{
-                url: locationURL+'/public/Chinese-traditional.json',
+                url: locationURL+'/Chinese-traditional.json',
                 decimal:',',
                 thousands:'.'
             },
@@ -153,7 +153,7 @@ $(document).ready(function () {
             "scrollCollapse": true,
             //"paging": false,
             language:{
-                url: locationURL+'/public/Chinese-traditional.json',
+                url: locationURL+'/Chinese-traditional.json',
             },
             processing: true,
             serverSide: true,
@@ -189,7 +189,7 @@ $(document).ready(function () {
             "scrollCollapse": true,
             //"paging": false,
             language:{
-                url: locationURL+'/public/Chinese-traditional.json',
+                url: locationURL+'/Chinese-traditional.json',
             },
             processing: true,
             serverSide: true,
@@ -218,7 +218,7 @@ $(document).ready(function () {
             // "scrollCollapse": true,
             //"paging": false,
             language:{
-                url: locationURL+'/public/Chinese-traditional.json',
+                url: locationURL+'/Chinese-traditional.json',
             },
             processing: true,
             serverSide: true,
@@ -290,7 +290,7 @@ $(document).ready(function () {
         $('#ajaxProductModel').modal('show');
         $("#form-sel").selectpicker('val',['noneSelectedText']);
         $("#form-sel").selectpicker('refresh');
-        $("#showPreviewImage").attr('src','http://www.admin.net/public/images/default.jpg');
+        $("#showPreviewImage").attr('src','http://www.admin.net/images/default.jpg');
          //get select option data
         
     });
@@ -862,7 +862,7 @@ $(document).ready(function () {
         }
         recordTable = $("#recordTable").DataTable({
             language:{
-                url: locationURL+'/public/Chinese-traditional.json',
+                url: locationURL+'/Chinese-traditional.json',
                 decimal:',',
                 thousands:'.'
             },

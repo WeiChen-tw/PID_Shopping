@@ -94,7 +94,7 @@ $(document).ready(function(){
                     alert(data.success);
                 }
                 if(data.login){
-                    document.location.href="http://www.shopping.net/public/login"
+                    document.location.href="http://www.shopping.net/login"
                 }
                if(data.wrong){
                     $('#shoppingCartModel').modal('hide');
@@ -131,7 +131,7 @@ $(document).ready(function(){
                     alert(data.success);
                 }
                 if(data.login){
-                    document.location.href="http://www.shopping.net/public/login"
+                    document.location.href="http://www.shopping.net/login"
                 }
                if(data.wrong){
                     $('#shoppingCartModel').modal('hide');

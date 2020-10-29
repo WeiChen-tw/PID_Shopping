@@ -56,7 +56,7 @@ $(document).ready(function(){
             // "scrollX": true,
             // "scrollCollapse": true,
             language:{
-                url: locationURL+'/public/Chinese-traditional.json',
+                url: locationURL+'/Chinese-traditional.json',
                 decimal:',',
                 thousands:'.'
             },

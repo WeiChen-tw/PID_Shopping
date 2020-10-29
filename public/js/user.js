@@ -53,7 +53,7 @@ $(document).ready(function(){
         }
         recordTable = $("#recordTable").DataTable({
             language:{
-                url: locationURL+'/public/Chinese-traditional.json',
+                url: locationURL+'/Chinese-traditional.json',
                 decimal:',',
                 thousands:'.'
             },
@@ -84,7 +84,7 @@ $(document).ready(function(){
             // "scrollX": true,
             // "scrollCollapse": true,
             language:{
-                url: locationURL+'/public/Chinese-traditional.json',
+                url: locationURL+'/Chinese-traditional.json',
                 decimal:',',
                 thousands:'.'
             },
