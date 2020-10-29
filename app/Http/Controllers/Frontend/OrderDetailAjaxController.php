@@ -249,7 +249,7 @@ class OrderDetailAjaxController extends Controller
                     'orderDiscount' => $obj->orderDiscount,
                 ]);
                 $max_id = DB::select('select max(id) as id from `orders`');
-                $id = $max_id[0]->id + 1;
+                $id = $max_id[0]->id ;
                 foreach ($request->productID as $key => $product_id) {
                     $product = Product::find($product_id);
                     $product->quantity -= $request->quantity[$key];
