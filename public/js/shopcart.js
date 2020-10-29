@@ -24,18 +24,29 @@ $(document).ready(function(){
     
     }
     function initProfile(){
-        $.get("./home/ajaxuser", function (data) {
-            let form_name = "#profileForm"
-            $(form_name+' input[name=id]').val(data.id);
-            $(form_name+' input[name=name]').val(data.name);
-            $(form_name+' input[name=password]').val(data.password);
-            $(form_name+' input[name=email]').val(data.email);
-            $(form_name+' input[name=addr]').val(data.addr);
-            $(form_name+' input[name=phone]').val(data.phone);
-            $(form_name+' input[name=level]').val(data.level);
-            $(form_name+' input[name=exp_bar]').val(data.exp_bar);
-            $(form_name+' input[name=coin]').val(data.coin);
-         });
+        $.ajax({
+            url: "./home/ajaxuser",
+            type: "GET",
+            dataType: 'json',
+            success: function (data) {
+                let form_name = "#profileForm"
+                $(form_name+' input[name=id]').val(data.id);
+                $(form_name+' input[name=name]').val(data.name);
+                $(form_name+' input[name=password]').val(data.password);
+                $(form_name+' input[name=email]').val(data.email);
+                $(form_name+' input[name=addr]').val(data.addr);
+                $(form_name+' input[name=phone]').val(data.phone);
+                $(form_name+' input[name=level]').val(data.level);
+                $(form_name+' input[name=exp_bar]').val(data.exp_bar);
+                $(form_name+' input[name=coin]').val(data.coin);
+            },
+            error: function (data) {
+                console.log('Error:', data);
+                alert('請重新登入');
+                document.location.href="http://www.shopping.net/login";
+            }
+        });
+    
     }
     $('#v-pills-myShopCart-tab').on('click', function (e) {
         initShopCart();
@@ -63,7 +74,13 @@ $(document).ready(function(){
             order:[0,"desc"],
             processing: true,
             serverSide: true,
-            ajax: "./getOrder",
+            ajax: {
+                'url':"./getOrder",
+                error:function(){
+                    alert('請重新登入');
+                    document.location.href="http://www.shopping.net/login";
+                }
+            },
             columns: [
                 { data: "id" },
                 { data: 'created_at' },
@@ -218,6 +235,8 @@ $(document).ready(function(){
             },
             error: function (data) {
                 console.log('Error:', data);
+                alert('請重新登入');
+                document.location.href="http://www.shopping.net/login";
             }
         });
    

@@ -44,6 +44,8 @@ $(document).ready(function () {
             },
             error: function (data) {
                 console.log('Error:', data);
+                alert('請重新登入');
+                document.location.href="http://www.shopping.net/login";
             }
         });
 
@@ -97,16 +99,24 @@ function reply(id,msg_id) {
         alert("請輸入訊息")
         return;
     }
-    $.post('./msgBoard/reply', {
-        'id': id,
-        'msg_id':msg_id,
-        'content': content
-    }, function (data) {
-        if (data.success) {
+    $.ajax({
+        type: "POST",
+        url: "./getOrderDiscount",
+        data:{
+            id: id,
+            msg_id:msg_id,
+            content: content
+        },
+        success: function(data) {
             alert(data.success);
             window.location.reload();
+        },
+        error:function(data){
+            alert('請重新登入');
+            document.location.href="http://www.shopping.net/login";
         }
     })
+    
 }
 function edit(id) {
     $.post('./msgBoard/edit/' + id, function (data) {

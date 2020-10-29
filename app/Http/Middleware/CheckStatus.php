@@ -22,6 +22,9 @@ class CheckStatus
             Auth::logout();
             return redirect('/login')->with('erro_login', '此帳號停權');
         }
+        if(!Auth::check()){
+            return redirect('/login')->with('erro_login', '此帳號停權');
+        }
         return $next($request);
     }
 }
