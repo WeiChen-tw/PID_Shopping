@@ -8,7 +8,7 @@ sudo apt install php7.2 libapache2-mod-php7.2 php7.2-mysql php7.2-gd php7.2-intl
 https://dev.mysql.com/downloads/repo/apt/<br>
 點選Download 跳轉後 點選左下角 No thanks,just start my download.<br>
 下載後在存放目錄執行 dpkg 指令安裝<br>
-sudo dpkg -i mysql-apt-conifg_0.8.13-1_all.deb<br>
+sudo dpkg -i mysql-apt-conifg_0.8.15-1_all.deb<br>
 config 設定選擇 Mysql 8.0 版本 然後選擇 OK 按下 Enter<br>
 ![image]()
 sudo apt-get update<br>
@@ -18,52 +18,50 @@ sudo apt-get install mysql-server
 畫面詢問你密碼難度規定 我們使用第二個選項 按下Enter
 選擇 Use Legacy Authentication Method (Retain Mysql 5.x Compatibility)
 ![image]()
-## 安裝 vim
-sudo apt-get remove vim-common
-sudo apt-get install vim
+
 ## 安裝 composer 並安裝專案套件
-在PID_Shopping-master專案目錄執行指令安裝composer
+在PID_Shopping-master專案目錄執行指令安裝composer<br>
 php -r "readfile('https://getcomposer.org/installer');" | php <br>
-將檔案移動到 usr/local/bin
-sudo mv composer.phar /usr/local/bin/
+將檔案移動到 usr/local/bin<br>
+sudo mv composer.phar /usr/local/bin/<br>
 在PID_Shopping-master專案目錄執行指令使用composer 安裝專案套件 <br>
-composer.phar install
-## 到PID_Shopping-master專案目錄執行
-sudo chown -R new:www-data storage/
+composer.phar install<br>
+## 到PID_Shopping-master專案目錄執行 （user 請換成自己ubuntu的userName)
+sudo chown -R user:www-data storage/<br>
 ## 設定 msyql 建立homestead資料庫
-在PID_Shopping-master專案目錄裡的 database_config
-cd PID_Shopping-master/database_config
-執行登入並匯入資料庫指令後要輸入"password"(Mysql root 密碼 輸入密碼會看不到字是正常的)  
-mysql -u root -p < homestead.sql
+在PID_Shopping-master專案目錄裡的 database_config<br>
+cd PID_Shopping-master/database_config<br>
+執行登入並匯入資料庫指令後要輸入password(Mysql root 密碼 輸入密碼會看不到字是正常的)  <br>
+mysql -u root -p < homestead.sql<br>
 
 
-## 設定ubuntu hosts  nano
-sudo nano /etc/hosts
-加入以下兩行
+## 設定ubuntu hosts  
+sudo nano /etc/hosts<br>
+加入以下兩行<br>
 127.0.0.1	www.admin.net <br>
 127.0.0.1	www.shopping.net <br>
 輸入指令離開檔案編輯
 ctrl + X 輸入 Y 按下 Enter
 ## apache2 設置多站點
-在PID_Shopping-master專案目錄下的 apache2_config 資料夾內編輯設定檔
-sudo nano www-admin-net.conf
+在PID_Shopping-master專案目錄下的 apache2_config 資料夾內編輯設定檔<br>
+sudo nano www-admin-net.conf<br>
 ![image]()
-sudo nano www-shopping-net.conf
+sudo nano www-shopping-net.conf<br>
 ![image]()
 複製設定檔到 apache2 資料夾<br>
-sudo cd PID_Shopping-master/apache2_config <br>
-cp www-admin-net.conf www-shopping-net.conf  /etc/apache2/sites-available <br>
+cd PID_Shopping-master/apache2_config <br>
+sudo cp www-admin-net.conf www-shopping-net.conf  /etc/apache2/sites-available <br>
 執行指令啟動設定<br>
 sudo a2ensite www-admin-net.conf www-shopping-net.conf<br>
 啟動Rewrite模組 <br>
-sudo a2enmod rewrite
+sudo a2enmod rewrite<br>
 
 重啟apache2<br>
 sudo service apache2 restart <br>
 ## 測試專案是否正常開啟
 後台網址:www.admin.net
 後台帳號:admin@g.com.tw
-後台密碼:123456
+後台密碼:123456<br>
 
 前台網址:www.shopping.net
 
