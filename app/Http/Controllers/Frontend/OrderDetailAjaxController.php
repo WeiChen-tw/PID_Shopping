@@ -61,8 +61,7 @@ class OrderDetailAjaxController extends Controller
     public function store(Request $request)
     {
         
-        $max_id = DB::select('select max(id) as id from `orders`');
-        $id = $max_id[0]->id + 1;
+        
         $user_id = $request->user()->id;
         $wrong_id = null;
         $addr = $request->addr;
@@ -232,12 +231,12 @@ class OrderDetailAjaxController extends Controller
             return response()->json(['wrong' => '購物金大於結帳金額']);
         }
         DB::transaction(function() use ($request,
-            $id,
             $user_id,
             $use_coin,
             $addr,
             $obj,
             $discounts_id){
+                
             Order::updateOrCreate(['id' => $request->id],
                 [
                     'user_id' => $user_id,
@@ -249,6 +248,8 @@ class OrderDetailAjaxController extends Controller
                     'active' => $obj->active,
                     'orderDiscount' => $obj->orderDiscount,
                 ]);
+                $max_id = DB::select('select max(id) as id from `orders`');
+                $id = $max_id[0]->id + 1;
                 foreach ($request->productID as $key => $product_id) {
                     $product = Product::find($product_id);
                     $product->quantity -= $request->quantity[$key];
